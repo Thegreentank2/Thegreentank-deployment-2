@@ -43,7 +43,7 @@ ROUTES = [
 ]
 
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/1.1 (+public backup deployment)"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/1.2 (+public backup deployment)"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -104,8 +104,7 @@ def prefixed_path(path: str) -> str:
 
 def patch_html_paths(text: str) -> str:
     def repl(match: re.Match[str]) -> str:
-        original = match.group("url")
-        normalized = normalize_same_origin(original)
+        normalized = normalize_same_origin(match.group("url"))
         if normalized is None:
             return match.group(0)
         return f'{match.group("attr")}={match.group("q")}{prefixed_path(normalized)}{match.group("q")}'
@@ -114,8 +113,6 @@ def patch_html_paths(text: str) -> str:
 
 
 def clean_html(text: str) -> str:
-    # Static Pages do not need Next/Vinext hydration. Removing framework JS also
-    # prevents client-side navigation from requesting server-only RSC endpoints.
     text = SCRIPT_RE.sub("", text)
     text = SCRIPT_PRELOAD_RE.sub("", text)
     return patch_html_paths(text)
@@ -139,7 +136,6 @@ def patch_css_paths(text: str, css_source_url: str) -> tuple[str, set[str]]:
         if normalized is None:
             return match.group(0)
         nested.add(normalized)
-        # Keep relative CSS URLs relative; patch only root/same-origin absolute ones.
         if value.startswith("/") or value.startswith(BASE):
             quote = match.group("q") or ""
             return f"url({quote}{prefixed_path(normalized)}{quote})"
@@ -209,11 +205,9 @@ def main() -> int:
     if len(research_urls) != 43:
         raise RuntimeError(f"Expected 43 public research downloads; found {len(research_urls)}")
 
-    # Framework styles/images and public assets are mirrored locally. Navigational
-    # routes are already handled above as HTML rather than fetched as binary assets.
     asset_urls = {
         u for u in discovered_urls
-        if u.startswith("/_next/") or u.startswith("/research/") or u in PUBLIC_ASSETS
+        if u.startswith(("/_next/", "/assets/", "/research/")) or u in PUBLIC_ASSETS
     }
     asset_urls.update(PUBLIC_ASSETS)
     asset_urls.update(research_urls)
@@ -229,13 +223,21 @@ def main() -> int:
     if len(research_files) != 43:
         raise RuntimeError(f"Expected 43 downloaded research files on disk; found {len(research_files)}")
 
-    # Require at least one presentation asset in addition to the routes/downloads.
+    stylesheets = sorted(OUT.rglob("*.css"))
+    if not stylesheets:
+        raise RuntimeError("No stylesheet was mirrored; refusing an unstyled deployment")
+
     presentation_assets = [
         p for p in OUT.rglob("*")
-        if p.is_file() and ("_next" in p.parts or p.name in {x.lstrip('/') for x in PUBLIC_ASSETS})
+        if p.is_file()
+        and (
+            "_next" in p.parts
+            or "assets" in p.parts
+            or p.name in {x.lstrip('/') for x in PUBLIC_ASSETS}
+        )
     ]
     if not presentation_assets:
-        raise RuntimeError("No presentation assets were mirrored; refusing a text-only/incomplete deployment")
+        raise RuntimeError("No presentation assets were mirrored; refusing an incomplete deployment")
 
     manifest_files = {}
     for path in sorted(p for p in OUT.rglob("*") if p.is_file()):
@@ -252,6 +254,7 @@ def main() -> int:
         "backup_reference_sha256": BACKUP_SHA256,
         "routes": ROUTES,
         "research_download_count": len(research_files),
+        "stylesheet_count": len(stylesheets),
         "presentation_asset_count": len(presentation_assets),
         "integrity_markers": required_home + ["Release 17"],
         "files": manifest_files,
@@ -261,7 +264,8 @@ def main() -> int:
 
     print(
         f"ready: {len(ROUTES)} routes, {len(research_files)} research downloads, "
-        f"{len(presentation_assets)} presentation assets, {len(manifest_files)} files"
+        f"{len(stylesheets)} stylesheets, {len(presentation_assets)} presentation assets, "
+        f"{len(manifest_files)} files"
     )
     return 0
 
