@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Build a static GitHub Pages snapshot from the Green Tank dev site.
+"""Build a self-contained static GitHub Pages snapshot from the Green Tank dev site.
 
 The ChatGPT Green Tank site is the development/update source. This script mirrors
-all public routes and all research downloads, strips framework JavaScript so the
-snapshot works as plain static HTML, rewrites internal root paths for the GitHub
-Pages repository prefix, and fails if expected integrity markers are missing.
+all public routes and all research downloads, removes framework JavaScript so the
+snapshot works as plain static HTML, copies same-origin presentation assets, and
+rewrites internal paths for the GitHub Pages repository prefix.
 """
 
 from __future__ import annotations
@@ -12,7 +12,6 @@ from __future__ import annotations
 import hashlib
 import html
 import json
-import os
 import re
 import shutil
 import sys
@@ -23,6 +22,7 @@ from urllib.parse import unquote, urljoin, urlparse
 from urllib.request import Request, urlopen
 
 BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
+BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 BACKUP_SHA256 = "3674cf838927e684e3731ed5c792c679a304d30d5ae050a2da549e9130f7e8e3"
@@ -42,11 +42,12 @@ ROUTES = [
     "/social-technology/psy-body-psychology-communication",
 ]
 
-USER_AGENT = "TheGreenTank-GitHub-Mirror/1.0 (+public backup deployment)"
-ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>/[^"']*)(?P=q)''', re.I)
+PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/1.1 (+public backup deployment)"
+ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
-CSS_URL_RE = re.compile(r"url\((?P<q>[\"']?)(?P<url>/[^)\"']+)(?P=q)\)", re.I)
+CSS_URL_RE = re.compile(r"url\((?P<q>[\"']?)(?P<url>[^)\"']+)(?P=q)\)", re.I)
 
 
 def fetch(url: str, attempts: int = 3) -> bytes:
@@ -65,6 +66,20 @@ def fetch(url: str, attempts: int = 3) -> bytes:
     raise RuntimeError(f"Could not fetch {url}: {last}")
 
 
+def normalize_same_origin(value: str, base_url: str = BASE) -> str | None:
+    value = html.unescape(value).strip()
+    if not value or value.startswith(("#", "mailto:", "tel:", "javascript:", "data:")):
+        return None
+    absolute = urljoin(base_url, value)
+    parsed = urlparse(absolute)
+    if parsed.scheme not in {"http", "https"} or parsed.netloc != BASE_HOST:
+        return None
+    path = parsed.path or "/"
+    if parsed.query:
+        path += "?" + parsed.query
+    return path
+
+
 def local_path_for_url(path: str) -> Path:
     clean = unquote(path.split("?", 1)[0].split("#", 1)[0]).lstrip("/")
     return OUT / clean
@@ -81,13 +96,19 @@ def route_output(route: str) -> Path:
     return OUT / route.strip("/") / "index.html"
 
 
-def patch_root_paths(text: str) -> str:
-    # Root-relative links/assets must include the repository path on GitHub Pages.
+def prefixed_path(path: str) -> str:
+    if path == PREFIX or path.startswith(PREFIX + "/"):
+        return path
+    return PREFIX + path
+
+
+def patch_html_paths(text: str) -> str:
     def repl(match: re.Match[str]) -> str:
-        url = match.group("url")
-        if url.startswith("//") or url.startswith(PREFIX + "/") or url == PREFIX:
+        original = match.group("url")
+        normalized = normalize_same_origin(original)
+        if normalized is None:
             return match.group(0)
-        return f'{match.group("attr")}={match.group("q")}{PREFIX}{url}{match.group("q")}'
+        return f'{match.group("attr")}={match.group("q")}{prefixed_path(normalized)}{match.group("q")}'
 
     return ATTR_URL_RE.sub(repl, text)
 
@@ -97,39 +118,51 @@ def clean_html(text: str) -> str:
     # prevents client-side navigation from requesting server-only RSC endpoints.
     text = SCRIPT_RE.sub("", text)
     text = SCRIPT_PRELOAD_RE.sub("", text)
-    return patch_root_paths(text)
+    return patch_html_paths(text)
 
 
-def collect_local_urls(text: str) -> set[str]:
+def collect_same_origin_urls(text: str) -> set[str]:
     urls: set[str] = set()
     for match in ATTR_URL_RE.finditer(text):
-        path = html.unescape(match.group("url"))
-        if path.startswith("//"):
-            continue
-        path = path.split("#", 1)[0]
-        if path:
-            urls.add(path)
+        normalized = normalize_same_origin(match.group("url"))
+        if normalized:
+            urls.add(normalized)
     return urls
 
 
+def patch_css_paths(text: str, css_source_url: str) -> tuple[str, set[str]]:
+    nested: set[str] = set()
+
+    def repl(match: re.Match[str]) -> str:
+        value = match.group("url")
+        normalized = normalize_same_origin(value, base_url=css_source_url)
+        if normalized is None:
+            return match.group(0)
+        nested.add(normalized)
+        # Keep relative CSS URLs relative; patch only root/same-origin absolute ones.
+        if value.startswith("/") or value.startswith(BASE):
+            quote = match.group("q") or ""
+            return f"url({quote}{prefixed_path(normalized)}{quote})"
+        return match.group(0)
+
+    return CSS_URL_RE.sub(repl, text), nested
+
+
 def save_asset(path: str, seen: set[str]) -> None:
-    path_no_fragment = html.unescape(path).split("#", 1)[0]
-    if not path_no_fragment.startswith("/") or path_no_fragment.startswith("//"):
+    normalized = normalize_same_origin(path)
+    if normalized is None or normalized in seen:
         return
-    if path_no_fragment in seen:
-        return
-    seen.add(path_no_fragment)
+    seen.add(normalized)
 
-    data = fetch(urljoin(BASE, path_no_fragment))
-    dest = local_path_for_url(path_no_fragment)
+    source_url = urljoin(BASE, normalized)
+    data = fetch(source_url)
+    dest = local_path_for_url(normalized)
 
-    # Patch root-relative URLs inside stylesheets for the GitHub Pages prefix.
     if dest.suffix.lower() == ".css":
         text = data.decode("utf-8", errors="replace")
-        nested = {m.group("url") for m in CSS_URL_RE.finditer(text)}
-        text = re.sub(r"url\((['\"]?)/(?!/|Thegreentank-deployment-2/)", rf"url(\1{PREFIX}/", text)
-        write_bytes(dest, text.encode("utf-8"))
-        for nested_url in nested:
+        patched, nested = patch_css_paths(text, source_url)
+        write_bytes(dest, patched.encode("utf-8"))
+        for nested_url in sorted(nested):
             save_asset(nested_url, seen)
     else:
         write_bytes(dest, data)
@@ -141,13 +174,13 @@ def main() -> int:
     OUT.mkdir(parents=True)
 
     original_pages: dict[str, str] = {}
-    local_urls: set[str] = set()
+    discovered_urls: set[str] = set()
 
     for route in ROUTES:
         raw = fetch(urljoin(BASE, route))
         text = raw.decode("utf-8", errors="strict")
         original_pages[route] = text
-        local_urls.update(collect_local_urls(text))
+        discovered_urls.update(collect_same_origin_urls(text))
         write_bytes(route_output(route), clean_html(text).encode("utf-8"))
         print(f"mirrored route {route}")
 
@@ -165,26 +198,24 @@ def main() -> int:
     if "Release 17" not in library:
         raise RuntimeError("Dev library is not Release 17; refusing to publish an older snapshot")
 
-    # The backup contains 43 files under public/research. Require the live public
-    # library to expose the same count before deployment.
     research_urls = sorted(
         {
-            html.unescape(match.group("url")).split("#", 1)[0]
+            normalized
             for match in ATTR_URL_RE.finditer(library)
-            if html.unescape(match.group("url")).startswith("/research/")
+            if (normalized := normalize_same_origin(match.group("url")))
+            and normalized.startswith("/research/")
         }
     )
     if len(research_urls) != 43:
         raise RuntimeError(f"Expected 43 public research downloads; found {len(research_urls)}")
 
-    # Do not try to fetch navigational routes as binary assets. Fetch framework
-    # styles/images plus all research downloads and public image assets.
+    # Framework styles/images and public assets are mirrored locally. Navigational
+    # routes are already handled above as HTML rather than fetched as binary assets.
     asset_urls = {
-        u for u in local_urls
-        if u.startswith("/_next/")
-        or u.startswith("/research/")
-        or u in {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
+        u for u in discovered_urls
+        if u.startswith("/_next/") or u.startswith("/research/") or u in PUBLIC_ASSETS
     }
+    asset_urls.update(PUBLIC_ASSETS)
     asset_urls.update(research_urls)
 
     seen: set[str] = set()
@@ -193,11 +224,18 @@ def main() -> int:
         if asset.startswith("/research/"):
             print(f"mirrored download {asset.rsplit('/', 1)[-1]}")
 
-    # Verify all 43 research files are present on disk.
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
     if len(research_files) != 43:
         raise RuntimeError(f"Expected 43 downloaded research files on disk; found {len(research_files)}")
+
+    # Require at least one presentation asset in addition to the routes/downloads.
+    presentation_assets = [
+        p for p in OUT.rglob("*")
+        if p.is_file() and ("_next" in p.parts or p.name in {x.lstrip('/') for x in PUBLIC_ASSETS})
+    ]
+    if not presentation_assets:
+        raise RuntimeError("No presentation assets were mirrored; refusing a text-only/incomplete deployment")
 
     manifest_files = {}
     for path in sorted(p for p in OUT.rglob("*") if p.is_file()):
@@ -214,13 +252,17 @@ def main() -> int:
         "backup_reference_sha256": BACKUP_SHA256,
         "routes": ROUTES,
         "research_download_count": len(research_files),
+        "presentation_asset_count": len(presentation_assets),
         "integrity_markers": required_home + ["Release 17"],
         "files": manifest_files,
     }
     write_bytes(OUT / "mirror-manifest.json", (json.dumps(manifest, indent=2) + "\n").encode())
     write_bytes(OUT / ".nojekyll", b"")
 
-    print(f"ready: {len(ROUTES)} routes, {len(research_files)} research downloads, {len(manifest_files)} files")
+    print(
+        f"ready: {len(ROUTES)} routes, {len(research_files)} research downloads, "
+        f"{len(presentation_assets)} presentation assets, {len(manifest_files)} files"
+    )
     return 0
 
 
