@@ -1,4 +1,4 @@
-name: Deploy Green Tank to GitHub Pages
+name: Deploy Green Tank full mirror to GitHub Pages
 
 on:
   push:
@@ -23,12 +23,30 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+
+      - name: Mirror and verify current Green Tank dev site
+        run: python3 scripts/mirror_dev.py
+
+      - name: Show mirror inventory
+        run: |
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          m = json.loads(Path('site/mirror-manifest.json').read_text())
+          print('Routes:', len(m['routes']))
+          print('Research downloads:', m['research_download_count'])
+          print('Total mirrored files:', len(m['files']))
+          print('Backup reference SHA256:', m['backup_reference_sha256'])
+          PY
+
       - name: Configure Pages
         uses: actions/configure-pages@v5
-      - name: Upload static site
+
+      - name: Upload verified full mirror
         uses: actions/upload-pages-artifact@v4
         with:
-          path: .
+          path: site
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
