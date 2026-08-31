@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Build a self-contained static GitHub Pages snapshot from the Green Tank dev site.
 
-The ChatGPT Green Tank site is the development/update source. This script mirrors
-all public routes and all research downloads, removes framework JavaScript so the
-snapshot works as plain static HTML, copies same-origin presentation assets, and
-rewrites internal paths for the GitHub Pages repository prefix.
+The ChatGPT Green Tank site is the development/update source. The manually supplied
+v36 backup (31 Aug 2026) is the integrity reference for expected routes and public
+files. The script mirrors public routes/downloads/assets, removes framework JS so
+GitHub Pages can serve plain static HTML, rewrites internal paths for the repository
+prefix, and refuses to deploy when the live dev site does not match the backup's
+published structure.
 """
 
 from __future__ import annotations
@@ -25,25 +27,35 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "3674cf838927e684e3731ed5c792c679a304d30d5ae050a2da549e9130f7e8e3"
+BACKUP_SHA256 = "c6b86b06128a70b96108c814fa1e9c3f707ece8fd266f3f2c06b1909cd9379cb"
+BACKUP_LABEL = "The_Green_Tank_Full_Backup_2026-08-31_v36.zip"
 
 ROUTES = [
     "/",
     "/library",
     "/music",
+    "/simulators",
     "/press",
     "/submit",
     "/phantom-concorde",
+    "/climate-technology/bubble-butt",
     "/economic-fairness/universal-basic-income",
     "/social-technology/care-for-those-who-care-for-us",
     "/social-technology/friendship-love-respect",
     "/social-technology/inner-and-outer-world",
+    "/social-technology/lion-king-or-big-cat",
     "/social-technology/perception-learning-expansion",
     "/social-technology/psy-body-psychology-communication",
 ]
 
+# v36 contains 45 library-linked research files plus a duplicate copy of the
+# standalone Buddha Net simulator in public/research. Preserve both public copies.
+EXTRA_BACKUP_PUBLIC_FILES = {
+    "/research/Buddha_Net_Simulator_Standalone.html",
+    "/simulators/Buddha_Net_Simulator_Standalone.html",
+}
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/1.2 (+public backup deployment)"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/1.3-v36 (+public backup deployment)"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -160,6 +172,9 @@ def save_asset(path: str, seen: set[str]) -> None:
         write_bytes(dest, patched.encode("utf-8"))
         for nested_url in sorted(nested):
             save_asset(nested_url, seen)
+    elif dest.suffix.lower() in {".html", ".htm"}:
+        text = data.decode("utf-8", errors="replace")
+        write_bytes(dest, patch_html_paths(text).encode("utf-8"))
     else:
         write_bytes(dest, data)
 
@@ -184,15 +199,19 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Twenty-six publications",
-        "Forty-three downloadable files",
+        "Twenty-eight publications",
+        "Forty-five research files",
         "P—23",
+        "Simulators",
     ]
     missing = [marker for marker in required_home if marker not in home]
     if missing:
-        raise RuntimeError(f"Dev homepage is missing expected current markers: {missing}")
-    if "Release 17" not in library:
-        raise RuntimeError("Dev library is not Release 17; refusing to publish an older snapshot")
+        raise RuntimeError(f"Dev homepage does not match v36 markers: {missing}")
+
+    required_library = ["Release 17", "28 publications", "45 public files", "P—27", "P—28"]
+    missing_library = [marker for marker in required_library if marker not in library]
+    if missing_library:
+        raise RuntimeError(f"Dev library does not match v36 markers: {missing_library}")
 
     research_urls = sorted(
         {
@@ -202,26 +221,36 @@ def main() -> int:
             and normalized.startswith("/research/")
         }
     )
-    if len(research_urls) != 43:
-        raise RuntimeError(f"Expected 43 public research downloads; found {len(research_urls)}")
+    if len(research_urls) != 45:
+        raise RuntimeError(f"Expected 45 library-linked public research files; found {len(research_urls)}")
 
     asset_urls = {
         u for u in discovered_urls
-        if u.startswith(("/_next/", "/assets/", "/research/")) or u in PUBLIC_ASSETS
+        if u.startswith(("/_next/", "/assets/", "/research/", "/simulators/")) or u in PUBLIC_ASSETS
     }
     asset_urls.update(PUBLIC_ASSETS)
     asset_urls.update(research_urls)
+    asset_urls.update(EXTRA_BACKUP_PUBLIC_FILES)
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
         save_asset(asset, seen)
         if asset.startswith("/research/"):
-            print(f"mirrored download {asset.rsplit('/', 1)[-1]}")
+            print(f"mirrored research file {asset.rsplit('/', 1)[-1]}")
+        elif asset.startswith("/simulators/"):
+            print(f"mirrored simulator file {asset.rsplit('/', 1)[-1]}")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
-    if len(research_files) != 43:
-        raise RuntimeError(f"Expected 43 downloaded research files on disk; found {len(research_files)}")
+    if len(research_files) != 46:
+        raise RuntimeError(
+            f"Expected all 46 v36 public/research files (45 library files + simulator duplicate); "
+            f"found {len(research_files)}"
+        )
+
+    simulator_file = OUT / "simulators" / "Buddha_Net_Simulator_Standalone.html"
+    if not simulator_file.is_file():
+        raise RuntimeError("Standalone Buddha Net simulator was not mirrored")
 
     stylesheets = sorted(OUT.rglob("*.css"))
     if not stylesheets:
@@ -251,19 +280,23 @@ def main() -> int:
         "source": BASE,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "github_pages_prefix": PREFIX,
+        "backup_reference": BACKUP_LABEL,
         "backup_reference_sha256": BACKUP_SHA256,
         "routes": ROUTES,
-        "research_download_count": len(research_files),
+        "library_linked_research_count": len(research_urls),
+        "public_research_folder_count": len(research_files),
+        "standalone_simulator": "simulators/Buddha_Net_Simulator_Standalone.html",
         "stylesheet_count": len(stylesheets),
         "presentation_asset_count": len(presentation_assets),
-        "integrity_markers": required_home + ["Release 17"],
+        "integrity_markers": required_home + required_library,
         "files": manifest_files,
     }
     write_bytes(OUT / "mirror-manifest.json", (json.dumps(manifest, indent=2) + "\n").encode())
     write_bytes(OUT / ".nojekyll", b"")
 
     print(
-        f"ready: {len(ROUTES)} routes, {len(research_files)} research downloads, "
+        f"ready: {len(ROUTES)} routes, {len(research_urls)} library research files, "
+        f"{len(research_files)} total public/research files, standalone simulator present, "
         f"{len(stylesheets)} stylesheets, {len(presentation_assets)} presentation assets, "
         f"{len(manifest_files)} files"
     )
