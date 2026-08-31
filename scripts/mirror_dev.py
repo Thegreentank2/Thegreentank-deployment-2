@@ -1,12 +1,10 @@
 #!/usr/bin/env python3
-"""Build a self-contained static GitHub Pages snapshot from the Green Tank dev site.
+"""Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The ChatGPT Green Tank site is the development/update source. The manually supplied
-v36 backup (31 Aug 2026) is the integrity reference for expected routes and public
-files. The script mirrors public routes/downloads/assets, removes framework JS so
-GitHub Pages can serve plain static HTML, rewrites internal paths for the repository
-prefix, and refuses to deploy when the live dev site does not match the backup's
-published structure.
+The current ChatGPT Green Tank site is the development/update source. The v36
+backup is the baseline. A routine manual update may add one image to one paper;
+this script permits exactly that narrow research-library delta while refusing
+removals or broader unexpected file-set changes.
 """
 
 from __future__ import annotations
@@ -48,14 +46,61 @@ ROUTES = [
     "/social-technology/psy-body-psychology-communication",
 ]
 
-# v36 contains 45 library-linked research files plus a duplicate copy of the
-# standalone Buddha Net simulator in public/research. Preserve both public copies.
-EXTRA_BACKUP_PUBLIC_FILES = {
+BASELINE_LIBRARY_RESEARCH = {
+    "/research/Affordable_Green_Security_China_UK_Paper.docx",
+    "/research/Alex_Anderson_Alice_Emotion_and_Feeling_Technology.docx",
+    "/research/Alex_Anderson_Alice_Emotion_and_Feeling_Technology.pdf",
+    "/research/Alex_Anderson_Alice_Emotion_and_Feeling_Technology.pptx",
+    "/research/Alex_Anderson_Concordance_Administration_V1.docx",
+    "/research/Alex_Anderson_Concordance_Administration_V1.pdf",
+    "/research/Alex_Anderson_From_Prohibition_to_Regulation_Revised_2026.docx",
+    "/research/Alex_Anderson_From_Prohibition_to_Regulation_Revised_2026.pdf",
+    "/research/Alex_Anderson_From_Punishment_to_Care_Revised_2026.docx",
+    "/research/Alex_Anderson_From_Punishment_to_Care_Revised_2026.pdf",
+    "/research/Alex_Anderson_Full_Submission_to_Prime_Minister.pdf",
+    "/research/Alex_Anderson_Guardians_Not_Enforcers_UK_Policy_Paper.docx",
+    "/research/Alex_Anderson_Guardians_Not_Enforcers_UK_Policy_Paper.pdf",
+    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Left_Authoritarianism.docx",
+    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Left_Authoritarianism.pdf",
+    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Right_Extremism.docx",
+    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Right_Extremism.pdf",
+    "/research/Alex_Anderson_Neighbourhood_Communal_Recycling_Bins_Reconciled.docx",
+    "/research/Alex_Anderson_Neighbourhood_Communal_Recycling_Bins_Reconciled.pdf",
+    "/research/Alex_Anderson_No_More_Landlords_Mortgage.docx",
+    "/research/Alex_Anderson_No_More_Landlords_Mortgage.pdf",
+    "/research/Alex_Anderson_Peoples_European_Reconstruction_Programme.pdf",
+    "/research/Alex_Anderson_Peoples_European_Reconstruction_Programme.pptx",
+    "/research/Alex_Anderson_Stop_Refrigerating_The_Aisle.docx",
+    "/research/Alex_Anderson_Stop_Refrigerating_The_Aisle.pdf",
+    "/research/Alex_Anderson_Stop_Refrigerating_The_Aisle.pptx",
+    "/research/Alex_Anderson_The_Ladder_Prison_Reform_Proposal.docx",
+    "/research/Alex_Anderson_The_Ladder_Prison_Reform_Proposal.pdf",
+    "/research/Alex_Anderson_Trust_Is_The_Temple_Of_Medicine_UK_Evidence_Based_Submission.pdf",
+    "/research/Alex_Anderson_Words_That_Trap_Functions.docx",
+    "/research/Alex_Anderson_Words_That_Trap_Functions.pdf",
+    "/research/Alex_Anderson_You_Cant_Expect_to_Resolve_Conflict_If_You_Come_Dressed_as_It.docx",
+    "/research/Alex_Anderson_You_Cant_Expect_to_Resolve_Conflict_If_You_Come_Dressed_as_It.pdf",
+    "/research/Bubble_Butt_Chemistry_Capture_Concept.png",
+    "/research/Bubble_Butt_Retrofit_Concept.png",
+    "/research/Enough_A_Democratic_Wealth_Ceiling_for_Tom.docx",
+    "/research/Enough_A_Democratic_Wealth_Ceiling_for_Tom.pdf",
+    "/research/Help_First_Policing_Figure_1_Aid_and_Safety_Tools.png",
+    "/research/Help_First_Policing_Figure_2_Uniform_Concept.png",
+    "/research/How_Fear_Can_Be_Turned_Into_Far_Right_Extremism_Infographic.png",
+    "/research/Letter_to_President_Xi_Jinping_Bilingual.pdf",
+    "/research/PHANTOM_CONCORDE_Gate_1_Research_Pack.zip",
+    "/research/UK_Neighbourhood_Communal_Bin_Simulation_Reconciled.xlsx",
+    "/research/UK_Perennial_Resilience_Plan_2026.pptx",
+    "/research/UK_Perennial_Resilience_Plan_Technical_Proposal_2026.docx",
+}
+
+EXTRA_BASELINE_PUBLIC_FILES = {
     "/research/Buddha_Net_Simulator_Standalone.html",
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/1.3-v36 (+public backup deployment)"
+IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/1.4-one-picture-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -82,8 +127,7 @@ def normalize_same_origin(value: str, base_url: str = BASE) -> str | None:
     value = html.unescape(value).strip()
     if not value or value.startswith(("#", "mailto:", "tel:", "javascript:", "data:")):
         return None
-    absolute = urljoin(base_url, value)
-    parsed = urlparse(absolute)
+    parsed = urlparse(urljoin(base_url, value))
     if parsed.scheme not in {"http", "https"} or parsed.netloc != BASE_HOST:
         return None
     path = parsed.path or "/"
@@ -103,15 +147,11 @@ def write_bytes(path: Path, data: bytes) -> None:
 
 
 def route_output(route: str) -> Path:
-    if route == "/":
-        return OUT / "index.html"
-    return OUT / route.strip("/") / "index.html"
+    return OUT / "index.html" if route == "/" else OUT / route.strip("/") / "index.html"
 
 
 def prefixed_path(path: str) -> str:
-    if path == PREFIX or path.startswith(PREFIX + "/"):
-        return path
-    return PREFIX + path
+    return path if path == PREFIX or path.startswith(PREFIX + "/") else PREFIX + path
 
 
 def patch_html_paths(text: str) -> str:
@@ -120,18 +160,15 @@ def patch_html_paths(text: str) -> str:
         if normalized is None:
             return match.group(0)
         return f'{match.group("attr")}={match.group("q")}{prefixed_path(normalized)}{match.group("q")}'
-
     return ATTR_URL_RE.sub(repl, text)
 
 
 def clean_html(text: str) -> str:
-    text = SCRIPT_RE.sub("", text)
-    text = SCRIPT_PRELOAD_RE.sub("", text)
-    return patch_html_paths(text)
+    return patch_html_paths(SCRIPT_PRELOAD_RE.sub("", SCRIPT_RE.sub("", text)))
 
 
 def collect_same_origin_urls(text: str) -> set[str]:
-    urls: set[str] = set()
+    urls = set()
     for match in ATTR_URL_RE.finditer(text):
         normalized = normalize_same_origin(match.group("url"))
         if normalized:
@@ -141,7 +178,6 @@ def collect_same_origin_urls(text: str) -> set[str]:
 
 def patch_css_paths(text: str, css_source_url: str) -> tuple[str, set[str]]:
     nested: set[str] = set()
-
     def repl(match: re.Match[str]) -> str:
         value = match.group("url")
         normalized = normalize_same_origin(value, base_url=css_source_url)
@@ -149,10 +185,9 @@ def patch_css_paths(text: str, css_source_url: str) -> tuple[str, set[str]]:
             return match.group(0)
         nested.add(normalized)
         if value.startswith("/") or value.startswith(BASE):
-            quote = match.group("q") or ""
-            return f"url({quote}{prefixed_path(normalized)}{quote})"
+            q = match.group("q") or ""
+            return f"url({q}{prefixed_path(normalized)}{q})"
         return match.group(0)
-
     return CSS_URL_RE.sub(repl, text), nested
 
 
@@ -161,11 +196,9 @@ def save_asset(path: str, seen: set[str]) -> None:
     if normalized is None or normalized in seen:
         return
     seen.add(normalized)
-
     source_url = urljoin(BASE, normalized)
     data = fetch(source_url)
     dest = local_path_for_url(normalized)
-
     if dest.suffix.lower() == ".css":
         text = data.decode("utf-8", errors="replace")
         patched, nested = patch_css_paths(text, source_url)
@@ -173,8 +206,7 @@ def save_asset(path: str, seen: set[str]) -> None:
         for nested_url in sorted(nested):
             save_asset(nested_url, seen)
     elif dest.suffix.lower() in {".html", ".htm"}:
-        text = data.decode("utf-8", errors="replace")
-        write_bytes(dest, patch_html_paths(text).encode("utf-8"))
+        write_bytes(dest, patch_html_paths(data.decode("utf-8", errors="replace")).encode("utf-8"))
     else:
         write_bytes(dest, data)
 
@@ -186,10 +218,8 @@ def main() -> int:
 
     original_pages: dict[str, str] = {}
     discovered_urls: set[str] = set()
-
     for route in ROUTES:
-        raw = fetch(urljoin(BASE, route))
-        text = raw.decode("utf-8", errors="strict")
+        text = fetch(urljoin(BASE, route)).decode("utf-8", errors="strict")
         original_pages[route] = text
         discovered_urls.update(collect_same_origin_urls(text))
         write_bytes(route_output(route), clean_html(text).encode("utf-8"))
@@ -197,32 +227,35 @@ def main() -> int:
 
     home = original_pages["/"]
     library = original_pages["/library"]
-    required_home = [
-        "Before we judge",
-        "Twenty-eight publications",
-        "Forty-five research files",
-        "P—23",
-        "Simulators",
-    ]
-    missing = [marker for marker in required_home if marker not in home]
-    if missing:
-        raise RuntimeError(f"Dev homepage does not match v36 markers: {missing}")
+    required_home = ["Before we judge", "Twenty-eight publications", "P—23", "Simulators"]
+    missing_home = [m for m in required_home if m not in home]
+    if missing_home:
+        raise RuntimeError(f"Dev homepage lost expected v36 structure: {missing_home}")
 
-    required_library = ["Release 17", "28 publications", "45 public files", "P—27", "P—28"]
-    missing_library = [marker for marker in required_library if marker not in library]
+    required_library = ["Release 17", "28 publications", "P—27", "P—28"]
+    missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library does not match v36 markers: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v36 structure: {missing_library}")
 
-    research_urls = sorted(
-        {
-            normalized
-            for match in ATTR_URL_RE.finditer(library)
-            if (normalized := normalize_same_origin(match.group("url")))
-            and normalized.startswith("/research/")
-        }
-    )
-    if len(research_urls) != 45:
-        raise RuntimeError(f"Expected 45 library-linked public research files; found {len(research_urls)}")
+    research_urls = {
+        normalized
+        for match in ATTR_URL_RE.finditer(library)
+        if (normalized := normalize_same_origin(match.group("url")))
+        and normalized.startswith("/research/")
+    }
+    removed = sorted(BASELINE_LIBRARY_RESEARCH - research_urls)
+    added = sorted(research_urls - BASELINE_LIBRARY_RESEARCH)
+    if removed:
+        raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
+    if len(added) > 1:
+        raise RuntimeError(f"Expected at most one new research image; found {len(added)} additions: {added}")
+    if added and Path(added[0].split("?", 1)[0]).suffix.lower() not in IMAGE_EXTENSIONS:
+        raise RuntimeError(f"The single new research file is not an image: {added[0]}")
+
+    if added:
+        print(f"accepted one-picture update: {added[0]}")
+    else:
+        print("no new library research file detected; checking for in-place paper/image changes")
 
     asset_urls = {
         u for u in discovered_urls
@@ -230,22 +263,20 @@ def main() -> int:
     }
     asset_urls.update(PUBLIC_ASSETS)
     asset_urls.update(research_urls)
-    asset_urls.update(EXTRA_BACKUP_PUBLIC_FILES)
+    asset_urls.update(EXTRA_BASELINE_PUBLIC_FILES)
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
         save_asset(asset, seen)
         if asset.startswith("/research/"):
             print(f"mirrored research file {asset.rsplit('/', 1)[-1]}")
-        elif asset.startswith("/simulators/"):
-            print(f"mirrored simulator file {asset.rsplit('/', 1)[-1]}")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
-    if len(research_files) != 46:
+    expected_research_folder_count = len(research_urls) + 1
+    if len(research_files) != expected_research_folder_count:
         raise RuntimeError(
-            f"Expected all 46 v36 public/research files (45 library files + simulator duplicate); "
-            f"found {len(research_files)}"
+            f"Expected {expected_research_folder_count} public/research files; found {len(research_files)}"
         )
 
     simulator_file = OUT / "simulators" / "Buddha_Net_Simulator_Standalone.html"
@@ -258,12 +289,7 @@ def main() -> int:
 
     presentation_assets = [
         p for p in OUT.rglob("*")
-        if p.is_file()
-        and (
-            "_next" in p.parts
-            or "assets" in p.parts
-            or p.name in {x.lstrip('/') for x in PUBLIC_ASSETS}
-        )
+        if p.is_file() and ("_next" in p.parts or "assets" in p.parts or p.name in {x.lstrip('/') for x in PUBLIC_ASSETS})
     ]
     if not presentation_assets:
         raise RuntimeError("No presentation assets were mirrored; refusing an incomplete deployment")
@@ -271,10 +297,7 @@ def main() -> int:
     manifest_files = {}
     for path in sorted(p for p in OUT.rglob("*") if p.is_file()):
         rel = path.relative_to(OUT).as_posix()
-        manifest_files[rel] = {
-            "bytes": path.stat().st_size,
-            "sha256": hashlib.sha256(path.read_bytes()).hexdigest(),
-        }
+        manifest_files[rel] = {"bytes": path.stat().st_size, "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
 
     manifest = {
         "source": BASE,
@@ -283,7 +306,9 @@ def main() -> int:
         "backup_reference": BACKUP_LABEL,
         "backup_reference_sha256": BACKUP_SHA256,
         "routes": ROUTES,
+        "baseline_library_research_count": len(BASELINE_LIBRARY_RESEARCH),
         "library_linked_research_count": len(research_urls),
+        "new_library_images": added,
         "public_research_folder_count": len(research_files),
         "standalone_simulator": "simulators/Buddha_Net_Simulator_Standalone.html",
         "stylesheet_count": len(stylesheets),
@@ -296,7 +321,7 @@ def main() -> int:
 
     print(
         f"ready: {len(ROUTES)} routes, {len(research_urls)} library research files, "
-        f"{len(research_files)} total public/research files, standalone simulator present, "
+        f"{len(research_files)} total public/research files, {len(added)} new image additions, "
         f"{len(stylesheets)} stylesheets, {len(presentation_assets)} presentation assets, "
         f"{len(manifest_files)} files"
     )
