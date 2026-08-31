@@ -34,8 +34,11 @@ jobs:
           from pathlib import Path
           m = json.loads(Path('site/mirror-manifest.json').read_text())
           print('Routes:', len(m['routes']))
-          print('Research downloads:', m['research_download_count'])
+          print('Library-linked research files:', m['library_linked_research_count'])
+          print('Total public/research files:', m['public_research_folder_count'])
+          print('Standalone simulator:', m['standalone_simulator'])
           print('Total mirrored files:', len(m['files']))
+          print('Backup reference:', m['backup_reference'])
           print('Backup reference SHA256:', m['backup_reference_sha256'])
           PY
 
