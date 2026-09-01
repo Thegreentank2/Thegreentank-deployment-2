@@ -2,7 +2,7 @@ name: Deploy Green Tank full mirror to GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, ghostbusters-integration-v1-5]
   workflow_dispatch:
 
 permissions:
@@ -47,14 +47,8 @@ jobs:
           entry_text = entry.read_text(encoding="utf-8")
           required = [
               "Ghostbusters — A True Story?",
-              'id="ghosts"',
-              'id="tools"',
-              'id="windows"',
-              'id="evidence"',
-              'id="signal"',
-              'id="gallery"',
-              'id="simulators"',
-              'id="garden"',
+              'id="ghosts"', 'id="tools"', 'id="windows"', 'id="evidence"',
+              'id="signal"', 'id="gallery"', 'id="simulators"', 'id="garden"',
               "https://github.com/Sometimesalex/67",
               "https://github.com/Sometimesalex/y",
               "https://github.com/Sometimesalex/eutube",
@@ -77,27 +71,13 @@ jobs:
               match = simulator_anchor.search(text)
               if not match:
                   raise RuntimeError("Could not find the Simulators navigation link; refusing to guess placement")
-
               clone = match.group(1)
-              clone = re.sub(
-                  r'href=(["\']).*?\1',
-                  lambda _: f'href="{href}"',
-                  clone,
-                  count=1,
-                  flags=re.S,
-              )
-              clone, changed = re.subn(
-                  r'>\s*Simulators\s*<',
-                  f'>{label}<',
-                  clone,
-                  count=1,
-                  flags=re.I,
-              )
+              clone = re.sub(r'href=(["\']).*?\1', lambda _: f'href="{href}"', clone, count=1, flags=re.S)
+              clone, changed = re.subn(r'>\s*Simulators\s*<', f'>{label}<', clone, count=1, flags=re.I)
               if not changed:
                   clone = clone.replace("Simulators", label, 1)
               if label not in clone:
                   raise RuntimeError("Could not clone the Simulators button safely")
-
               text = text[:match.end()] + "\n" + clone + text[match.end():]
               home.write_text(text, encoding="utf-8")
 
@@ -113,7 +93,6 @@ jobs:
                   rel = path.relative_to(site).as_posix()
                   data = path.read_bytes()
                   files[rel] = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
-
           home_data = home.read_bytes()
           files["index.html"] = {"bytes": len(home_data), "sha256": hashlib.sha256(home_data).hexdigest()}
           manifest["ghostbusters_entry"] = "ghostbusters/index.html"
@@ -142,13 +121,16 @@ jobs:
           PY
 
       - name: Configure Pages
+        if: github.ref == 'refs/heads/main'
         uses: actions/configure-pages@v5
 
       - name: Upload verified full mirror
+        if: github.ref == 'refs/heads/main'
         uses: actions/upload-pages-artifact@v4
         with:
           path: site
 
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main'
         id: deployment
         uses: actions/deploy-pages@v4
