@@ -1,0 +1,61 @@
+name: Verify Ghostbusters integration
+
+on:
+  push:
+    branches: [ghostbusters-integration-v1-5]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Mirror and verify current Green Tank dev site
+        run: python3 scripts/mirror_dev.py
+
+      - name: Install and verify Ghostbusters without deployment
+        run: |
+          rm -rf site/ghostbusters
+          mkdir -p site/ghostbusters
+          cp -a ghostbusters_source/. site/ghostbusters/
+          python3 - <<'PY'
+          import json, re
+          from pathlib import Path
+
+          prefix = "/Thegreentank-deployment-2"
+          site = Path("site")
+          entry = site / "ghostbusters" / "index.html"
+          if not entry.is_file(): raise RuntimeError("missing Ghostbusters entry")
+          page = entry.read_text(encoding="utf-8")
+          required = ["Ghostbusters — A True Story?", 'id="ghosts"', 'id="tools"', 'id="windows"', 'id="evidence"', 'id="signal"', 'id="gallery"', 'id="simulators"', 'id="garden"', "https://github.com/Sometimesalex/67", "https://github.com/Sometimesalex/y", "https://github.com/Sometimesalex/eutube", "https://github.com/Sometimesalex/Tokenary"]
+          missing = [x for x in required if x not in page]
+          if missing: raise RuntimeError(f"source markers missing: {missing}")
+
+          home = site / "index.html"
+          text = home.read_text(encoding="utf-8")
+          label = "Ghostbusters — A True Story?"
+          href = f"{prefix}/ghostbusters/"
+          anchor = re.compile(r'(<a\b[^>]*href=["\'][^"\']*?/simulators/?[^"\']*["\'][^>]*>.*?</a>)', re.I | re.S)
+          match = anchor.search(text)
+          if not match: raise RuntimeError("Simulators link not found")
+          clone = match.group(1)
+          clone = re.sub(r'href=(["\']).*?\1', lambda _: f'href="{href}"', clone, count=1, flags=re.S)
+          clone, changed = re.subn(r'>\s*Simulators\s*<', f'>{label}<', clone, count=1, flags=re.I)
+          if not changed: clone = clone.replace("Simulators", label, 1)
+          if label not in clone: raise RuntimeError("button clone failed")
+          text = text[:match.end()] + "\n" + clone + text[match.end():]
+          home.write_text(text, encoding="utf-8")
+          final = home.read_text(encoding="utf-8")
+          if label not in final or href not in final: raise RuntimeError("navigation verification failed")
+          manifest = json.loads((site / "mirror-manifest.json").read_text(encoding="utf-8"))
+          print("mirror routes:", len(manifest["routes"]))
+          print("ghostbusters source files:", sum(1 for p in (site / "ghostbusters").rglob("*") if p.is_file()))
+          print("simulators button preserved:", "Simulators" in final)
+          print("ghostbusters button inserted:", label in final)
+          print("STAGING VERIFICATION PASSED")
+          PY
