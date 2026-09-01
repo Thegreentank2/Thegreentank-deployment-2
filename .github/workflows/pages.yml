@@ -40,28 +40,40 @@ jobs:
 
           prefix = "/Thegreentank-deployment-2"
           site = Path("site")
-          entry = site / "ghostbusters" / "index.html"
-          if not entry.is_file():
-              raise RuntimeError("Ghostbusters source has no entry page")
-
-          entry_text = entry.read_text(encoding="utf-8")
-          required = [
-              "Ghostbusters — A True Story?",
-              'id="ghosts"', 'id="tools"', 'id="windows"', 'id="evidence"',
-              'id="signal"', 'id="gallery"', 'id="simulators"', 'id="garden"',
-              "https://github.com/Sometimesalex/67",
-              "https://github.com/Sometimesalex/y",
-              "https://github.com/Sometimesalex/eutube",
-              "https://github.com/Sometimesalex/Tokenary",
-          ]
-          missing = [marker for marker in required if marker not in entry_text]
+          required_pages = {
+              "index.html": ["Ghostbusters", "A True Story?", "Choose a door", "Begin the guided journey"],
+              "journey.html": ["The Guided Journey", "The repositories appear", "The shortest version"],
+              "story.html": ["The Story", "Five questions became projects", "Privacy choice"],
+              "ghosts.html": ["The Ghosts", "How monsters are manifested"],
+              "tools.html": ["The Tools", "The Ghostbusters rule"],
+              "windows.html": ["The Many Windows", "Try the same question through different lenses"],
+              "evidence.html": ["The Evidence Room", "https://github.com/Sometimesalex/67", "https://github.com/Sometimesalex/y", "https://github.com/Sometimesalex/eutube", "https://github.com/Sometimesalex/Tokenary"],
+              "signal.html": ["The Signal", "Project 67"],
+              "gallery.html": ["The Gallery", "Visual explanations"],
+              "simulators.html": ["Missing information", "Confidence meter"],
+              "garden.html": ["The Garden", "No throne at the end"],
+              "map.html": ["Journey Map", "Follow the full journey"],
+          }
+          missing = []
+          for name, markers in required_pages.items():
+              page = site / "ghostbusters" / name
+              if not page.is_file():
+                  missing.append(f"missing page: {name}")
+                  continue
+              page_text = page.read_text(encoding="utf-8")
+              missing.extend(f"{name}: {marker}" for marker in markers if marker not in page_text)
           if missing:
               raise RuntimeError(f"Ghostbusters source verification failed: {missing}")
+
+          required_assets = ["assets/style.css", "assets/app.js", "assets/reflection_to_community.svg"]
+          absent_assets = [name for name in required_assets if not (site / "ghostbusters" / name).is_file()]
+          if absent_assets:
+              raise RuntimeError(f"Ghostbusters assets missing: {absent_assets}")
 
           home = site / "index.html"
           text = home.read_text(encoding="utf-8")
           label = "Ghostbusters — A True Story?"
-          href = f"{prefix}/ghostbusters/"
+          href = f"{prefix}/ghostbusters"
 
           if label not in text:
               simulator_anchor = re.compile(
@@ -97,7 +109,7 @@ jobs:
           files["index.html"] = {"bytes": len(home_data), "sha256": hashlib.sha256(home_data).hexdigest()}
           manifest["ghostbusters_entry"] = "ghostbusters/index.html"
           manifest["ghostbusters_label"] = label
-          manifest["ghostbusters_layout"] = "continuous accessible rooms"
+          manifest["ghostbusters_layout"] = "12-page accessible learning journey"
           manifest["ghostbusters_file_count"] = sum(1 for p in (site / "ghostbusters").rglob("*") if p.is_file())
           manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
           print(f"installed Ghostbusters beside Simulators: {manifest['ghostbusters_file_count']} files")

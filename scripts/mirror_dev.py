@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The current ChatGPT Green Tank site is the development/update source. The v36
-backup is the baseline. A routine manual update may add one image to one paper;
-this script permits exactly that narrow research-library delta while refusing
-removals or broader unexpected file-set changes.
+The current ChatGPT Green Tank site is the development/update source. The v38
+portable deployment backup is the baseline. A routine manual update may add one
+image to one paper; this script permits exactly that narrow research-library
+delta while refusing removals or broader unexpected file-set changes.
 """
 
 from __future__ import annotations
@@ -25,8 +25,8 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "c6b86b06128a70b96108c814fa1e9c3f707ece8fd266f3f2c06b1909cd9379cb"
-BACKUP_LABEL = "The_Green_Tank_Full_Backup_2026-08-31_v36.zip"
+BACKUP_SHA256 = "f1570ba5324963330c128e06c59e80d7a4f004cc47132fc09689f74e89839e23"
+BACKUP_LABEL = "The_Green_Tank_Full_Deployment_2026-09-01_v38.zip"
 
 ROUTES = [
     "/",
@@ -87,6 +87,7 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/Help_First_Policing_Figure_1_Aid_and_Safety_Tools.png",
     "/research/Help_First_Policing_Figure_2_Uniform_Concept.png",
     "/research/How_Fear_Can_Be_Turned_Into_Far_Right_Extremism_Infographic.png",
+    "/research/How_Fear_Can_Be_Turned_Into_Far_Left_Authoritarianism_Infographic.png",
     "/research/Letter_to_President_Xi_Jinping_Bilingual.pdf",
     "/research/PHANTOM_CONCORDE_Gate_1_Research_Pack.zip",
     "/research/UK_Neighbourhood_Communal_Bin_Simulation_Reconciled.xlsx",
@@ -100,10 +101,16 @@ EXTRA_BASELINE_PUBLIC_FILES = {
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/1.4-one-picture-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/1.5-v38-backup-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
+CLOUDFLARE_CHALLENGE_RE = re.compile(
+    r'<script\b[^>]*>'
+    r'(?=(?:(?!</script\s*>)[\s\S])*(?:__CF\$cv\$params|challenge-platform/scripts/jsd/main\.js))'
+    r'(?:(?!</script\s*>)[\s\S])*</script\s*>',
+    re.I,
+)
 CSS_URL_RE = re.compile(r"url\((?P<q>[\"']?)(?P<url>[^)\"']+)(?P=q)\)", re.I)
 
 
@@ -206,7 +213,9 @@ def save_asset(path: str, seen: set[str]) -> None:
         for nested_url in sorted(nested):
             save_asset(nested_url, seen)
     elif dest.suffix.lower() in {".html", ".htm"}:
-        write_bytes(dest, patch_html_paths(data.decode("utf-8", errors="replace")).encode("utf-8"))
+        text = data.decode("utf-8", errors="replace")
+        text = CLOUDFLARE_CHALLENGE_RE.sub("", text)
+        write_bytes(dest, patch_html_paths(text).encode("utf-8"))
     else:
         write_bytes(dest, data)
 

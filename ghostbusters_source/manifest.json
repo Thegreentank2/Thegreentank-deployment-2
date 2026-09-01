@@ -1,0 +1,34 @@
+{
+  "version": "1.4",
+  "status": "integration release",
+  "integration": "integrated into The Green Tank version 38",
+  "entry": "index.html",
+  "guided_entry": "journey.html",
+  "compact_map": "map.html",
+  "pages": [
+    "evidence.html",
+    "gallery.html",
+    "garden.html",
+    "ghosts.html",
+    "index.html",
+    "journey.html",
+    "map.html",
+    "signal.html",
+    "simulators.html",
+    "story.html",
+    "tools.html",
+    "windows.html"
+  ],
+  "principles": [
+    "no hero narrative",
+    "multiple media and perspectives",
+    "evidence / experience / interpretation / unknown separated",
+    "spiritual interpretation not presented as scientific proof",
+    "privacy minimised",
+    "Project 67 publicly reachable",
+    "learning and correction remain possible"
+  ],
+  "deployment_path": "/ghostbusters/",
+  "internal_link_validation": "passed",
+  "parent_green_tank_link": "../index.html (validated for portable deployment)"
+}

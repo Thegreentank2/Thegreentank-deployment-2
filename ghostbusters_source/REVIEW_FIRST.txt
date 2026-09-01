@@ -1,0 +1,23 @@
+GHOSTBUSTERS — A TRUE STORY? v1.3
+
+Nothing in this ZIP modifies the Green Tank.
+
+Two review routes:
+
+A) Guided:
+index.html → journey.html → follow the Next buttons.
+
+B) Free:
+index.html → choose any room.
+
+Also try:
+- map.html for the one-page structure
+- Simple / Deep / All layers
+- Larger text
+- High contrast
+- Gallery
+- Simulators
+- Evidence repository links
+- Project 67 links
+
+This is still a review build. Green Tank integration comes only after review against the actual Green Tank files.
