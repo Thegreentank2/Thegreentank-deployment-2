@@ -29,36 +29,40 @@ jobs:
 
       - name: Install reviewed Ghostbusters section
         run: |
+          rm -rf site/ghostbusters
+          mkdir -p site/ghostbusters
+          cp -a ghostbusters_source/. site/ghostbusters/
           python3 - <<'PY'
-          import base64
           import hashlib
           import json
           import re
-          import zipfile
           from pathlib import Path
 
           prefix = "/Thegreentank-deployment-2"
-          bundle = Path("ghostbusters_bundle.zip.b64")
           site = Path("site")
-          if not bundle.is_file():
-              raise RuntimeError("Ghostbusters release bundle is missing")
-
-          raw = base64.b64decode(bundle.read_text(encoding="utf-8").strip(), validate=True)
-          archive = Path("/tmp/ghostbusters-release.zip")
-          archive.write_bytes(raw)
-
-          with zipfile.ZipFile(archive) as z:
-              names = z.namelist()
-              unsafe = [n for n in names if Path(n).is_absolute() or ".." in Path(n).parts]
-              if unsafe:
-                  raise RuntimeError(f"Unsafe Ghostbusters archive paths: {unsafe}")
-              if "ghostbusters/index.html" not in names:
-                  raise RuntimeError("Ghostbusters archive has no entry page")
-              z.extractall(site)
-
           entry = site / "ghostbusters" / "index.html"
           if not entry.is_file():
-              raise RuntimeError("Ghostbusters entry page was not installed")
+              raise RuntimeError("Ghostbusters source has no entry page")
+
+          entry_text = entry.read_text(encoding="utf-8")
+          required = [
+              "Ghostbusters — A True Story?",
+              'id="ghosts"',
+              'id="tools"',
+              'id="windows"',
+              'id="evidence"',
+              'id="signal"',
+              'id="gallery"',
+              'id="simulators"',
+              'id="garden"',
+              "https://github.com/Sometimesalex/67",
+              "https://github.com/Sometimesalex/y",
+              "https://github.com/Sometimesalex/eutube",
+              "https://github.com/Sometimesalex/Tokenary",
+          ]
+          missing = [marker for marker in required if marker not in entry_text]
+          if missing:
+              raise RuntimeError(f"Ghostbusters source verification failed: {missing}")
 
           home = site / "index.html"
           text = home.read_text(encoding="utf-8")
@@ -77,7 +81,7 @@ jobs:
               clone = match.group(1)
               clone = re.sub(
                   r'href=(["\']).*?\1',
-                  lambda m: f'href="{href}"',
+                  lambda _: f'href="{href}"',
                   clone,
                   count=1,
                   flags=re.S,
@@ -92,12 +96,13 @@ jobs:
               if not changed:
                   clone = clone.replace("Simulators", label, 1)
               if label not in clone:
-                  raise RuntimeError("Could not preserve the Simulators button while creating Ghostbusters")
+                  raise RuntimeError("Could not clone the Simulators button safely")
 
-              text = text[:match.end()] + clone + text[match.end():]
+              text = text[:match.end()] + "\n" + clone + text[match.end():]
               home.write_text(text, encoding="utf-8")
 
-          if label not in home.read_text(encoding="utf-8") or href not in home.read_text(encoding="utf-8"):
+          final_home = home.read_text(encoding="utf-8")
+          if label not in final_home or href not in final_home:
               raise RuntimeError("Ghostbusters navigation verification failed")
 
           manifest_path = site / "mirror-manifest.json"
@@ -113,6 +118,7 @@ jobs:
           files["index.html"] = {"bytes": len(home_data), "sha256": hashlib.sha256(home_data).hexdigest()}
           manifest["ghostbusters_entry"] = "ghostbusters/index.html"
           manifest["ghostbusters_label"] = label
+          manifest["ghostbusters_layout"] = "continuous accessible rooms"
           manifest["ghostbusters_file_count"] = sum(1 for p in (site / "ghostbusters").rglob("*") if p.is_file())
           manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
           print(f"installed Ghostbusters beside Simulators: {manifest['ghostbusters_file_count']} files")
