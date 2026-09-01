@@ -27,6 +27,97 @@ jobs:
       - name: Mirror and verify current Green Tank dev site
         run: python3 scripts/mirror_dev.py
 
+      - name: Install reviewed Ghostbusters section
+        run: |
+          python3 - <<'PY'
+          import base64
+          import hashlib
+          import json
+          import re
+          import zipfile
+          from pathlib import Path
+
+          prefix = "/Thegreentank-deployment-2"
+          bundle = Path("ghostbusters_bundle.zip.b64")
+          site = Path("site")
+          if not bundle.is_file():
+              raise RuntimeError("Ghostbusters release bundle is missing")
+
+          raw = base64.b64decode(bundle.read_text(encoding="utf-8").strip(), validate=True)
+          archive = Path("/tmp/ghostbusters-release.zip")
+          archive.write_bytes(raw)
+
+          with zipfile.ZipFile(archive) as z:
+              names = z.namelist()
+              unsafe = [n for n in names if Path(n).is_absolute() or ".." in Path(n).parts]
+              if unsafe:
+                  raise RuntimeError(f"Unsafe Ghostbusters archive paths: {unsafe}")
+              if "ghostbusters/index.html" not in names:
+                  raise RuntimeError("Ghostbusters archive has no entry page")
+              z.extractall(site)
+
+          entry = site / "ghostbusters" / "index.html"
+          if not entry.is_file():
+              raise RuntimeError("Ghostbusters entry page was not installed")
+
+          home = site / "index.html"
+          text = home.read_text(encoding="utf-8")
+          label = "Ghostbusters — A True Story?"
+          href = f"{prefix}/ghostbusters/"
+
+          if label not in text:
+              simulator_anchor = re.compile(
+                  r'(<a\b[^>]*href=["\'][^"\']*?/simulators/?[^"\']*["\'][^>]*>.*?</a>)',
+                  re.I | re.S,
+              )
+              match = simulator_anchor.search(text)
+              if not match:
+                  raise RuntimeError("Could not find the Simulators navigation link; refusing to guess placement")
+
+              clone = match.group(1)
+              clone = re.sub(
+                  r'href=(["\']).*?\1',
+                  lambda m: f'href="{href}"',
+                  clone,
+                  count=1,
+                  flags=re.S,
+              )
+              clone, changed = re.subn(
+                  r'>\s*Simulators\s*<',
+                  f'>{label}<',
+                  clone,
+                  count=1,
+                  flags=re.I,
+              )
+              if not changed:
+                  clone = clone.replace("Simulators", label, 1)
+              if label not in clone:
+                  raise RuntimeError("Could not preserve the Simulators button while creating Ghostbusters")
+
+              text = text[:match.end()] + clone + text[match.end():]
+              home.write_text(text, encoding="utf-8")
+
+          if label not in home.read_text(encoding="utf-8") or href not in home.read_text(encoding="utf-8"):
+              raise RuntimeError("Ghostbusters navigation verification failed")
+
+          manifest_path = site / "mirror-manifest.json"
+          manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+          files = manifest.setdefault("files", {})
+          for path in sorted((site / "ghostbusters").rglob("*")):
+              if path.is_file():
+                  rel = path.relative_to(site).as_posix()
+                  data = path.read_bytes()
+                  files[rel] = {"bytes": len(data), "sha256": hashlib.sha256(data).hexdigest()}
+
+          home_data = home.read_bytes()
+          files["index.html"] = {"bytes": len(home_data), "sha256": hashlib.sha256(home_data).hexdigest()}
+          manifest["ghostbusters_entry"] = "ghostbusters/index.html"
+          manifest["ghostbusters_label"] = label
+          manifest["ghostbusters_file_count"] = sum(1 for p in (site / "ghostbusters").rglob("*") if p.is_file())
+          manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+          print(f"installed Ghostbusters beside Simulators: {manifest['ghostbusters_file_count']} files")
+          PY
+
       - name: Show mirror inventory
         run: |
           python3 - <<'PY'
@@ -37,6 +128,8 @@ jobs:
           print('Library-linked research files:', m['library_linked_research_count'])
           print('Total public/research files:', m['public_research_folder_count'])
           print('Standalone simulator:', m['standalone_simulator'])
+          print('Ghostbusters:', m.get('ghostbusters_entry'))
+          print('Ghostbusters files:', m.get('ghostbusters_file_count'))
           print('Total mirrored files:', len(m['files']))
           print('Backup reference:', m['backup_reference'])
           print('Backup reference SHA256:', m['backup_reference_sha256'])
