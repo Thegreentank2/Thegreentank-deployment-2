@@ -9,12 +9,13 @@ Deployment role:
 - `Thegreentank-deployment-2` — reference deployment
 - `The-green-tank-condition-test` — experimental/condition-test deployment
 
-The GitHub Pages build is a guarded full mirror of the public development Site. It includes the main routes, research downloads, Buddha Net simulator and the complete version-38 Ghostbusters learning journey.
+The GitHub Pages build is a guarded full mirror of the public development Site. It includes the main routes, 30 publications, 47 linked research files, the Buddha Net simulator, the complete Ghostbusters learning journey, and the external MOD link.
 
 Trusted portable baseline:
-- `The_Green_Tank_Full_Deployment_2026-09-01_v38.zip`
-- SHA-256 `f1570ba5324963330c128e06c59e80d7a4f004cc47132fc09689f74e89839e23`
+- `the-green-tank-full-backup-v42-2026-09-03.zip`
+- SHA-256 `25ddb3a02626009aeedbfdb916b9c29f4ccc71176479b1505c1b7b1c29f6a94c`
 
 ## Restore rule
 
-If this deployment becomes damaged or inconsistent, restore from the trusted version-38 deployment backup and Git history rather than repairing an unknown state in place.
+If this deployment becomes damaged or inconsistent, restore from the trusted version-42 deployment backup and Git history rather than repairing an unknown state in place.
+

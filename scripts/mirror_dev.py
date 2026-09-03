@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The current ChatGPT Green Tank site is the development/update source. The v38
-portable deployment backup is the baseline. A routine manual update may add one
-image to one paper; this script permits exactly that narrow research-library
-delta while refusing removals or broader unexpected file-set changes.
+The current ChatGPT Green Tank site is the development/update source. The v42
+portable deployment backup is the baseline. This script requires the exact
+known v42 route and research-file set and refuses removals or unexpected
+additions.
 """
 
 from __future__ import annotations
@@ -25,8 +25,8 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "f1570ba5324963330c128e06c59e80d7a4f004cc47132fc09689f74e89839e23"
-BACKUP_LABEL = "The_Green_Tank_Full_Deployment_2026-09-01_v38.zip"
+BACKUP_SHA256 = "25ddb3a02626009aeedbfdb916b9c29f4ccc71176479b1505c1b7b1c29f6a94c"
+BACKUP_LABEL = "the-green-tank-full-backup-v42-2026-09-03.zip"
 
 ROUTES = [
     "/",
@@ -40,10 +40,12 @@ ROUTES = [
     "/economic-fairness/universal-basic-income",
     "/social-technology/care-for-those-who-care-for-us",
     "/social-technology/friendship-love-respect",
+    "/social-technology/friendship-two",
     "/social-technology/inner-and-outer-world",
     "/social-technology/lion-king-or-big-cat",
     "/social-technology/perception-learning-expansion",
     "/social-technology/psy-body-psychology-communication",
+    "/social-technology/voting-without-fear",
 ]
 
 BASELINE_LIBRARY_RESEARCH = {
@@ -93,6 +95,7 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/UK_Neighbourhood_Communal_Bin_Simulation_Reconciled.xlsx",
     "/research/UK_Perennial_Resilience_Plan_2026.pptx",
     "/research/UK_Perennial_Resilience_Plan_Technical_Proposal_2026.docx",
+    "/research/LOVE-0_Machine-Neutral_Love_Module_v0.1.docx",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -100,8 +103,7 @@ EXTRA_BASELINE_PUBLIC_FILES = {
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-IMAGE_EXTENSIONS = {".png", ".jpg", ".jpeg", ".webp", ".gif", ".svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/1.5-v38-backup-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v42-backup-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -236,15 +238,31 @@ def main() -> int:
 
     home = original_pages["/"]
     library = original_pages["/library"]
-    required_home = ["Before we judge", "Twenty-eight publications", "P—23", "Simulators"]
+    required_home = [
+        "Before we judge",
+        "Thirty publications",
+        "P—29",
+        "P—30",
+        "Simulators",
+        "https://ministryofducks.github.io/",
+        ">MOD<",
+    ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v36 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v42 structure: {missing_home}")
 
-    required_library = ["Release 17", "28 publications", "P—27", "P—28"]
+    required_library = [
+        "Release 19",
+        "30 publications",
+        "47 public files",
+        "P—29",
+        "P—30",
+        "Voting Without Fear",
+        "Friendship Two - From Ducks to Humans",
+    ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v36 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v42 structure: {missing_library}")
 
     research_urls = {
         normalized
@@ -256,15 +274,9 @@ def main() -> int:
     added = sorted(research_urls - BASELINE_LIBRARY_RESEARCH)
     if removed:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
-    if len(added) > 1:
-        raise RuntimeError(f"Expected at most one new research image; found {len(added)} additions: {added}")
-    if added and Path(added[0].split("?", 1)[0]).suffix.lower() not in IMAGE_EXTENSIONS:
-        raise RuntimeError(f"The single new research file is not an image: {added[0]}")
-
     if added:
-        print(f"accepted one-picture update: {added[0]}")
-    else:
-        print("no new library research file detected; checking for in-place paper/image changes")
+        raise RuntimeError(f"Unexpected research files were added: {added}")
+    print("v42 research library file set verified")
 
     asset_urls = {
         u for u in discovered_urls
@@ -317,7 +329,7 @@ def main() -> int:
         "routes": ROUTES,
         "baseline_library_research_count": len(BASELINE_LIBRARY_RESEARCH),
         "library_linked_research_count": len(research_urls),
-        "new_library_images": added,
+        "unexpected_library_research": added,
         "public_research_folder_count": len(research_files),
         "standalone_simulator": "simulators/Buddha_Net_Simulator_Standalone.html",
         "stylesheet_count": len(stylesheets),
@@ -330,7 +342,7 @@ def main() -> int:
 
     print(
         f"ready: {len(ROUTES)} routes, {len(research_urls)} library research files, "
-        f"{len(research_files)} total public/research files, {len(added)} new image additions, "
+        f"{len(research_files)} total public/research files, "
         f"{len(stylesheets)} stylesheets, {len(presentation_assets)} presentation assets, "
         f"{len(manifest_files)} files"
     )
@@ -343,3 +355,4 @@ if __name__ == "__main__":
     except Exception as exc:  # noqa: BLE001
         print(f"mirror failed: {exc}", file=sys.stderr)
         raise
+
