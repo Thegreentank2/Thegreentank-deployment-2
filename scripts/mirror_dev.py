@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The current ChatGPT Green Tank site is the development/update source. The v42
+The current ChatGPT Green Tank site is the development/update source. The v43
 portable deployment backup is the baseline. This script requires the exact
-known v42 route and research-file set and refuses removals or unexpected
+known Release 20 route and research-file set and refuses removals or unexpected
 additions.
 """
 
@@ -25,12 +25,13 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "25ddb3a02626009aeedbfdb916b9c29f4ccc71176479b1505c1b7b1c29f6a94c"
-BACKUP_LABEL = "the-green-tank-full-backup-v42-2026-09-03.zip"
+BACKUP_SHA256 = "4307a91266032d6e57da3baec4533614f7b34ba0fa39c951893a82d8e80a6855"
+BACKUP_LABEL = "The_Green_Tank_Full_Backup_2026-09-04.zip"
 
 ROUTES = [
     "/",
     "/library",
+    "/psy-chology",
     "/music",
     "/simulators",
     "/press",
@@ -96,6 +97,13 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/UK_Perennial_Resilience_Plan_2026.pptx",
     "/research/UK_Perennial_Resilience_Plan_Technical_Proposal_2026.docx",
     "/research/LOVE-0_Machine-Neutral_Love_Module_v0.1.docx",
+    "/research/Loss_Is_Not_Nothing_MRRAF.docx",
+    "/research/Loss_Is_Not_Nothing_MRRAF.pdf",
+    "/research/MRRAF_LOVE0_Integrity.json",
+    "/research/MRRAF_LOVE0_Processed.docx",
+    "/research/MRRAF_LOVE0_Processed.pdf",
+    "/research/MRRAF_LOVE0_Side_by_Side.docx",
+    "/research/MRRAF_LOVE0_Side_by_Side.pdf",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -103,7 +111,7 @@ EXTRA_BASELINE_PUBLIC_FILES = {
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v42-backup-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v43-release-20-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -240,29 +248,35 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty publications",
+        "Thirty-one publications",
         "P—29",
         "P—30",
+        "P—31",
+        "Psy-chology",
+        "Loss Is Not Nothing",
         "Simulators",
         "https://ministryofducks.github.io/",
         ">MOD<",
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v42 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v43 structure: {missing_home}")
 
     required_library = [
-        "Release 19",
-        "30 publications",
-        "47 public files",
+        "Release 20",
+        "31 publications",
+        "54 public files",
         "P—29",
         "P—30",
+        "P—31",
+        "Psy-chology",
+        "Loss Is Not Nothing",
         "Voting Without Fear",
         "Friendship Two - From Ducks to Humans",
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v42 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v43 structure: {missing_library}")
 
     research_urls = {
         normalized
@@ -276,7 +290,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("v42 research library file set verified")
+    print("v43 Release 20 research library file set verified")
 
     asset_urls = {
         u for u in discovered_urls
