@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The current ChatGPT Green Tank site is the development/update source. The v43
-portable deployment backup is the baseline. This script requires the exact
-known Release 20 route and research-file set and refuses removals or unexpected
-additions.
+The current ChatGPT Green Tank site is the development/update source. The
+Release 23 portable deployment backup is the baseline. This script requires the
+exact known Release 23 route and research-file set and refuses removals or
+unexpected additions.
 """
 
 from __future__ import annotations
@@ -25,13 +25,15 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "4307a91266032d6e57da3baec4533614f7b34ba0fa39c951893a82d8e80a6855"
-BACKUP_LABEL = "The_Green_Tank_Full_Backup_2026-09-04.zip"
+BACKUP_SHA256 = "81e07af178b247563cba0712bdce84de8c18e09b049e17e80751839cbf446b68"
+BACKUP_LABEL = "Green_Tank_Release_23_Complete_Site_Backup.zip"
 
 ROUTES = [
     "/",
     "/library",
     "/psy-chology",
+    "/psy-chology/learning-is-a-matter-of-perspective",
+    "/psy-chology/ocd-to-curl",
     "/music",
     "/simulators",
     "/press",
@@ -44,6 +46,7 @@ ROUTES = [
     "/social-technology/friendship-two",
     "/social-technology/inner-and-outer-world",
     "/social-technology/lion-king-or-big-cat",
+    "/social-technology/monkey-banana",
     "/social-technology/perception-learning-expansion",
     "/social-technology/psy-body-psychology-communication",
     "/social-technology/voting-without-fear",
@@ -97,6 +100,11 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/UK_Perennial_Resilience_Plan_2026.pptx",
     "/research/UK_Perennial_Resilience_Plan_Technical_Proposal_2026.docx",
     "/research/LOVE-0_Machine-Neutral_Love_Module_v0.1.docx",
+    "/research/LOVE0_Paper_Comparison_Review_Record_1.0.docx",
+    "/research/Learning_Is_a_Matter_of_Perspective_v0.1.docx",
+    "/research/Learning_Is_a_Matter_of_Perspective_v0.2.docx",
+    "/research/Learning_Is_a_Matter_of_Perspective_v0.3.docx",
+    "/research/Learning_Is_a_Matter_of_Perspective_v0.3_Supplied_Duplicate.docx",
     "/research/Loss_Is_Not_Nothing_MRRAF.docx",
     "/research/Loss_Is_Not_Nothing_MRRAF.pdf",
     "/research/MRRAF_LOVE0_Integrity.json",
@@ -104,6 +112,12 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/MRRAF_LOVE0_Processed.pdf",
     "/research/MRRAF_LOVE0_Side_by_Side.docx",
     "/research/MRRAF_LOVE0_Side_by_Side.pdf",
+    "/research/Monkey_Banana_Page_Map.png",
+    "/research/Monkey_Bandana.png",
+    "/research/Monkey_Sees_People_Using_Human_Tech.png",
+    "/research/People_Trying_to_Be_Monkeys.png",
+    "/research/What_the_Monkeys_Let_Us_See.png",
+    "/research/Capacity_Uncertainty_Regulation_Loop_CURL_Medical_Hypothesis.docx",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -111,7 +125,7 @@ EXTRA_BASELINE_PUBLIC_FILES = {
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v43-release-20-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v46-release-23-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -122,6 +136,58 @@ CLOUDFLARE_CHALLENGE_RE = re.compile(
     re.I,
 )
 CSS_URL_RE = re.compile(r"url\((?P<q>[\"']?)(?P<url>[^)\"']+)(?P=q)\)", re.I)
+
+MONKEY_BANANA_SCRIPT = r"""
+(() => {
+  const facts = [
+    ["Banana", "Yes—if it is ripe and safe for you."],
+    ["Pepper", "Possibly. It is food, but it is still a pepper."],
+    ["Squash", "Possibly—after preparing it as squash."],
+    ["Melon", "Possibly. Check the fruit, not only the name."],
+    ["Passionfruit", "Possibly. Its name describes a variety, not its identity."],
+    ["Shallot", "Possibly—but expect an onion relative, not dessert."],
+    ["Electrical connector", "No. It carries electrical signals, not lunch."],
+    ["Computer storage", "No. Save a file on it; do not serve it for pudding."],
+    ["Single-board computer", "No. It computes; it is not produce."],
+    ["Telephone", "No—unless somebody has handed you an actual banana as a joke."]
+  ];
+  const cards = [...document.querySelectorAll(".banana-card")];
+  const allButton = document.querySelector(".banana-check-intro > button");
+  const opened = new Set();
+
+  function render(index, show) {
+    const card = cards[index];
+    const answer = card?.querySelector(".banana-card-answer");
+    if (!card || !answer) return;
+    card.classList.toggle("is-open", show);
+    card.setAttribute("aria-expanded", String(show));
+    answer.innerHTML = show
+      ? "<small>Actually</small><strong>" + facts[index][0] + "</strong><em>" + facts[index][1] + "</em>"
+      : "<small>Actually</small><strong>Tap to check</strong>";
+    if (show) opened.add(index); else opened.delete(index);
+  }
+
+  function updateAllButton() {
+    if (!allButton) return;
+    const allOpen = opened.size === cards.length;
+    allButton.innerHTML = (allOpen ? "Hide the answers" : "Would you eat it?") +
+      '<span aria-hidden="true">' + (allOpen ? "↑" : "?") + "</span>";
+  }
+
+  cards.forEach((card, index) => {
+    card.addEventListener("click", () => {
+      render(index, !opened.has(index));
+      updateAllButton();
+    });
+  });
+
+  allButton?.addEventListener("click", () => {
+    const show = opened.size !== cards.length;
+    cards.forEach((_, index) => render(index, show));
+    updateAllButton();
+  });
+})();
+"""
 
 
 def fetch(url: str, attempts: int = 3) -> bytes:
@@ -241,19 +307,31 @@ def main() -> int:
         text = fetch(urljoin(BASE, route)).decode("utf-8", errors="strict")
         original_pages[route] = text
         discovered_urls.update(collect_same_origin_urls(text))
-        write_bytes(route_output(route), clean_html(text).encode("utf-8"))
+        cleaned = clean_html(text)
+        if route == "/social-technology/monkey-banana":
+            mirror_script = f"{PREFIX}/assets/monkey-banana.js"
+            cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+        write_bytes(route_output(route), cleaned.encode("utf-8"))
         print(f"mirrored route {route}")
+
+    write_bytes(OUT / "assets" / "monkey-banana.js", MONKEY_BANANA_SCRIPT.encode("utf-8"))
 
     home = original_pages["/"]
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty-one publications",
+        "Thirty-four publications",
         "P—29",
         "P—30",
         "P—31",
+        "P—32",
+        "P—33",
+        "P—34",
         "Psy-chology",
         "Loss Is Not Nothing",
+        "Learning Is a Matter of Perspective",
+        "Monkey Banana",
+        "OCD to CURL",
         "Simulators",
         "https://ministryofducks.github.io/",
         ">MOD<",
@@ -263,14 +341,20 @@ def main() -> int:
         raise RuntimeError(f"Dev homepage lost expected v43 structure: {missing_home}")
 
     required_library = [
-        "Release 20",
-        "31 publications",
-        "54 public files",
+        "Release 23",
+        "34 publications",
+        "65 public files",
         "P—29",
         "P—30",
         "P—31",
+        "P—32",
+        "P—33",
+        "P—34",
         "Psy-chology",
         "Loss Is Not Nothing",
+        "Learning Is a Matter of Perspective",
+        "Monkey Banana",
+        "OCD to CURL",
         "Voting Without Fear",
         "Friendship Two - From Ducks to Humans",
     ]
@@ -290,7 +374,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("v43 Release 20 research library file set verified")
+    print("Release 23 research library file set verified")
 
     asset_urls = {
         u for u in discovered_urls
