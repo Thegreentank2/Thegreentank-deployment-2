@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-Release 23 portable deployment backup is the baseline. This script requires the
-exact known Release 23 route and research-file set and refuses removals or
+Release 24 portable deployment backup is the baseline. This script requires the
+exact known Release 24 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,12 +25,14 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "81e07af178b247563cba0712bdce84de8c18e09b049e17e80751839cbf446b68"
-BACKUP_LABEL = "Green_Tank_Release_23_Complete_Site_Backup.zip"
+BACKUP_SHA256 = "8725aa0ef38dfbd80e2f84cedef261902d5d0ff31588c82d632494e34b5a04e6"
+BACKUP_LABEL = "The_Green_Tank_Complete_Dev_Site_Backup_Release_24_Verified_2026-09-07.zip"
 
 ROUTES = [
     "/",
     "/library",
+    "/finances",
+    "/finances/universal-payment-and-shared-growth",
     "/psy-chology",
     "/psy-chology/learning-is-a-matter-of-perspective",
     "/psy-chology/ocd-to-curl",
@@ -118,6 +120,11 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/People_Trying_to_Be_Monkeys.png",
     "/research/What_the_Monkeys_Let_Us_See.png",
     "/research/Capacity_Uncertainty_Regulation_Loop_CURL_Medical_Hypothesis.docx",
+    "/research/Universal_Payment_Working_Paper_Stage_1.md",
+    "/research/Universal_Payment_Working_Paper_Stage_2.md",
+    "/research/Universal_Payment_Working_Paper_Stage_3.md",
+    "/research/Universal_Payment_Working_Paper_Stage_4.md",
+    "/research/Universal_Payment_and_Shared_Growth_Financial_Policy_v1.docx",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -125,7 +132,7 @@ EXTRA_BASELINE_PUBLIC_FILES = {
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v46-release-23-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v48-release-24-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -320,13 +327,16 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty-four publications",
+        "Thirty-five publications",
         "P—29",
         "P—30",
         "P—31",
         "P—32",
         "P—33",
         "P—34",
+        "P—35",
+        "Finances",
+        "Universal Payment and Shared Growth",
         "Psy-chology",
         "Loss Is Not Nothing",
         "Learning Is a Matter of Perspective",
@@ -338,18 +348,21 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v43 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v48 structure: {missing_home}")
 
     required_library = [
-        "Release 23",
-        "34 publications",
-        "65 public files",
+        "Release 24",
+        "35 publications",
+        "70 public files",
         "P—29",
         "P—30",
         "P—31",
         "P—32",
         "P—33",
         "P—34",
+        "P—35",
+        "Finances",
+        "Universal Payment and Shared Growth",
         "Psy-chology",
         "Loss Is Not Nothing",
         "Learning Is a Matter of Perspective",
@@ -360,7 +373,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v43 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v48 structure: {missing_library}")
 
     research_urls = {
         normalized
@@ -374,7 +387,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Release 23 research library file set verified")
+    print("Release 24 research library file set verified")
 
     asset_urls = {
         u for u in discovered_urls
@@ -453,4 +466,3 @@ if __name__ == "__main__":
     except Exception as exc:  # noqa: BLE001
         print(f"mirror failed: {exc}", file=sys.stderr)
         raise
-
