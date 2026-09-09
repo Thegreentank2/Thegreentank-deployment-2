@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-Release 24 portable deployment backup is the baseline. This script requires the
-exact known Release 24 route and research-file set and refuses removals or
+version 49 portable deployment backup is the baseline. This script requires the
+exact known version 49 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,8 +25,8 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "8725aa0ef38dfbd80e2f84cedef261902d5d0ff31588c82d632494e34b5a04e6"
-BACKUP_LABEL = "The_Green_Tank_Complete_Dev_Site_Backup_Release_24_Verified_2026-09-07.zip"
+BACKUP_SHA256 = "2afdc718aa7e17ff85175400f3c0bb499b4a43c8e369412ffe762674092c236e"
+BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-09_v49.zip"
 
 ROUTES = [
     "/",
@@ -37,6 +37,8 @@ ROUTES = [
     "/psy-chology/learning-is-a-matter-of-perspective",
     "/psy-chology/ocd-to-curl",
     "/music",
+    "/music/knots-untying-through-perspective",
+    "/music/knots-1",
     "/simulators",
     "/press",
     "/submit",
@@ -132,7 +134,7 @@ EXTRA_BASELINE_PUBLIC_FILES = {
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v48-release-24-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v49-music-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -375,6 +377,50 @@ def main() -> int:
     if missing_library:
         raise RuntimeError(f"Dev library lost expected v48 structure: {missing_library}")
 
+    music = original_pages["/music"]
+    required_music = [
+        "Hear the influence. Keep the choice.",
+        "Mini Knots – Let Me Untie You Tuo",
+        "/music/knots-untying-through-perspective",
+        "/music/knots-1",
+        "Six stages of one developing experiment",
+        "CC0 — No Rights Reserved",
+    ]
+    missing_music = [m for m in required_music if m not in music]
+    if missing_music:
+        raise RuntimeError(f"Dev Music page lost expected version 49 structure: {missing_music}")
+
+    journey = original_pages["/music/knots-untying-through-perspective"]
+    required_journey = [
+        "Untying Through Perspective",
+        "Mini Knots – Let Me Untie You Tuo",
+        "dynamic children’s book",
+        "60 recordings",
+        "CC0 — No Rights Reserved",
+        "knots-Let-me-untie-you",
+        "knots-let-me-auntie-uoo-say-hello",
+        "knots-let-me-untie-you-3",
+        "knots-pop-say-hello-a",
+        "knots-commercial-Let-me-untie-you",
+        "knots-Universal-Let-me-untie-you",
+    ]
+    missing_journey = [m for m in required_journey if m not in journey]
+    if missing_journey:
+        raise RuntimeError(f"Knots chronology verification failed: {missing_journey}")
+
+    protocol = original_pages["/music/knots-1"]
+    required_protocol = [
+        "KNOTS/1.0",
+        "prompt-injection resistance",
+        "not</strong> a complete technical security solution",
+        "Emotion and feeling are not stripped away",
+        "automatic_response != verified_truth",
+        "input → internal state → test → decision → action → feedback",
+    ]
+    missing_protocol = [m for m in required_protocol if m not in protocol]
+    if missing_protocol:
+        raise RuntimeError(f"KNOTS/1.0 verification failed: {missing_protocol}")
+
     research_urls = {
         normalized
         for match in ATTR_URL_RE.finditer(library)
@@ -387,7 +433,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Release 24 research library file set verified")
+    print("Version 49 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
