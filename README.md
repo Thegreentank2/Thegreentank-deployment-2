@@ -9,12 +9,12 @@ Deployment role:
 - `Thegreentank-deployment-2` — reference deployment
 - `The-green-tank-condition-test` — experimental/condition-test deployment
 
-The GitHub Pages build is a guarded full mirror of the public development Site. It includes the main routes, 35 publications, 70 linked research files, the Buddha Net simulator, the complete Ghostbusters learning journey, the external MOD link, Monkey Banana, the Psy-chology collection through OCD to CURL, the Finances collection through Universal Payment and Shared Growth, and the complete Knots chronology and KNOTS/1.0 public protocol.
+The GitHub Pages build is a guarded full mirror of the public development Site. It includes the main routes, 36 publications, 73 catalogued public files, the Buddha Net simulator, the complete Ghostbusters learning journey, the external MOD link, Monkey Banana, the Psy-chology collection through OCD to CURL, the Finances collection through Universal Payment and Shared Growth, the complete Knots chronology and KNOTS/1.0 public protocol, Drugs & Society, and the Health Systems and Patient Choice study in formation.
 
 Trusted portable baseline:
-- `The_Green_Tank_Dev_Backup_2026-09-09_v49.zip`
-- SHA-256 `2afdc718aa7e17ff85175400f3c0bb499b4a43c8e369412ffe762674092c236e`
+- `The_Green_Tank_Development_Backup_v51_2026-09-11.zip`
+- SHA-256 `8c9fa9978f953917d76067e5bfbedb0acedcf17d974bb74c84b22613d73e74bb`
 
 ## Restore rule
 
-If this deployment becomes damaged or inconsistent, restore from the trusted version-49 deployment source, its verified portable backup and Git history rather than repairing an unknown state in place.
+If this deployment becomes damaged or inconsistent, restore from the trusted version-51 deployment source, its verified portable backup and Git history rather than repairing an unknown state in place.

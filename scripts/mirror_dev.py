@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 49 portable deployment backup is the baseline. This script requires the
-exact known version 49 route and research-file set and refuses removals or
+version 51 portable deployment backup is the baseline. This script requires the
+exact known version 51 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,8 +25,8 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "2afdc718aa7e17ff85175400f3c0bb499b4a43c8e369412ffe762674092c236e"
-BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-09_v49.zip"
+BACKUP_SHA256 = "8c9fa9978f953917d76067e5bfbedb0acedcf17d974bb74c84b22613d73e74bb"
+BACKUP_LABEL = "The_Green_Tank_Development_Backup_v51_2026-09-11.zip"
 
 ROUTES = [
     "/",
@@ -45,7 +45,10 @@ ROUTES = [
     "/phantom-concorde",
     "/climate-technology/bubble-butt",
     "/economic-fairness/universal-basic-income",
+    "/social-technology",
     "/social-technology/care-for-those-who-care-for-us",
+    "/social-technology/drugs-and-society",
+    "/social-technology/drugs-and-society/drug-knowledge-body-autonomy-and-patient-choice",
     "/social-technology/friendship-love-respect",
     "/social-technology/friendship-two",
     "/social-technology/inner-and-outer-world",
@@ -54,6 +57,7 @@ ROUTES = [
     "/social-technology/perception-learning-expansion",
     "/social-technology/psy-body-psychology-communication",
     "/social-technology/voting-without-fear",
+    "/social-technology/health-systems-and-patient-choice",
 ]
 
 BASELINE_LIBRARY_RESEARCH = {
@@ -122,6 +126,8 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/People_Trying_to_Be_Monkeys.png",
     "/research/What_the_Monkeys_Let_Us_See.png",
     "/research/Capacity_Uncertainty_Regulation_Loop_CURL_Medical_Hypothesis.docx",
+    "/research/Drug_Knowledge_Body_Autonomy_and_Patient_Choice.docx",
+    "/research/Drug_Knowledge_Body_Autonomy_and_Patient_Choice.pdf",
     "/research/Universal_Payment_Working_Paper_Stage_1.md",
     "/research/Universal_Payment_Working_Paper_Stage_2.md",
     "/research/Universal_Payment_Working_Paper_Stage_3.md",
@@ -131,10 +137,11 @@ BASELINE_LIBRARY_RESEARCH = {
 
 EXTRA_BASELINE_PUBLIC_FILES = {
     "/research/Buddha_Net_Simulator_Standalone.html",
+    "/research/NHS_Right_to_Choose_Data_Acquisition_Survey.docx",
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v49-music-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v51-health-systems-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -329,7 +336,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty-five publications",
+        "Thirty-six publications",
         "P—29",
         "P—30",
         "P—31",
@@ -337,6 +344,9 @@ def main() -> int:
         "P—33",
         "P—34",
         "P—35",
+        "P—36",
+        "Drugs &amp; Society",
+        "NHS Right to Choose",
         "Finances",
         "Universal Payment and Shared Growth",
         "Psy-chology",
@@ -350,12 +360,12 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v48 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v51 structure: {missing_home}")
 
     required_library = [
-        "Release 24",
-        "35 publications",
-        "70 public files",
+        "Release 26",
+        "36 publications",
+        "73 public files",
         "P—29",
         "P—30",
         "P—31",
@@ -363,6 +373,10 @@ def main() -> int:
         "P—33",
         "P—34",
         "P—35",
+        "P—36",
+        "Drugs &amp; Society",
+        "Health Systems and Patient Choice",
+        "NHS Right to Choose",
         "Finances",
         "Universal Payment and Shared Growth",
         "Psy-chology",
@@ -375,7 +389,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v48 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v51 structure: {missing_library}")
 
     music = original_pages["/music"]
     required_music = [
@@ -421,6 +435,65 @@ def main() -> int:
     if missing_protocol:
         raise RuntimeError(f"KNOTS/1.0 verification failed: {missing_protocol}")
 
+    social = original_pages["/social-technology"]
+    required_social = [
+        "Technology is also",
+        "Drugs:",
+        "Evidence, Experience &amp; Supply.",
+        "Health Systems",
+        "What happens to NHS Right to Choose funding after referral?",
+        "/social-technology/drugs-and-society",
+        "/social-technology/health-systems-and-patient-choice",
+    ]
+    missing_social = [m for m in required_social if m not in social]
+    if missing_social:
+        raise RuntimeError(f"Social Technology verification failed: {missing_social}")
+
+    drugs = original_pages["/social-technology/drugs-and-society"]
+    required_drugs = [
+        "Four kinds of knowledge.",
+        "Drug Knowledge, Body Autonomy and Patient Choice",
+        "How fentanyl is making its way to UK streets",
+        "Investigation announced · findings not yet published",
+        "What happens to NHS Right to Choose funding after referral?",
+        "/social-technology/drugs-and-society/drug-knowledge-body-autonomy-and-patient-choice",
+        "/social-technology/health-systems-and-patient-choice",
+    ]
+    missing_drugs = [m for m in required_drugs if m not in drugs]
+    if missing_drugs:
+        raise RuntimeError(f"Drugs & Society verification failed: {missing_drugs}")
+
+    drug_paper = original_pages[
+        "/social-technology/drugs-and-society/drug-knowledge-body-autonomy-and-patient-choice"
+    ]
+    required_drug_paper = [
+        "P—36 · discussion draft",
+        "From punishment to care",
+        "A signal is not proof.",
+        "Transformation,",
+        "not abolition.",
+        "Drug_Knowledge_Body_Autonomy_and_Patient_Choice.pdf",
+        "Drug_Knowledge_Body_Autonomy_and_Patient_Choice.docx",
+    ]
+    missing_drug_paper = [m for m in required_drug_paper if m not in drug_paper]
+    if missing_drug_paper:
+        raise RuntimeError(f"Drug paper verification failed: {missing_drug_paper}")
+
+    health_study = original_pages["/social-technology/health-systems-and-patient-choice"]
+    required_health_study = [
+        "Study in formation",
+        "Follow public money through",
+        "private provision.",
+        "Five links must remain connected.",
+        "A suspicion is not a finding.",
+        "NHS Right to Choose Data Acquisition Survey",
+        "NHS_Right_to_Choose_Data_Acquisition_Survey.docx",
+        "does not establish financial loss, fraud, unlawful billing",
+    ]
+    missing_health_study = [m for m in required_health_study if m not in health_study]
+    if missing_health_study:
+        raise RuntimeError(f"Health Systems study verification failed: {missing_health_study}")
+
     research_urls = {
         normalized
         for match in ATTR_URL_RE.finditer(library)
@@ -433,7 +506,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 49 research library file set verified unchanged")
+    print("Version 51 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -451,7 +524,8 @@ def main() -> int:
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
-    expected_research_folder_count = len(research_urls) + 1
+    extra_research_count = sum(path.startswith("/research/") for path in EXTRA_BASELINE_PUBLIC_FILES)
+    expected_research_folder_count = len(research_urls) + extra_research_count
     if len(research_files) != expected_research_folder_count:
         raise RuntimeError(
             f"Expected {expected_research_folder_count} public/research files; found {len(research_files)}"
