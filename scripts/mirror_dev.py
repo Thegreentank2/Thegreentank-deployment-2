@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 51 portable deployment backup is the baseline. This script requires the
-exact known version 51 route and research-file set and refuses removals or
+version 52 portable deployment backup is the baseline. This script requires the
+exact known version 52 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,8 +25,8 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "8c9fa9978f953917d76067e5bfbedb0acedcf17d974bb74c84b22613d73e74bb"
-BACKUP_LABEL = "The_Green_Tank_Development_Backup_v51_2026-09-11.zip"
+BACKUP_SHA256 = "0d489f6ffbf08e33c8ffc7fd973213fd8f34df2289703d04f4fea31911cd1bb2"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_Release_27_2026-09-12_verified.zip"
 
 ROUTES = [
     "/",
@@ -58,6 +58,7 @@ ROUTES = [
     "/social-technology/psy-body-psychology-communication",
     "/social-technology/voting-without-fear",
     "/social-technology/health-systems-and-patient-choice",
+    "/social-technology/justice-and-accountability",
 ]
 
 BASELINE_LIBRARY_RESEARCH = {
@@ -133,6 +134,9 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/Universal_Payment_Working_Paper_Stage_3.md",
     "/research/Universal_Payment_Working_Paper_Stage_4.md",
     "/research/Universal_Payment_and_Shared_Growth_Financial_Policy_v1.docx",
+    "/research/Corporate_Manslaughter_UK_Draft.docx",
+    "/research/Corporate_Manslaughter_and_Corporate_Homicide_Act_2007.pdf",
+    "/research/Corporate_Manslaughter_Act_2007_Explanatory_Notes.pdf",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -141,7 +145,12 @@ EXTRA_BASELINE_PUBLIC_FILES = {
     "/simulators/Buddha_Net_Simulator_Standalone.html",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v51-health-systems-guard"
+EXPECTED_CONTENT_SHA256 = {
+    "/research/Corporate_Manslaughter_UK_Draft.docx": "98b52a98ec087adc7603adc1f7a4a48a6d0e545ae6becd68030117514503598b",
+    "/research/Corporate_Manslaughter_and_Corporate_Homicide_Act_2007.pdf": "98fa2361402ec919654298f8be4233d4f06fc44cb6f420b229b56890f6e04b9a",
+    "/research/Corporate_Manslaughter_Act_2007_Explanatory_Notes.pdf": "e0af0933e5c1485d4c292f70d1fee4d5c650f28e7cfe258bdee4e315e0f7be4e",
+}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v52-justice-accountability-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -336,7 +345,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty-six publications",
+        "Thirty-seven publications",
         "P—29",
         "P—30",
         "P—31",
@@ -345,6 +354,8 @@ def main() -> int:
         "P—34",
         "P—35",
         "P—36",
+        "P—37",
+        "When Organisations Fail",
         "Drugs &amp; Society",
         "NHS Right to Choose",
         "Finances",
@@ -360,12 +371,12 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v51 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v52 structure: {missing_home}")
 
     required_library = [
-        "Release 26",
-        "36 publications",
-        "73 public files",
+        "Release 27",
+        "37 publications",
+        "76 public files",
         "P—29",
         "P—30",
         "P—31",
@@ -374,6 +385,9 @@ def main() -> int:
         "P—34",
         "P—35",
         "P—36",
+        "P—37",
+        "Justice &amp; Accountability",
+        "When Organisations Fail",
         "Drugs &amp; Society",
         "Health Systems and Patient Choice",
         "NHS Right to Choose",
@@ -389,7 +403,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v51 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v52 structure: {missing_library}")
 
     music = original_pages["/music"]
     required_music = [
@@ -444,6 +458,8 @@ def main() -> int:
         "What happens to NHS Right to Choose funding after referral?",
         "/social-technology/drugs-and-society",
         "/social-technology/health-systems-and-patient-choice",
+        "Justice &amp; Accountability",
+        "/social-technology/justice-and-accountability",
     ]
     missing_social = [m for m in required_social if m not in social]
     if missing_social:
@@ -494,6 +510,23 @@ def main() -> int:
     if missing_health_study:
         raise RuntimeError(f"Health Systems study verification failed: {missing_health_study}")
 
+    justice = original_pages["/social-technology/justice-and-accountability"]
+    required_justice = [
+        "P—37",
+        "When Organisations",
+        "Corporate Manslaughter and Preventable Death in the United Kingdom",
+        "not legal advice",
+        "no finding of guilt",
+        "This is not 540 suspected corporate manslaughters",
+        "Thirty named matters",
+        "Corporate_Manslaughter_UK_Draft.docx",
+        "Corporate_Manslaughter_and_Corporate_Homicide_Act_2007.pdf",
+        "Corporate_Manslaughter_Act_2007_Explanatory_Notes.pdf",
+    ]
+    missing_justice = [m for m in required_justice if m not in justice]
+    if missing_justice:
+        raise RuntimeError(f"Justice & Accountability verification failed: {missing_justice}")
+
     research_urls = {
         normalized
         for match in ATTR_URL_RE.finditer(library)
@@ -506,7 +539,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 51 research library file set verified unchanged")
+    print("Version 52 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -521,6 +554,15 @@ def main() -> int:
         save_asset(asset, seen)
         if asset.startswith("/research/"):
             print(f"mirrored research file {asset.rsplit('/', 1)[-1]}")
+
+    for asset, expected_sha256 in EXPECTED_CONTENT_SHA256.items():
+        data = local_path_for_url(asset).read_bytes()
+        actual_sha256 = hashlib.sha256(data).hexdigest()
+        if actual_sha256 != expected_sha256:
+            raise RuntimeError(
+                f"Protected research file checksum mismatch for {asset}: {actual_sha256}"
+            )
+    print("Protected version 52 research-file checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
