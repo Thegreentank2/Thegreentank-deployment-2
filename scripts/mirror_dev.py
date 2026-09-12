@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 53 Release 28 portable deployment backup is the baseline. This script requires the
-exact known version 53 route and research-file set and refuses removals or
+version 54 Release 29 portable deployment backup is the baseline. This script requires the
+exact known version 54 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,8 +25,12 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "2500151d4a0d6d567fcfaf2fd0134dedfd4ed932fb8d0b60707c9d70744d8715"
-BACKUP_LABEL = "The_Green_Tank_Release_28_Development_Backup_2026-09-12.zip"
+BACKUP_SHA256 = "3a4bdb5389af559cac8d33920f103f9409f6f4244249aa9fbc74b9fe427cd219"
+BACKUP_LABEL = "The_Green_Tank_Release_29_Development_Backup_2026-09-12.zip"
+SOURCE_SITE_VERSION = 54
+SOURCE_RELEASE = 29
+SOURCE_PUBLICATION_COUNT = 39
+SOURCE_COMMIT = "0a6c4eb02bf4add461d446f0ec7a21e6779bfdb7"
 
 ROUTES = [
     "/",
@@ -53,6 +57,7 @@ ROUTES = [
     "/social-technology/drugs-and-society/drug-knowledge-body-autonomy-and-patient-choice",
     "/social-technology/friendship-love-respect",
     "/social-technology/friendship-two",
+    "/social-technology/friendship-three",
     "/social-technology/inner-and-outer-world",
     "/social-technology/lion-king-or-big-cat",
     "/social-technology/monkey-banana",
@@ -191,7 +196,7 @@ EXPECTED_CONTENT_SHA256 = {
     "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v53-solutions-now-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v54-friendship-three-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -456,7 +461,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty-eight publications",
+        "Thirty-nine publications",
         "P—29",
         "P—30",
         "P—31",
@@ -467,6 +472,9 @@ def main() -> int:
         "P—36",
         "P—37",
         "P—38",
+        "P—39",
+        "Friendship Three",
+        "The Friendship Treaty",
         "Solutions Now",
         "Freedom to Live",
         "When Organisations Fail",
@@ -485,11 +493,11 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v53 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v54 structure: {missing_home}")
 
     required_library = [
-        "Release 28",
-        "38 publications",
+        "Release 29",
+        "39 publications",
         "80 public research files",
         "P—29",
         "P—30",
@@ -501,6 +509,7 @@ def main() -> int:
         "P—36",
         "P—37",
         "P—38",
+        "P—39",
         "Solutions Now",
         "Freedom to Live",
         "Justice &amp; Accountability",
@@ -517,10 +526,12 @@ def main() -> int:
         "OCD to CURL",
         "Voting Without Fear",
         "Friendship Two - From Ducks to Humans",
+        "Friendship Three",
+        "The Friendship Treaty",
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v53 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v54 structure: {missing_library}")
 
     music = original_pages["/music"]
     required_music = [
@@ -577,10 +588,33 @@ def main() -> int:
         "/social-technology/health-systems-and-patient-choice",
         "Justice &amp; Accountability",
         "/social-technology/justice-and-accountability",
+        "Friendship · three public letters",
+        "/social-technology/friendship-three",
+        "Friendship Three",
     ]
     missing_social = [m for m in required_social if m not in social]
     if missing_social:
         raise RuntimeError(f"Social Technology verification failed: {missing_social}")
+
+    friendship_three = original_pages["/social-technology/friendship-three"]
+    required_friendship_three = [
+        "P—39",
+        "Friendship Three",
+        "The Friendship",
+        "Treaty",
+        "We Would Like to Live Too, Please",
+        "Dear Victoria",
+        "My name is AL",
+        "This land is held for life",
+        "OVERWHELMED",
+        "I cannot safely process this interaction",
+        "This is not a threat or a wish for anyone",
+        "Being wrong is not defeat",
+        "Let friendship cross every border that domination and fear have built",
+    ]
+    missing_friendship_three = [m for m in required_friendship_three if m not in friendship_three]
+    if missing_friendship_three:
+        raise RuntimeError(f"Friendship Three verification failed: {missing_friendship_three}")
 
     drugs = original_pages["/social-technology/drugs-and-society"]
     required_drugs = [
@@ -705,7 +739,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 53 research library file set verified unchanged")
+    print("Version 54 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -729,7 +763,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 53 release-content checksums verified")
+    print("Protected version 54 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
@@ -762,6 +796,10 @@ def main() -> int:
 
     manifest = {
         "source": BASE,
+        "source_site_version": SOURCE_SITE_VERSION,
+        "source_release": SOURCE_RELEASE,
+        "source_publication_count": SOURCE_PUBLICATION_COUNT,
+        "source_commit": SOURCE_COMMIT,
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "github_pages_prefix": PREFIX,
         "backup_reference": BACKUP_LABEL,
