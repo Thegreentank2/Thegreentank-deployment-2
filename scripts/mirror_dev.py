@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 52 portable deployment backup is the baseline. This script requires the
-exact known version 52 route and research-file set and refuses removals or
+version 53 Release 28 portable deployment backup is the baseline. This script requires the
+exact known version 53 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,11 +25,13 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "0d489f6ffbf08e33c8ffc7fd973213fd8f34df2289703d04f4fea31911cd1bb2"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_Release_27_2026-09-12_verified.zip"
+BACKUP_SHA256 = "2500151d4a0d6d567fcfaf2fd0134dedfd4ed932fb8d0b60707c9d70744d8715"
+BACKUP_LABEL = "The_Green_Tank_Release_28_Development_Backup_2026-09-12.zip"
 
 ROUTES = [
     "/",
+    "/solutions-now",
+    "/solutions-now/evidence",
     "/library",
     "/finances",
     "/finances/universal-payment-and-shared-growth",
@@ -137,6 +139,9 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/Corporate_Manslaughter_UK_Draft.docx",
     "/research/Corporate_Manslaughter_and_Corporate_Homicide_Act_2007.pdf",
     "/research/Corporate_Manslaughter_Act_2007_Explanatory_Notes.pdf",
+    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pptx",
+    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pdf",
+    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22_Transcript.txt",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -149,8 +154,44 @@ EXPECTED_CONTENT_SHA256 = {
     "/research/Corporate_Manslaughter_UK_Draft.docx": "98b52a98ec087adc7603adc1f7a4a48a6d0e545ae6becd68030117514503598b",
     "/research/Corporate_Manslaughter_and_Corporate_Homicide_Act_2007.pdf": "98fa2361402ec919654298f8be4233d4f06fc44cb6f420b229b56890f6e04b9a",
     "/research/Corporate_Manslaughter_Act_2007_Explanatory_Notes.pdf": "e0af0933e5c1485d4c292f70d1fee4d5c650f28e7cfe258bdee4e315e0f7be4e",
+    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pptx": "3cfd6e8892bdd258280cbaeb05b2db5a49d118d2b36a39eb45f099c6770b3948",
+    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pdf": "f03b4459f0b14a138f6bbbcd6066fa069cc11348260b2f0293ac76fdf697523f",
+    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22_Transcript.txt": "a1ee5b764631e4c944a5b4030df8f94b66e9e544f3f85076f90b1e09832d30bf",
+    "/solutions-now/slides/slide-1.webp": "2ec473d54e721e0a4782b6690236c737b9af3c528aef27ccbfc064bff792f900",
+    "/solutions-now/slides/slide-2.webp": "2d3c4ca9f35a8b27628f123f1d9d5f3f80a062c27c90c267d1fc4a6c4e62caf7",
+    "/solutions-now/slides/slide-3.webp": "c96a27d5501eb409a1bb2484fb6062ba87cfc27d54bd6df2952375cee171b83c",
+    "/solutions-now/slides/slide-4.webp": "a6626ac700695bd2147e092240a3a0ee90263e886bfa3c2ec7fff138fb2e0764",
+    "/solutions-now/slides/slide-5.webp": "2448c6ac6b55ba576aed1c42058c73646245d22aea667eceb84c5ddedc93c7b3",
+    "/solutions-now/slides/slide-6.webp": "3f7ad079268fcff3a24c7946c240a1b3cda286613cca7b7054cf08b44468c246",
+    "/solutions-now/slides/slide-7.webp": "76157ce48674dc50b605bfa704bd71bf4e7a04de2a4de4acd45595936789fd5f",
+    "/solutions-now/slides/slide-8.webp": "5833bd29099a4507f1443dbace68c1265cc6636ab880975c6403595ebf10394c",
+    "/solutions-now/slides/slide-9.webp": "c19fddd00207e71e21f28a5be01293a02399daef8b342d2137afd66857df4a3b",
+    "/solutions-now/slides/slide-10.webp": "d83f4c15c38efd9586244e9abdcbc1cfc95902cb0ea30879413acef1258d90c8",
+    "/solutions-now/slides/slide-11.webp": "8ac0e2ef609428810162b4c18e32c4300f4ca371e0ab3c770a8cd39370c9bf6f",
+    "/solutions-now/slides/slide-12.webp": "ca4c8343b888cb3e03b71be19d5058b2468784380a876ca024dd762d4abcd905",
+    "/solutions-now/slides/slide-13.webp": "f3582ebe03c9f30a233300c802a65e5ccf032a03ed7950aa2f269f67704385a8",
+    "/solutions-now/slides/slide-14.webp": "56705e0a588d4546d7cb3a9a0a964da530f2743e83730b4ca8329a639d81d35c",
+    "/solutions-now/slides/slide-15.webp": "47d50989367866525950b3ec0c16b7ae5a43d52ff6c6adcd274b3f8cb70aee6d",
+    "/solutions-now/slides/slide-16.webp": "ae764f7da75d0d85f90d9d900c25cc921d8037c6016442f489c8d21e2bebb3b6",
+    "/solutions-now/slides/slide-17.webp": "aa5e91bfdad9a43dce2fad8e0d6f0f317f5d613a36be0542f7303fe3fecbd9d9",
+    "/solutions-now/slides/slide-18.webp": "dfbc1ae429c84da09922e7e0719fb6909868876be98224fa1429502ee4e8d871",
+    "/solutions-now/slides/slide-19.webp": "7b80a3d49bbc07f2836ad1505f99ced89ff38fd3a625976ff04b145dab728389",
+    "/solutions-now/slides/slide-20.webp": "dc012381bda0254915470602dac8438daab640c80572c1994b1de42bc5acbfb2",
+    "/solutions-now/slides/slide-21.webp": "e15ded0295aa9134d8786886ae6be540dc21635d69d7d4b9cb0e1bd6119cb945",
+    "/solutions-now/slides/slide-22.webp": "16d1f40e41b85a6cf78d4302727b49adc85f466c97962b3b08105c7d46faca2e",
+    "/solutions-now/slides/slide-23.webp": "ba7e45630abc2742564d425b1b66f5717f22a8cfa9cce8a2675238f2b00ad1a7",
+    "/solutions-now/slides/slide-24.webp": "92ce994be8f261ec918cd200e8a3081eb95e6a2d83b08386d8a0e38067e724e1",
+    "/solutions-now/slides/slide-25.webp": "5c3735566bd5469a6d026cf2a0094e9fdcc965c4fa5a9a08f3340cd2f27e43ed",
+    "/solutions-now/slides/slide-26.webp": "6fd3a75a296c72fc01baab6941002106706e9af075b69cf37ec475d6780b2abc",
+    "/solutions-now/slides/slide-27.webp": "9f4b00a3d952b802d27fa9a804cef604ae69501ecc51785dbee1c8f17fd184bc",
+    "/solutions-now/slides/slide-28.webp": "f42dd62c5a86c9e8aa1c597489902d25df6a626b0bd849d2062b2c5985b6d5b1",
+    "/solutions-now/slides/slide-29.webp": "b4b9a96538b1b056c5f694ec164f75fab73e6cd46aaf9131f0eb4715b6010c47",
+    "/solutions-now/slides/slide-30.webp": "6b54250569ecebc733a705a978866729b5d63fb8f5c10bc93c7d5e2dac1b8131",
+    "/solutions-now/slides/slide-31.webp": "92ad34b9b75b2b13a39f701dfa6bbbcd2e1fea6f85563c297ffc685efce7ca42",
+    "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
 }
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v52-justice-accountability-guard"
+SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v53-solutions-now-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -211,6 +252,72 @@ MONKEY_BANANA_SCRIPT = r"""
     cards.forEach((_, index) => render(index, show));
     updateAllButton();
   });
+})();
+"""
+
+SOLUTIONS_EVIDENCE_SCRIPT = r"""
+(() => {
+  const viewer = document.querySelector(".solution-slide-viewer");
+  const currentFigure = viewer?.querySelector(".solution-current-slide");
+  const currentAnchor = currentFigure?.querySelector("a");
+  const currentImage = currentFigure?.querySelector("img");
+  const currentCaption = currentFigure?.querySelector("figcaption");
+  const title = viewer?.querySelector("#slide-viewer-title");
+  const topline = viewer?.querySelector(".solution-viewer-topline .eyebrow");
+  const controls = [...(viewer?.querySelectorAll(".solution-viewer-controls button") || [])];
+  const indexButtons = [...(viewer?.querySelectorAll(".solution-slide-index button") || [])];
+  const sourceFigures = [...document.querySelectorAll(".solution-all-slides figure")];
+  let current = 0;
+
+  if (!viewer || !currentAnchor || !currentImage || !currentCaption ||
+      !title || controls.length !== 2 || indexButtons.length !== sourceFigures.length) return;
+
+  function show(index, scroll = false) {
+    current = Math.max(0, Math.min(sourceFigures.length - 1, index));
+    const sourceFigure = sourceFigures[current];
+    const sourceAnchor = sourceFigure.querySelector("a");
+    const sourceImage = sourceFigure.querySelector("img");
+    const sourceLink = sourceFigure.querySelector("figcaption a");
+    const itemTitle = indexButtons[current].querySelector("strong")?.textContent?.trim() || "";
+    if (!sourceAnchor || !sourceImage) return;
+
+    currentAnchor.href = sourceAnchor.href;
+    currentAnchor.setAttribute("aria-label", `Open slide ${current + 1} full size: ${itemTitle}`);
+    currentImage.src = sourceImage.src;
+    currentImage.alt = `Slide ${current + 1} of ${sourceFigures.length}: ${itemTitle}. Open the full-size slide for every displayed price, table, calculation and qualification.`;
+    title.textContent = itemTitle;
+    topline.textContent = `Complete evidence deck · slide ${current + 1} of ${sourceFigures.length}`;
+
+    indexButtons.forEach((button, indexNumber) => {
+      const selected = indexNumber === current;
+      button.classList.toggle("is-current", selected);
+      if (selected) button.setAttribute("aria-current", "true");
+      else button.removeAttribute("aria-current");
+    });
+    controls[0].disabled = current === 0;
+    controls[1].disabled = current === sourceFigures.length - 1;
+
+    currentCaption.querySelector(".mirror-source-listing")?.remove();
+    if (sourceLink) {
+      const link = document.createElement("a");
+      link.className = "mirror-source-listing";
+      link.href = sourceLink.href;
+      link.target = "_blank";
+      link.rel = "noreferrer";
+      link.textContent = "Open the pictured Alibaba listing ↗";
+      currentCaption.append(link);
+    }
+    if (scroll) viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  controls[0].addEventListener("click", () => show(current - 1, true));
+  controls[1].addEventListener("click", () => show(current + 1, true));
+  indexButtons.forEach((button, index) => button.addEventListener("click", () => show(index, true)));
+  window.addEventListener("keydown", event => {
+    if (event.key === "ArrowLeft") show(current - 1);
+    if (event.key === "ArrowRight") show(current + 1);
+  });
+  show(0);
 })();
 """
 
@@ -336,16 +443,20 @@ def main() -> int:
         if route == "/social-technology/monkey-banana":
             mirror_script = f"{PREFIX}/assets/monkey-banana.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+        if route == "/solutions-now/evidence":
+            mirror_script = f"{PREFIX}/assets/solutions-evidence.js"
+            cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
         write_bytes(route_output(route), cleaned.encode("utf-8"))
         print(f"mirrored route {route}")
 
     write_bytes(OUT / "assets" / "monkey-banana.js", MONKEY_BANANA_SCRIPT.encode("utf-8"))
+    write_bytes(OUT / "assets" / "solutions-evidence.js", SOLUTIONS_EVIDENCE_SCRIPT.encode("utf-8"))
 
     home = original_pages["/"]
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty-seven publications",
+        "Thirty-eight publications",
         "P—29",
         "P—30",
         "P—31",
@@ -355,6 +466,9 @@ def main() -> int:
         "P—35",
         "P—36",
         "P—37",
+        "P—38",
+        "Solutions Now",
+        "Freedom to Live",
         "When Organisations Fail",
         "Drugs &amp; Society",
         "NHS Right to Choose",
@@ -371,12 +485,12 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v52 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v53 structure: {missing_home}")
 
     required_library = [
-        "Release 27",
-        "37 publications",
-        "76 public files",
+        "Release 28",
+        "38 publications",
+        "80 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -386,6 +500,9 @@ def main() -> int:
         "P—35",
         "P—36",
         "P—37",
+        "P—38",
+        "Solutions Now",
+        "Freedom to Live",
         "Justice &amp; Accountability",
         "When Organisations Fail",
         "Drugs &amp; Society",
@@ -403,7 +520,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v52 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v53 structure: {missing_library}")
 
     music = original_pages["/music"]
     required_music = [
@@ -527,6 +644,55 @@ def main() -> int:
     if missing_justice:
         raise RuntimeError(f"Justice & Accountability verification failed: {missing_justice}")
 
+    solutions = original_pages["/solutions-now"]
+    required_solutions = [
+        "P—38",
+        "Freedom",
+        "to Live",
+        "See the actual options",
+        "13.4m",
+        "25.3m",
+        "57%",
+        "1.7m",
+        "Surviving and living are different conditions.",
+        "When does life begin if security always comes later?",
+        "A market screen, not an endorsement.",
+        "What remaining harm justifies refusal?",
+        "One site. One home. Every cost and outcome made public.",
+        "Freedom without a lawful place to exist is not freedom.",
+        "/solutions-now/evidence",
+    ]
+    missing_solutions = [m for m in required_solutions if m not in solutions]
+    if missing_solutions:
+        raise RuntimeError(f"Solutions Now verification failed: {missing_solutions}")
+
+    evidence = original_pages["/solutions-now/evidence"]
+    required_evidence = [
+        "Read before purchasing",
+        "A market screen, not an endorsement.",
+        "Complete evidence deck",
+        "Slide 1 of 32:",
+        "All 32 slides",
+        "Every option, number and limitation",
+        "No deposit before the complete evidence package exists.",
+        "Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pptx",
+        "Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pdf",
+        "Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22_Transcript.txt",
+        "1601761827603.html",
+        "1601105102694.html",
+    ]
+    missing_evidence = [m for m in required_evidence if m not in evidence]
+    if missing_evidence:
+        raise RuntimeError(f"Solutions Now evidence verification failed: {missing_evidence}")
+
+    solution_slide_urls = {u for u in discovered_urls if u.startswith("/solutions-now/slides/")}
+    missing_slides = sorted(SOLUTION_SLIDES - solution_slide_urls)
+    unexpected_slides = sorted(solution_slide_urls - SOLUTION_SLIDES)
+    if missing_slides or unexpected_slides:
+        raise RuntimeError(
+            f"Solutions Now slide set changed: missing={missing_slides}, unexpected={unexpected_slides}"
+        )
+
     research_urls = {
         normalized
         for match in ATTR_URL_RE.finditer(library)
@@ -539,7 +705,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 52 research library file set verified unchanged")
+    print("Version 53 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -548,6 +714,7 @@ def main() -> int:
     asset_urls.update(PUBLIC_ASSETS)
     asset_urls.update(research_urls)
     asset_urls.update(EXTRA_BASELINE_PUBLIC_FILES)
+    asset_urls.update(SOLUTION_SLIDES)
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
@@ -560,9 +727,9 @@ def main() -> int:
         actual_sha256 = hashlib.sha256(data).hexdigest()
         if actual_sha256 != expected_sha256:
             raise RuntimeError(
-                f"Protected research file checksum mismatch for {asset}: {actual_sha256}"
+                f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 52 research-file checksums verified")
+    print("Protected version 53 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
