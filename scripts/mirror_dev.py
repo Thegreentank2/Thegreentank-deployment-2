@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 56 Release 30 portable deployment backup is the baseline. This script requires the
-exact known version 56 route and research-file set and refuses removals or
+version 57 Release 30 portable deployment backup is the baseline. This script requires the
+exact known version 57 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,12 +25,12 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "f20ca0da4a8692d2fa274e93a863283ffc2925abbf833c3bd72c2ad9cbdc7a99"
-BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-13_v56.zip"
-SOURCE_SITE_VERSION = 56
+BACKUP_SHA256 = "7953aa6d724958d3a43be98ad62dcb81fe35205b1a2eac661cc0640e5a90bd16"
+BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-13_v57.zip"
+SOURCE_SITE_VERSION = 57
 SOURCE_RELEASE = 30
 SOURCE_PUBLICATION_COUNT = 40
-SOURCE_COMMIT = "3eeb7ae38e97e2bc147b5190354cf80967637a93"
+SOURCE_COMMIT = "726d077a24efd31f82117377b212313e5d26ae5e"
 
 ROUTES = [
     "/",
@@ -49,6 +49,7 @@ ROUTES = [
     "/press",
     "/submit",
     "/phantom-concorde",
+    "/fashion-police",
     "/climate-technology/bubble-butt",
     "/climate-technology/emission-transitive-emission",
     "/economic-fairness/universal-basic-income",
@@ -215,7 +216,7 @@ EXPECTED_CONTENT_SHA256 = {
     "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v56-cl17-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v57-fashion-police-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -509,12 +510,14 @@ def main() -> int:
         "Monkey Banana",
         "OCD to CURL",
         "Simulators",
+        "Fashion Police",
+        "/fashion-police",
         "https://ministryofducks.github.io/",
         ">MOD<",
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v56 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v57 structure: {missing_home}")
 
     required_library = [
         "Release 30",
@@ -554,7 +557,39 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v56 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v57 structure: {missing_library}")
+
+    fashion_police = original_pages["/fashion-police"]
+    required_fashion_police = [
+        "The Fashion",
+        "Police Are",
+        "Hear.",
+        "The one law",
+        "The Fashion Police shall have no authority over fashion.",
+        "You can wear that.",
+        "Weird is not a crime.",
+        "Clothing is not consent.",
+        "Investigate harm.",
+        "Never prosecute taste.",
+        "David Bowie:",
+        "spirit of the Commissioner.",
+        "CASE FILE 1982 · VALLEY GIRL",
+        "Trying to quit fashion is also fashion.",
+        "I will not arrest difference.",
+        "I will investigate harm.",
+        "I will tell nobody.",
+        "I will tell everybody.",
+        "F-z6u5hFgPk",
+        "R5Q1yVLSR3I",
+        "bIOocUQkfzk",
+        "www.davidbowie.com",
+        "www.zappa.com",
+        "An unofficial cultural tribute and interpretation.",
+        "It does not claim endorsement by David Bowie’s estate or representatives.",
+    ]
+    missing_fashion_police = [m for m in required_fashion_police if m not in fashion_police]
+    if missing_fashion_police:
+        raise RuntimeError(f"Fashion Police verification failed: {missing_fashion_police}")
 
     music = original_pages["/music"]
     required_music = [
@@ -780,7 +815,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 56 research library file set verified unchanged")
+    print("Version 57 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -804,7 +839,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 56 release-content checksums verified")
+    print("Protected version 57 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
