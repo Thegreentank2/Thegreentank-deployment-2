@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 54 Release 29 portable deployment backup is the baseline. This script requires the
-exact known version 54 route and research-file set and refuses removals or
+version 56 Release 30 portable deployment backup is the baseline. This script requires the
+exact known version 56 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,12 +25,12 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "3a4bdb5389af559cac8d33920f103f9409f6f4244249aa9fbc74b9fe427cd219"
-BACKUP_LABEL = "The_Green_Tank_Release_29_Development_Backup_2026-09-12.zip"
-SOURCE_SITE_VERSION = 54
-SOURCE_RELEASE = 29
-SOURCE_PUBLICATION_COUNT = 39
-SOURCE_COMMIT = "0a6c4eb02bf4add461d446f0ec7a21e6779bfdb7"
+BACKUP_SHA256 = "f20ca0da4a8692d2fa274e93a863283ffc2925abbf833c3bd72c2ad9cbdc7a99"
+BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-13_v56.zip"
+SOURCE_SITE_VERSION = 56
+SOURCE_RELEASE = 30
+SOURCE_PUBLICATION_COUNT = 40
+SOURCE_COMMIT = "3eeb7ae38e97e2bc147b5190354cf80967637a93"
 
 ROUTES = [
     "/",
@@ -50,6 +50,7 @@ ROUTES = [
     "/submit",
     "/phantom-concorde",
     "/climate-technology/bubble-butt",
+    "/climate-technology/emission-transitive-emission",
     "/economic-fairness/universal-basic-income",
     "/social-technology",
     "/social-technology/care-for-those-who-care-for-us",
@@ -147,6 +148,15 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pptx",
     "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pdf",
     "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22_Transcript.txt",
+    "/research/CL17_Emission_Transitive_Emission_Matrix.xlsx",
+    "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.docx",
+    "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.pdf",
+    "/research/CL17_Emission_Transitive_Emission_Research_Package_2026-09-13.zip",
+    "/research/CL17_Supplemental_Interactive_Systems.xlsx",
+    "/research/CL17_Supplemental_Investigations.docx",
+    "/research/CL17_Supplemental_Investigations.pdf",
+    "/research/Emission_Transitive_Emission_Evidence_Review.docx",
+    "/research/Emission_Transitive_Emission_Evidence_Review.pdf",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -156,6 +166,15 @@ EXTRA_BASELINE_PUBLIC_FILES = {
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
+    "/research/CL17_Emission_Transitive_Emission_Matrix.xlsx": "85a25fdc985b22976b403aa2a115fc1f42f30d861ee2781add62ad4458859ad2",
+    "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.docx": "3b01b578d3c1f037d6c6bcdb7d1dc6ef122f67e14aec451e48b597d34014ec23",
+    "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.pdf": "bf4d3c75e2174aeb197d56675500eefb75edbba48dd0c278d9b4593f927d6538",
+    "/research/CL17_Emission_Transitive_Emission_Research_Package_2026-09-13.zip": "be0f521261e32d20f8ac23ffb8331de68711488e68fceab7ad68455242693cab",
+    "/research/CL17_Supplemental_Interactive_Systems.xlsx": "db30f3faaf17dd7130325447b00770aac48bafc4346a92fcf8743a7010db6dae",
+    "/research/CL17_Supplemental_Investigations.docx": "45a50253a941d627552d1abef8200a24e1d905060b91bb199d8b9152b735e8b0",
+    "/research/CL17_Supplemental_Investigations.pdf": "e3e5b93ae4c46617f9ca6903178f15c054eb668efce01e42114d72128088b6b1",
+    "/research/Emission_Transitive_Emission_Evidence_Review.docx": "eea783e0c7651d594d5d3fb2247da302c33bab46ac8e6c982ccab32587241f07",
+    "/research/Emission_Transitive_Emission_Evidence_Review.pdf": "23ff5019fe47a6ff75bcac5f4e6ed31014335fb64182a7c7033b543f3fe69ec7",
     "/research/Corporate_Manslaughter_UK_Draft.docx": "98b52a98ec087adc7603adc1f7a4a48a6d0e545ae6becd68030117514503598b",
     "/research/Corporate_Manslaughter_and_Corporate_Homicide_Act_2007.pdf": "98fa2361402ec919654298f8be4233d4f06fc44cb6f420b229b56890f6e04b9a",
     "/research/Corporate_Manslaughter_Act_2007_Explanatory_Notes.pdf": "e0af0933e5c1485d4c292f70d1fee4d5c650f28e7cfe258bdee4e315e0f7be4e",
@@ -196,7 +215,7 @@ EXPECTED_CONTENT_SHA256 = {
     "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v54-friendship-three-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v56-cl17-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -461,7 +480,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Thirty-nine publications",
+        "Forty publications",
         "P—29",
         "P—30",
         "P—31",
@@ -473,6 +492,8 @@ def main() -> int:
         "P—37",
         "P—38",
         "P—39",
+        "P—40",
+        "CL17 — Emission Transitive Emission",
         "Friendship Three",
         "The Friendship Treaty",
         "Solutions Now",
@@ -493,12 +514,12 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v54 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v56 structure: {missing_home}")
 
     required_library = [
-        "Release 29",
-        "39 publications",
-        "80 public research files",
+        "Release 30",
+        "40 publications",
+        "89 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -510,6 +531,8 @@ def main() -> int:
         "P—37",
         "P—38",
         "P—39",
+        "P—40",
+        "CL17 — Emission Transitive Emission",
         "Solutions Now",
         "Freedom to Live",
         "Justice &amp; Accountability",
@@ -531,7 +554,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v54 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v56 structure: {missing_library}")
 
     music = original_pages["/music"]
     required_music = [
@@ -719,6 +742,24 @@ def main() -> int:
     if missing_evidence:
         raise RuntimeError(f"Solutions Now evidence verification failed: {missing_evidence}")
 
+    cl17 = original_pages["/climate-technology/emission-transitive-emission"]
+    required_cl17 = [
+        "P—40",
+        "CL17",
+        "Emission Transitive Emission",
+        "A personal research<br/><em>perspective.</em>",
+        "The author’s view · clearly separated from the evidence verdict",
+        "Li₂C₂ + 2 H₂O → C₂H₂ + 2 LiOH + heat",
+        "2 LiOH + CO₂ → Li₂CO₃ + H₂O",
+        "Lithium carbonate does not directly produce the acetylene",
+        "I may be wrong, which is precisely why the pathway should be tested openly",
+        "I do not seek ownership, control or exclusive rights",
+        "CL17_Emission_Transitive_Emission_Research_Package_2026-09-13.zip",
+    ]
+    missing_cl17 = [m for m in required_cl17 if m not in cl17]
+    if missing_cl17:
+        raise RuntimeError(f"CL17 publication verification failed: {missing_cl17}")
+
     solution_slide_urls = {u for u in discovered_urls if u.startswith("/solutions-now/slides/")}
     missing_slides = sorted(SOLUTION_SLIDES - solution_slide_urls)
     unexpected_slides = sorted(solution_slide_urls - SOLUTION_SLIDES)
@@ -739,7 +780,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 54 research library file set verified unchanged")
+    print("Version 56 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -763,7 +804,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 54 release-content checksums verified")
+    print("Protected version 56 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
