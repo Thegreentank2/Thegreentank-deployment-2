@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 57 Release 30 portable deployment backup is the baseline. This script requires the
-exact known version 57 route and research-file set and refuses removals or
+version 59 Release 30 portable deployment backup is the baseline. This script requires the
+exact known version 59 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,12 +25,12 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "7953aa6d724958d3a43be98ad62dcb81fe35205b1a2eac661cc0640e5a90bd16"
-BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-13_v57.zip"
-SOURCE_SITE_VERSION = 57
+BACKUP_SHA256 = "d4dd0c1106f09e1a39eb2379193caf0de41e9bf1b1487e746a872ff24f44339c"
+BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-14_v59.zip"
+SOURCE_SITE_VERSION = 59
 SOURCE_RELEASE = 30
 SOURCE_PUBLICATION_COUNT = 40
-SOURCE_COMMIT = "726d077a24efd31f82117377b212313e5d26ae5e"
+SOURCE_COMMIT = "45a806d309a6fb0f58534682a45b2bd97b4d67c8"
 
 ROUTES = [
     "/",
@@ -216,7 +216,7 @@ EXPECTED_CONTENT_SHA256 = {
     "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v57-fashion-police-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v59-music-player-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -517,7 +517,31 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v57 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v59 structure: {missing_home}")
+
+    expected_project_destinations = [
+        "/solutions-now",
+        "/library#publication-02",
+        "/library#publication-02",
+        "/library#publication-02",
+        "/solutions-now",
+        "/library#publication-01",
+        "/phantom-concorde",
+        "/library#publication-10",
+        "/climate-technology/emission-transitive-emission",
+    ]
+    actual_project_destinations = re.findall(
+        r'<a\s+class=["\']project-open["\']\s+href=["\']([^"\']+)["\']',
+        home,
+        re.I,
+    )
+    if actual_project_destinations != expected_project_destinations:
+        raise RuntimeError(
+            "Homepage project destinations changed: "
+            f"expected={expected_project_destinations}, actual={actual_project_destinations}"
+        )
+    if home.count(">Open subject<") != 9:
+        raise RuntimeError("Homepage must retain exactly nine Open subject links")
 
     required_library = [
         "Release 30",
@@ -557,7 +581,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v57 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v59 structure: {missing_library}")
 
     fashion_police = original_pages["/fashion-police"]
     required_fashion_police = [
@@ -599,10 +623,36 @@ def main() -> int:
         "/music/knots-1",
         "Six stages of one developing experiment",
         "CC0 — No Rights Reserved",
+        "Internet Archive players",
+        "Seven unique players from the Knots archive.",
+        "The Commercial player has been included once",
+        "SoundCloud and Internet Archive",
     ]
     missing_music = [m for m in required_music if m not in music]
     if missing_music:
-        raise RuntimeError(f"Dev Music page lost expected version 49 structure: {missing_music}")
+        raise RuntimeError(f"Dev Music page lost expected version 59 structure: {missing_music}")
+
+    expected_archive_player_ids = [
+        "knots-let-me-untie-you-3",
+        "knots-Universal-Let-me-untie-you",
+        "knots-pop-say-hello-a",
+        "knots-commercial-Let-me-untie-you",
+        "knots-let-me-auntie-uoo-say-hello",
+        "knots-Let-me-untie-you",
+        "Knots-POP-Let-me-untie-you",
+    ]
+    actual_archive_player_ids = re.findall(
+        r'src=["\']https://archive\.org/embed/([^"\']+)["\']',
+        music,
+        re.I,
+    )
+    if actual_archive_player_ids != expected_archive_player_ids:
+        raise RuntimeError(
+            "Music archive player set changed: "
+            f"expected={expected_archive_player_ids}, actual={actual_archive_player_ids}"
+        )
+    if actual_archive_player_ids.count("knots-commercial-Let-me-untie-you") != 1:
+        raise RuntimeError("Commercial Music archive player must appear exactly once")
 
     journey = original_pages["/music/knots-untying-through-perspective"]
     required_journey = [
@@ -815,7 +865,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 57 research library file set verified unchanged")
+    print("Version 59 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -839,7 +889,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 57 release-content checksums verified")
+    print("Protected version 59 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
