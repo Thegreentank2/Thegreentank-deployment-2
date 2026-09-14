@@ -396,10 +396,15 @@ def prefixed_path(path: str) -> str:
 
 def patch_html_paths(text: str) -> str:
     def repl(match: re.Match[str]) -> str:
-        normalized = normalize_same_origin(match.group("url"))
+        value = match.group("url")
+        normalized = normalize_same_origin(value)
         if normalized is None:
             return match.group(0)
-        return f'{match.group("attr")}={match.group("q")}{prefixed_path(normalized)}{match.group("q")}'
+        fragment = urlparse(urljoin(BASE, html.unescape(value).strip())).fragment
+        target = prefixed_path(normalized)
+        if fragment:
+            target += "#" + fragment
+        return f'{match.group("attr")}={match.group("q")}{target}{match.group("q")}'
     return ATTR_URL_RE.sub(repl, text)
 
 
@@ -542,6 +547,20 @@ def main() -> int:
         )
     if home.count(">Open subject<") != 9:
         raise RuntimeError("Homepage must retain exactly nine Open subject links")
+
+    expected_mirror_project_destinations = [prefixed_path(path) for path in expected_project_destinations]
+    mirrored_home = (OUT / "index.html").read_text(encoding="utf-8")
+    actual_mirror_project_destinations = re.findall(
+        r'<a\s+class=["\']project-open["\']\s+href=["\']([^"\']+)["\']',
+        mirrored_home,
+        re.I,
+    )
+    if actual_mirror_project_destinations != expected_mirror_project_destinations:
+        raise RuntimeError(
+            "Mirrored homepage project destinations changed: "
+            f"expected={expected_mirror_project_destinations}, "
+            f"actual={actual_mirror_project_destinations}"
+        )
 
     required_library = [
         "Release 30",
