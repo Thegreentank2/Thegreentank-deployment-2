@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 60 Release 31 portable deployment backup is the baseline. This script requires the
-exact known version 60 route and research-file set and refuses removals or
+version 61 Release 32 portable deployment backup is the baseline. This script requires the
+exact known version 61 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import html
 import json
+import os
 import re
 import shutil
 import sys
@@ -25,12 +26,13 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "f4b61a9732e764c0d1ee1d1a93aca321c3e8b19d5d4239fb08722deacbfb4773"
-BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-16_v60.zip"
-SOURCE_SITE_VERSION = 60
-SOURCE_RELEASE = 31
-SOURCE_PUBLICATION_COUNT = 41
-SOURCE_COMMIT = "dd208817f6bd40d8b4965493ea5408da9ad934ef"
+LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
+BACKUP_SHA256 = "d1d78d5928bd78e20cb979f3dcb2fe3bec70ab7ad9e118e256b1739a7ecd03bb"
+BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-16_v61.zip"
+SOURCE_SITE_VERSION = 61
+SOURCE_RELEASE = 32
+SOURCE_PUBLICATION_COUNT = 42
+SOURCE_COMMIT = "8ad281540b15a2832022bea939760fdb6399e32d"
 
 ROUTES = [
     "/",
@@ -38,6 +40,7 @@ ROUTES = [
     "/solutions-now/evidence",
     "/library",
     "/finances",
+    "/finances/the-family-centre",
     "/finances/universal-payment-and-shared-growth",
     "/psy-chology",
     "/psy-chology/learning-is-a-matter-of-perspective",
@@ -161,6 +164,7 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/CL17_Supplemental_Investigations.pdf",
     "/research/Emission_Transitive_Emission_Evidence_Review.docx",
     "/research/Emission_Transitive_Emission_Evidence_Review.pdf",
+    "/research/The_Family_Centre_Before_Now_After_September_2026.pptx",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -187,6 +191,25 @@ EXPECTED_CONTENT_SHA256 = {
     "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pptx": "3cfd6e8892bdd258280cbaeb05b2db5a49d118d2b36a39eb45f099c6770b3948",
     "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pdf": "f03b4459f0b14a138f6bbbcd6066fa069cc11348260b2f0293ac76fdf697523f",
     "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22_Transcript.txt": "a1ee5b764631e4c944a5b4030df8f94b66e9e544f3f85076f90b1e09832d30bf",
+    "/research/The_Family_Centre_Before_Now_After_September_2026.pptx": "aa686d8ec321648aa90771eb3a9f40c5973d61e045725dbc4b8198586db482b3",
+    "/finances/family-centre/slides/slide-1.webp": "d23f090ffc3738e4c965d2f616317089989b410f99ebf2f3b047fa94036e3a9c",
+    "/finances/family-centre/slides/slide-2.webp": "572cdd70f6d795847483315df45b8cfaa921ad77b29b736e4f45b5d1d5522b84",
+    "/finances/family-centre/slides/slide-3.webp": "e5d5538008f46c4aed8cd3c54e685a53b5a30eb8f060c907690a288428736dbb",
+    "/finances/family-centre/slides/slide-4.webp": "cae3e446f02f466471e68dbe78db5f28b5e8766a5ce5d6536676dd7ad592adfd",
+    "/finances/family-centre/slides/slide-5.webp": "eea5ab626d8fd3efac356e05f97ba3799dc4ec8d76cf283ae862ba0e063c972b",
+    "/finances/family-centre/slides/slide-6.webp": "2acb3bac78f1ca340f98330fc055edc991bb08b87f90df87dc4419da5b4064e3",
+    "/finances/family-centre/slides/slide-7.webp": "4daf3a513dddfa7c4120f8fff417a6c692f277761f5380974f43a67d115a4414",
+    "/finances/family-centre/slides/slide-8.webp": "e25cb864f7853e4c555bf2b226c521579e26e21985ed871f6ad9da106f60bc15",
+    "/finances/family-centre/slides/slide-9.webp": "9d16439bd422425e72e506065878e9a45436fdace93490423117d27081bb438d",
+    "/finances/family-centre/slides/slide-10.webp": "4a7aae61beb4e9a58ee4410b52f080467eb34b9cc10af00b5b2c8396aba9f8c3",
+    "/finances/family-centre/slides/slide-11.webp": "2d0fdef9161721be8e7a400ec07df93a2226616e0e0aa2e046e05ebdcf6cdc64",
+    "/finances/family-centre/slides/slide-12.webp": "b1ed9bd34015759853e4172bde17a15b0ae9f80cb11dcf3c505091b7641c04b9",
+    "/finances/family-centre/slides/slide-13.webp": "8f2a4dd4ddf2e95b540e07eca965ce31e9042d4450324402b3c9af055995f8e2",
+    "/finances/family-centre/slides/slide-14.webp": "db1fb0538d810b68f31c98e65022e2da3314f5b90d7c5642fce475dfe1eda62f",
+    "/finances/family-centre/slides/slide-15.webp": "14187af189fabb43334ee79701f49f3e2318f7716c3fdc382f1394fc555a918f",
+    "/finances/family-centre/slides/slide-16.webp": "b2a914e2e473d463a9af4eac9ea385524be3eefe14b6f5c26de620799a51df14",
+    "/finances/family-centre/slides/slide-17.webp": "bb5c88cb8013233dde4285de9470c119ccbde860601d9e933f12c62e8c5afc4b",
+    "/finances/family-centre/slides/slide-18.webp": "7f45318d24b682201f10af95eb58728c1f017338a3628b99b2b79eacb5e2d3d5",
     "/solutions-now/slides/slide-1.webp": "2ec473d54e721e0a4782b6690236c737b9af3c528aef27ccbfc064bff792f900",
     "/solutions-now/slides/slide-2.webp": "2d3c4ca9f35a8b27628f123f1d9d5f3f80a062c27c90c267d1fc4a6c4e62caf7",
     "/solutions-now/slides/slide-3.webp": "c96a27d5501eb409a1bb2484fb6062ba87cfc27d54bd6df2952375cee171b83c",
@@ -221,7 +244,8 @@ EXPECTED_CONTENT_SHA256 = {
     "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v60-democratic-centre-guard"
+FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v61-family-centre-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -351,8 +375,66 @@ SOLUTIONS_EVIDENCE_SCRIPT = r"""
 })();
 """
 
+FAMILY_CENTRE_SCRIPT = r"""
+(() => {
+  const viewer = document.querySelector(".family-centre-viewer");
+  const controls = [...(viewer?.querySelectorAll(".family-centre-viewer-controls button") || [])];
+  const indexButtons = [...(viewer?.querySelectorAll(".family-centre-slide-index button") || [])];
+  const title = viewer?.querySelector("#family-centre-viewer-title");
+  const topline = viewer?.querySelector("header .eyebrow");
+  const anchor = viewer?.querySelector(".family-centre-current-slide > a");
+  const image = anchor?.querySelector("img");
+  const fullSizeLink = viewer?.querySelector(".family-centre-current-slide figcaption a");
+  let current = 0;
+
+  if (!viewer || controls.length !== 2 || indexButtons.length !== 18 ||
+      !title || !topline || !anchor || !image || !fullSizeLink) return;
+
+  const firstSlidePath = image.getAttribute("src") || "";
+  const slidePath = index => firstSlidePath.replace(/slide-\d+\.webp$/, `slide-${index + 1}.webp`);
+
+  function show(index, scroll = false) {
+    current = Math.max(0, Math.min(indexButtons.length - 1, index));
+    const itemTitle = indexButtons[current].querySelector("strong")?.textContent?.trim() || "";
+    const path = slidePath(current);
+
+    title.textContent = itemTitle;
+    topline.textContent = `Read here · slide ${current + 1} of ${indexButtons.length}`;
+    anchor.href = path;
+    anchor.setAttribute("aria-label", `Open slide ${current + 1} full size: ${itemTitle}`);
+    image.src = path;
+    image.alt = `Slide ${current + 1} of ${indexButtons.length}: ${itemTitle}`;
+    fullSizeLink.href = path;
+
+    indexButtons.forEach((button, buttonIndex) => {
+      const selected = buttonIndex === current;
+      button.classList.toggle("is-current", selected);
+      if (selected) button.setAttribute("aria-current", "true");
+      else button.removeAttribute("aria-current");
+    });
+    controls[0].disabled = current === 0;
+    controls[1].disabled = current === indexButtons.length - 1;
+    if (scroll) viewer.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
+  controls[0].addEventListener("click", () => show(current - 1, true));
+  controls[1].addEventListener("click", () => show(current + 1, true));
+  indexButtons.forEach((button, index) => button.addEventListener("click", () => show(index, true)));
+  window.addEventListener("keydown", event => {
+    if (event.key === "ArrowLeft") show(current - 1);
+    if (event.key === "ArrowRight") show(current + 1);
+  });
+  show(0);
+})();
+"""
+
 
 def fetch(url: str, attempts: int = 3) -> bytes:
+    parsed = urlparse(url)
+    if LOCAL_SOURCE_ROOT is not None and parsed.netloc == BASE_HOST:
+        candidate = LOCAL_SOURCE_ROOT / unquote(parsed.path).lstrip("/")
+        if candidate.is_file():
+            return candidate.read_bytes()
     last = None
     for attempt in range(1, attempts + 1):
         try:
@@ -481,17 +563,21 @@ def main() -> int:
         if route == "/solutions-now/evidence":
             mirror_script = f"{PREFIX}/assets/solutions-evidence.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+        if route == "/finances/the-family-centre":
+            mirror_script = f"{PREFIX}/assets/family-centre.js"
+            cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
         write_bytes(route_output(route), cleaned.encode("utf-8"))
         print(f"mirrored route {route}")
 
     write_bytes(OUT / "assets" / "monkey-banana.js", MONKEY_BANANA_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "solutions-evidence.js", SOLUTIONS_EVIDENCE_SCRIPT.encode("utf-8"))
+    write_bytes(OUT / "assets" / "family-centre.js", FAMILY_CENTRE_SCRIPT.encode("utf-8"))
 
     home = original_pages["/"]
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Forty-one publications",
+        "Forty-two publications",
         "P—29",
         "P—30",
         "P—31",
@@ -505,6 +591,9 @@ def main() -> int:
         "P—39",
         "P—40",
         "P—41",
+        "P—42",
+        "The Family Centre",
+        "/finances/the-family-centre",
         "The Democratic Centre as a Shared Civic Space",
         "/social-technology/democratic-centre",
         "CL17 — Emission Transitive Emission",
@@ -530,7 +619,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v60 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v61 structure: {missing_home}")
 
     expected_project_destinations = [
         "/solutions-now",
@@ -571,9 +660,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 31",
-        "41 publications",
-        "91 public research files",
+        "Release 32",
+        "42 publications",
+        "92 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -587,6 +676,9 @@ def main() -> int:
         "P—39",
         "P—40",
         "P—41",
+        "P—42",
+        "The Family Centre: A Possible Future for Living Civic Support",
+        "/finances/the-family-centre",
         "The Democratic Centre as a Shared Civic Space",
         "Open the Democratic Centre paper",
         "CL17 — Emission Transitive Emission",
@@ -611,7 +703,48 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v60 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v61 structure: {missing_library}")
+
+    finances = original_pages["/finances"]
+    required_finances = [
+        "What income security",
+        "could make possible.",
+        "Possible lived result · P—42",
+        "Enter the Family Centre",
+        "/finances/the-family-centre",
+    ]
+    missing_finances = [m for m in required_finances if m not in finances]
+    if missing_finances:
+        raise RuntimeError(f"Finances collection verification failed: {missing_finances}")
+
+    family_centre = original_pages["/finances/the-family-centre"]
+    required_family_centre = [
+        "P—42",
+        "The Family Centre",
+        "A place built for living.",
+        "Possible future, not promised outcome",
+        "Three parts of one possibility",
+        "View the presentation here",
+        "Transformation without abandonment",
+        "Care without paternalism",
+        "Complete presentation · 18 slides",
+        "The change is deeper than a new sign",
+        "Selected evidence and policy context",
+        "The_Family_Centre_Before_Now_After_September_2026.pptx",
+        "aa686d8ec321648aa90771eb3a9f40c5973d61e045725dbc4b8198586db482b3",
+    ]
+    missing_family_centre = [m for m in required_family_centre if m not in family_centre]
+    if missing_family_centre:
+        raise RuntimeError(f"Family Centre publication verification failed: {missing_family_centre}")
+    family_slide_buttons = re.findall(
+        r'<li><button\s+type=["\']button["\']',
+        family_centre,
+        re.I,
+    )
+    if len(family_slide_buttons) != 18:
+        raise RuntimeError(
+            f"Family Centre viewer must retain exactly 18 slide controls; found {len(family_slide_buttons)}"
+        )
 
     fashion_police = original_pages["/fashion-police"]
     required_fashion_police = [
@@ -660,7 +793,7 @@ def main() -> int:
     ]
     missing_music = [m for m in required_music if m not in music]
     if missing_music:
-        raise RuntimeError(f"Dev Music page lost expected version 60 structure: {missing_music}")
+        raise RuntimeError(f"Dev Music page lost expected version 61 structure: {missing_music}")
 
     expected_archive_player_ids = [
         "knots-let-me-untie-you-3",
@@ -733,6 +866,8 @@ def main() -> int:
         "Friendship · three public letters",
         "/social-technology/friendship-three",
         "Friendship Three",
+        "/finances/the-family-centre",
+        "The Family Centre",
     ]
     missing_social = [m for m in required_social if m not in social]
     if missing_social:
@@ -925,7 +1060,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 60 research library file set verified unchanged")
+    print("Version 61 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -935,6 +1070,7 @@ def main() -> int:
     asset_urls.update(research_urls)
     asset_urls.update(EXTRA_BASELINE_PUBLIC_FILES)
     asset_urls.update(SOLUTION_SLIDES)
+    asset_urls.update(FAMILY_CENTRE_SLIDES)
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
@@ -949,7 +1085,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 60 release-content checksums verified")
+    print("Protected version 61 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
