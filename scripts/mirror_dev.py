@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 59 Release 30 portable deployment backup is the baseline. This script requires the
-exact known version 59 route and research-file set and refuses removals or
+version 60 Release 31 portable deployment backup is the baseline. This script requires the
+exact known version 60 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -25,12 +25,12 @@ BASE = "https://the-green-tank.alexiscoderpenguy.chatgpt.site"
 BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
-BACKUP_SHA256 = "d4dd0c1106f09e1a39eb2379193caf0de41e9bf1b1487e746a872ff24f44339c"
-BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-14_v59.zip"
-SOURCE_SITE_VERSION = 59
-SOURCE_RELEASE = 30
-SOURCE_PUBLICATION_COUNT = 40
-SOURCE_COMMIT = "45a806d309a6fb0f58534682a45b2bd97b4d67c8"
+BACKUP_SHA256 = "f4b61a9732e764c0d1ee1d1a93aca321c3e8b19d5d4239fb08722deacbfb4773"
+BACKUP_LABEL = "The_Green_Tank_Dev_Backup_2026-09-16_v60.zip"
+SOURCE_SITE_VERSION = 60
+SOURCE_RELEASE = 31
+SOURCE_PUBLICATION_COUNT = 41
+SOURCE_COMMIT = "dd208817f6bd40d8b4965493ea5408da9ad934ef"
 
 ROUTES = [
     "/",
@@ -54,6 +54,7 @@ ROUTES = [
     "/climate-technology/emission-transitive-emission",
     "/economic-fairness/universal-basic-income",
     "/social-technology",
+    "/social-technology/democratic-centre",
     "/social-technology/care-for-those-who-care-for-us",
     "/social-technology/drugs-and-society",
     "/social-technology/drugs-and-society/drug-knowledge-body-autonomy-and-patient-choice",
@@ -88,6 +89,8 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Left_Authoritarianism.pdf",
     "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Right_Extremism.docx",
     "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Right_Extremism.pdf",
+    "/research/Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.docx",
+    "/research/Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.pdf",
     "/research/Alex_Anderson_Neighbourhood_Communal_Recycling_Bins_Reconciled.docx",
     "/research/Alex_Anderson_Neighbourhood_Communal_Recycling_Bins_Reconciled.pdf",
     "/research/Alex_Anderson_No_More_Landlords_Mortgage.docx",
@@ -167,6 +170,8 @@ EXTRA_BASELINE_PUBLIC_FILES = {
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
+    "/research/Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.docx": "bdcb7dc3b65b21d5776dab6f211f7903660bb6f5f963f1f63b295f9eeb403f47",
+    "/research/Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.pdf": "f0dc594a80c265b8e60af4b9131527d16aba06a00085216887bee628f3dd161b",
     "/research/CL17_Emission_Transitive_Emission_Matrix.xlsx": "85a25fdc985b22976b403aa2a115fc1f42f30d861ee2781add62ad4458859ad2",
     "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.docx": "3b01b578d3c1f037d6c6bcdb7d1dc6ef122f67e14aec451e48b597d34014ec23",
     "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.pdf": "bf4d3c75e2174aeb197d56675500eefb75edbba48dd0c278d9b4593f927d6538",
@@ -216,7 +221,7 @@ EXPECTED_CONTENT_SHA256 = {
     "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v59-music-player-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v60-democratic-centre-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -486,7 +491,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Forty publications",
+        "Forty-one publications",
         "P—29",
         "P—30",
         "P—31",
@@ -499,6 +504,9 @@ def main() -> int:
         "P—38",
         "P—39",
         "P—40",
+        "P—41",
+        "The Democratic Centre as a Shared Civic Space",
+        "/social-technology/democratic-centre",
         "CL17 — Emission Transitive Emission",
         "Friendship Three",
         "The Friendship Treaty",
@@ -522,7 +530,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v59 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v60 structure: {missing_home}")
 
     expected_project_destinations = [
         "/solutions-now",
@@ -563,9 +571,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 30",
-        "40 publications",
-        "89 public research files",
+        "Release 31",
+        "41 publications",
+        "91 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -578,6 +586,9 @@ def main() -> int:
         "P—38",
         "P—39",
         "P—40",
+        "P—41",
+        "The Democratic Centre as a Shared Civic Space",
+        "Open the Democratic Centre paper",
         "CL17 — Emission Transitive Emission",
         "Solutions Now",
         "Freedom to Live",
@@ -600,7 +611,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v59 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v60 structure: {missing_library}")
 
     fashion_police = original_pages["/fashion-police"]
     required_fashion_police = [
@@ -649,7 +660,7 @@ def main() -> int:
     ]
     missing_music = [m for m in required_music if m not in music]
     if missing_music:
-        raise RuntimeError(f"Dev Music page lost expected version 59 structure: {missing_music}")
+        raise RuntimeError(f"Dev Music page lost expected version 60 structure: {missing_music}")
 
     expected_archive_player_ids = [
         "knots-let-me-untie-you-3",
@@ -707,6 +718,10 @@ def main() -> int:
     social = original_pages["/social-technology"]
     required_social = [
         "Technology is also",
+        "The common table.",
+        "Not the halfway opinion.",
+        "Democratic Centre",
+        "/social-technology/democratic-centre",
         "Drugs:",
         "Evidence, Experience &amp; Supply.",
         "Health Systems",
@@ -722,6 +737,32 @@ def main() -> int:
     missing_social = [m for m in required_social if m not in social]
     if missing_social:
         raise RuntimeError(f"Social Technology verification failed: {missing_social}")
+
+    democratic_centre = original_pages["/social-technology/democratic-centre"]
+    required_democratic_centre = [
+        "P—41",
+        "The Democratic Centre",
+        "as a Shared Civic Space.",
+        "A place, not a halfway political opinion",
+        "Separate the views.",
+        "Keep the people together.",
+        "Existing perspective · P—18",
+        "Existing perspective · P—24",
+        "false equivalence",
+        "A proposal to test,",
+        "not a centre to obey.",
+        "46 references",
+        "supplied DOCX is preserved unchanged",
+        "Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.pdf",
+        "Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.docx",
+    ]
+    missing_democratic_centre = [
+        marker for marker in required_democratic_centre if marker not in democratic_centre
+    ]
+    if missing_democratic_centre:
+        raise RuntimeError(
+            f"Democratic Centre verification failed: {missing_democratic_centre}"
+        )
 
     friendship_three = original_pages["/social-technology/friendship-three"]
     required_friendship_three = [
@@ -884,7 +925,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 59 research library file set verified unchanged")
+    print("Version 60 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -908,7 +949,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 59 release-content checksums verified")
+    print("Protected version 60 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
