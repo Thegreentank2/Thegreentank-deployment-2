@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 62 Release 33 portable deployment backup is the baseline. This script requires the
-exact known version 62 route and research-file set and refuses removals or
+version 63 Release 34 portable deployment backup is the baseline. This script requires the
+exact known version 63 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "084bd603963866eb9fb41ac5ea5072e0b8d74d86abda86e4b1293f70933f33ed"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_Release_33_Version_62_2026-09-17.zip"
-SOURCE_SITE_VERSION = 62
-SOURCE_RELEASE = 33
-SOURCE_PUBLICATION_COUNT = 43
-SOURCE_COMMIT = "018f4356163c0615a152db398b26f7f36c959f38"
+BACKUP_SHA256 = "63e957343c3e788e46cc5c70d20c90fd2be8ecdb0506b2a9ddb933ac81f6c561"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-18_P44.zip"
+SOURCE_SITE_VERSION = 63
+SOURCE_RELEASE = 34
+SOURCE_PUBLICATION_COUNT = 44
+SOURCE_COMMIT = "81851a7409637a4ecb8221d60376b7ad669ad8ae"
 
 ROUTES = [
     "/",
@@ -71,6 +71,7 @@ ROUTES = [
     "/social-technology/psy-body-psychology-communication",
     "/social-technology/voting-without-fear",
     "/social-technology/health-systems-and-patient-choice",
+    "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
     "/social-technology/justice-and-accountability",
     "/social-technology/public-duty-and-democratic-accountability",
 ]
@@ -168,6 +169,7 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/The_Family_Centre_Before_Now_After_September_2026.pptx",
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.docx",
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.pdf",
+    "/research/NHS_Interim_Needs_and_Adjustments_Certificate_Policy_Proposal_2026.docx",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
@@ -177,6 +179,7 @@ EXTRA_BASELINE_PUBLIC_FILES = {
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
+    "/research/NHS_Interim_Needs_and_Adjustments_Certificate_Policy_Proposal_2026.docx": "e7e041c26691f0a9891a2b6100bc79e5af36395c3304cc5234b9d20f2607b94c",
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.docx": "a4c3ef94092bfd2ce108f85db79e9ea846cddfcaee9de9c5c67591ef2d562a0e",
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.pdf": "0105494be8a1c37d3c17f6f521ca303a9bab21958035dae410609206548aa4b7",
     "/research/Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.docx": "bdcb7dc3b65b21d5776dab6f211f7903660bb6f5f963f1f63b295f9eeb403f47",
@@ -250,7 +253,7 @@ EXPECTED_CONTENT_SHA256 = {
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
 FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v62-public-duty-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v63-nhs-continuity-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -582,7 +585,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Forty-three publications",
+        "Forty-four publications",
         "P—29",
         "P—30",
         "P—31",
@@ -598,6 +601,9 @@ def main() -> int:
         "P—41",
         "P—42",
         "P—43",
+        "P—44",
+        "NHS Interim Needs and Adjustments Certificate",
+        "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
         "Public Duty and Democratic Accountability",
         "/social-technology/public-duty-and-democratic-accountability",
         "The Family Centre",
@@ -627,7 +633,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v62 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v63 structure: {missing_home}")
 
     expected_project_destinations = [
         "/solutions-now",
@@ -668,9 +674,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 33",
-        "43 publications",
-        "94 public research files",
+        "Release 34",
+        "44 publications",
+        "95 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -686,6 +692,9 @@ def main() -> int:
         "P—41",
         "P—42",
         "P—43",
+        "P—44",
+        "NHS Interim Needs and Adjustments Certificate",
+        "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
         "Public Duty and Democratic Accountability",
         "/social-technology/public-duty-and-democratic-accountability",
         "The Family Centre: A Possible Future for Living Civic Support",
@@ -698,7 +707,7 @@ def main() -> int:
         "Justice &amp; Accountability",
         "When Organisations Fail",
         "Drugs &amp; Society",
-        "Health Systems and Patient Choice",
+        "Health systems · NHS continuity",
         "NHS Right to Choose",
         "Finances",
         "Universal Payment and Shared Growth",
@@ -714,7 +723,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v62 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v63 structure: {missing_library}")
 
     finances = original_pages["/finances"]
     required_finances = [
@@ -804,7 +813,7 @@ def main() -> int:
     ]
     missing_music = [m for m in required_music if m not in music]
     if missing_music:
-        raise RuntimeError(f"Dev Music page lost expected version 62 structure: {missing_music}")
+        raise RuntimeError(f"Dev Music page lost expected version 63 structure: {missing_music}")
 
     expected_archive_player_ids = [
         "knots-let-me-untie-you-3",
@@ -869,7 +878,9 @@ def main() -> int:
         "Drugs:",
         "Evidence, Experience &amp; Supply.",
         "Health Systems",
-        "What happens to NHS Right to Choose funding after referral?",
+        "Patient choice should include the right to remain in continuous NHS care",
+        "NHS Interim Needs and Adjustments Certificate",
+        "existing study in formation",
         "/social-technology/drugs-and-society",
         "/social-technology/health-systems-and-patient-choice",
         "Justice &amp; Accountability",
@@ -990,7 +1001,15 @@ def main() -> int:
 
     health_study = original_pages["/social-technology/health-systems-and-patient-choice"]
     required_health_study = [
-        "Study in formation",
+        "Choice should include",
+        "staying with the NHS.",
+        "Two distinct publications",
+        "New policy proposal · P—44",
+        "Open the NHS continuity proposal",
+        "A right to choose",
+        "long-term NHS care.",
+        "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
+        "Open question · source document",
         "Follow public money through",
         "private provision.",
         "Five links must remain connected.",
@@ -1002,6 +1021,28 @@ def main() -> int:
     missing_health_study = [m for m in required_health_study if m not in health_study]
     if missing_health_study:
         raise RuntimeError(f"Health Systems study verification failed: {missing_health_study}")
+
+    interim_certificate = original_pages[
+        "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate"
+    ]
+    required_interim_certificate = [
+        "P—44",
+        "NHS Interim Needs and Adjustments Certificate",
+        "The right to remain in NHS care",
+        "Proposed statutory certificate",
+        "not yet enacted",
+        "NHS continuity choice",
+        "Good-faith clinical judgment",
+        "No loss of existing rights",
+        "NHS_Interim_Needs_and_Adjustments_Certificate_Policy_Proposal_2026.docx",
+    ]
+    missing_interim_certificate = [
+        marker for marker in required_interim_certificate if marker not in interim_certificate
+    ]
+    if missing_interim_certificate:
+        raise RuntimeError(
+            f"Interim Needs and Adjustments Certificate verification failed: {missing_interim_certificate}"
+        )
 
     justice = original_pages["/social-technology/justice-and-accountability"]
     required_justice = [
@@ -1099,7 +1140,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 62 research library file set verified unchanged")
+    print("Version 63 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1124,7 +1165,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 62 release-content checksums verified")
+    print("Protected version 63 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
