@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 63 Release 34 portable deployment backup is the baseline. This script requires the
-exact known version 63 route and research-file set and refuses removals or
+version 64 Release 35 portable deployment backup is the baseline. This script requires the
+exact known version 64 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "63e957343c3e788e46cc5c70d20c90fd2be8ecdb0506b2a9ddb933ac81f6c561"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-18_P44.zip"
-SOURCE_SITE_VERSION = 63
-SOURCE_RELEASE = 34
-SOURCE_PUBLICATION_COUNT = 44
-SOURCE_COMMIT = "81851a7409637a4ecb8221d60376b7ad669ad8ae"
+BACKUP_SHA256 = "182de3d9ce5415bd445e1b571a50a27c2c405eb743178355bfdddfbef91b4a1a"
+BACKUP_LABEL = "The_Green_Tank_Dev_Full_Site_Backup_Release_35_2026-09-19.zip"
+SOURCE_SITE_VERSION = 64
+SOURCE_RELEASE = 35
+SOURCE_PUBLICATION_COUNT = 45
+SOURCE_COMMIT = "4c115b5a981da6a8f7793c0a834206d440390a02"
 
 ROUTES = [
     "/",
@@ -65,6 +65,7 @@ ROUTES = [
     "/social-technology/friendship-two",
     "/social-technology/friendship-three",
     "/social-technology/inner-and-outer-world",
+    "/social-technology/where-do-we-expect-god-to-live",
     "/social-technology/lion-king-or-big-cat",
     "/social-technology/monkey-banana",
     "/social-technology/perception-learning-expansion",
@@ -253,7 +254,7 @@ EXPECTED_CONTENT_SHA256 = {
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
 FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v63-nhs-continuity-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v64-moral-mirror-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -585,7 +586,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Forty-four publications",
+        "Forty-five publications",
         "P—29",
         "P—30",
         "P—31",
@@ -602,6 +603,9 @@ def main() -> int:
         "P—42",
         "P—43",
         "P—44",
+        "P—45",
+        "Where Do We Expect God to Live?",
+        "/social-technology/where-do-we-expect-god-to-live",
         "NHS Interim Needs and Adjustments Certificate",
         "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
         "Public Duty and Democratic Accountability",
@@ -633,7 +637,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v63 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v64 structure: {missing_home}")
 
     expected_project_destinations = [
         "/solutions-now",
@@ -674,8 +678,8 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 34",
-        "44 publications",
+        "Release 35",
+        "45 publications",
         "95 public research files",
         "P—29",
         "P—30",
@@ -693,6 +697,9 @@ def main() -> int:
         "P—42",
         "P—43",
         "P—44",
+        "P—45",
+        "Where Do We Expect God to Live?",
+        "/social-technology/where-do-we-expect-god-to-live",
         "NHS Interim Needs and Adjustments Certificate",
         "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
         "Public Duty and Democratic Accountability",
@@ -723,7 +730,28 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v63 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v64 structure: {missing_library}")
+
+    moral_mirror = original_pages["/social-technology/where-do-we-expect-god-to-live"]
+    required_moral_mirror = [
+        "P—45",
+        "Where do we expect",
+        "God to live?",
+        "If every person bears God’s image",
+        "Human beings do not literally force God to live there",
+        "When you condemn another person to misery",
+        "whom are you truly punishing?",
+        "Love does not merely visit suffering; it works to end it.",
+        "Those who understand the sacred differently",
+        "This is not an invitation to admire suffering or call it sacred.",
+        "/social-technology/friendship-three",
+        "/social-technology/care-for-those-who-care-for-us",
+        "/solutions-now",
+        "/social-technology/justice-and-accountability",
+    ]
+    missing_moral_mirror = [m for m in required_moral_mirror if m not in moral_mirror]
+    if missing_moral_mirror:
+        raise RuntimeError(f"P—45 moral-mirror verification failed: {missing_moral_mirror}")
 
     finances = original_pages["/finances"]
     required_finances = [
@@ -1140,7 +1168,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 63 research library file set verified unchanged")
+    print("Version 64 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1165,7 +1193,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 63 release-content checksums verified")
+    print("Protected version 64 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
