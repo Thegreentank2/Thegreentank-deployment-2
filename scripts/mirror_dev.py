@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 64 Release 35 portable deployment backup is the baseline. This script requires the
-exact known version 64 route and research-file set and refuses removals or
+version 65 Release 36 portable deployment backup is the baseline. This script requires the
+exact known version 65 route and research-file set and refuses removals or
 unexpected additions.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "182de3d9ce5415bd445e1b571a50a27c2c405eb743178355bfdddfbef91b4a1a"
-BACKUP_LABEL = "The_Green_Tank_Dev_Full_Site_Backup_Release_35_2026-09-19.zip"
-SOURCE_SITE_VERSION = 64
-SOURCE_RELEASE = 35
-SOURCE_PUBLICATION_COUNT = 45
-SOURCE_COMMIT = "4c115b5a981da6a8f7793c0a834206d440390a02"
+BACKUP_SHA256 = "d853b05d80b5624111664c79c23701f617fd317ed9e77004a4b8bb360eb43198"
+BACKUP_LABEL = "The_Green_Tank_Dev_Full_Site_Backup_Release_36_v65_2026-09-20.zip"
+SOURCE_SITE_VERSION = 65
+SOURCE_RELEASE = 36
+SOURCE_PUBLICATION_COUNT = 46
+SOURCE_COMMIT = "08503b0ad1601a9c1a354ea526bdd34c20ad4e7b"
 
 ROUTES = [
     "/",
@@ -57,6 +57,7 @@ ROUTES = [
     "/climate-technology/emission-transitive-emission",
     "/economic-fairness/universal-basic-income",
     "/social-technology",
+    "/social-technology/public-service-and-community-resilience/pace",
     "/social-technology/democratic-centre",
     "/social-technology/care-for-those-who-care-for-us",
     "/social-technology/drugs-and-society",
@@ -171,15 +172,21 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.docx",
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.pdf",
     "/research/NHS_Interim_Needs_and_Adjustments_Certificate_Policy_Proposal_2026.docx",
+    "/research/National_PACE_Resilience_Service_Proposal.docx",
+    "/research/National_PACE_Resilience_Service_Proposal.pdf",
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
     "/research/Buddha_Net_Simulator_Standalone.html",
     "/research/NHS_Right_to_Choose_Data_Acquisition_Survey.docx",
     "/simulators/Buddha_Net_Simulator_Standalone.html",
+    "/social-technology/pace/pace-community-vehicle-concept.png",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
+    "/research/National_PACE_Resilience_Service_Proposal.docx": "7208fb1d6f85b58e35861c5bfb873591139af8cc30236abefdf95671fd11564d",
+    "/research/National_PACE_Resilience_Service_Proposal.pdf": "0e0bcd00d857535b94652718e6198ef639c401e3f87707c4fb42ef82532024b8",
+    "/social-technology/pace/pace-community-vehicle-concept.png": "1f2d4dfa804c1c921d31d91de6acc929a02a1725a5ca0a680c5d1aaa6ddc64f3",
     "/research/NHS_Interim_Needs_and_Adjustments_Certificate_Policy_Proposal_2026.docx": "e7e041c26691f0a9891a2b6100bc79e5af36395c3304cc5234b9d20f2607b94c",
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.docx": "a4c3ef94092bfd2ce108f85db79e9ea846cddfcaee9de9c5c67591ef2d562a0e",
     "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.pdf": "0105494be8a1c37d3c17f6f521ca303a9bab21958035dae410609206548aa4b7",
@@ -254,7 +261,7 @@ EXPECTED_CONTENT_SHA256 = {
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
 FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v64-moral-mirror-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.0-v65-pace-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -586,7 +593,7 @@ def main() -> int:
     library = original_pages["/library"]
     required_home = [
         "Before we judge",
-        "Forty-five publications",
+        "Forty-six publications",
         "P—29",
         "P—30",
         "P—31",
@@ -604,6 +611,9 @@ def main() -> int:
         "P—43",
         "P—44",
         "P—45",
+        "P—46",
+        "PACE — Public Assistance, Communication and Emergency Support",
+        "/social-technology/public-service-and-community-resilience/pace",
         "Where Do We Expect God to Live?",
         "/social-technology/where-do-we-expect-god-to-live",
         "NHS Interim Needs and Adjustments Certificate",
@@ -637,7 +647,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v64 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v65 structure: {missing_home}")
 
     expected_project_destinations = [
         "/solutions-now",
@@ -678,9 +688,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 35",
-        "45 publications",
-        "95 public research files",
+        "Release 36",
+        "46 publications",
+        "97 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -698,6 +708,11 @@ def main() -> int:
         "P—43",
         "P—44",
         "P—45",
+        "P—46",
+        "PACE — Public Assistance, Communication and Emergency Support",
+        "/social-technology/public-service-and-community-resilience/pace",
+        "National_PACE_Resilience_Service_Proposal.pdf",
+        "National_PACE_Resilience_Service_Proposal.docx",
         "Where Do We Expect God to Live?",
         "/social-technology/where-do-we-expect-god-to-live",
         "NHS Interim Needs and Adjustments Certificate",
@@ -730,7 +745,33 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v64 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v65 structure: {missing_library}")
+
+    pace = original_pages[
+        "/social-technology/public-service-and-community-resilience/pace"
+    ]
+    required_pace = [
+        "Public Service &amp; Community Resilience · P—46",
+        "Public Assistance, Communication and Emergency Support",
+        "Not a current public service",
+        "cannot stop, search, detain, pursue, penalise or compel anyone",
+        "Help is available because a person needs it",
+        "three years of licensed driving experience",
+        "genuine living wage",
+        "A ceiling is not a target",
+        "govern PACE fleet vehicles only",
+        "not an unaccountable surveillance fleet",
+        "Begin parked",
+        "PACE has the practical means to help but no general power to control people",
+        "Illustrative concept image",
+        "Not a final vehicle specification",
+        "National_PACE_Resilience_Service_Proposal.pdf",
+        "National_PACE_Resilience_Service_Proposal.docx",
+        "pace-community-vehicle-concept.png",
+    ]
+    missing_pace = [marker for marker in required_pace if marker not in pace]
+    if missing_pace:
+        raise RuntimeError(f"P—46 PACE verification failed: {missing_pace}")
 
     moral_mirror = original_pages["/social-technology/where-do-we-expect-god-to-live"]
     required_moral_mirror = [
@@ -899,6 +940,9 @@ def main() -> int:
     social = original_pages["/social-technology"]
     required_social = [
         "Technology is also",
+        "Public Service &amp; Community Resilience · new proposal · P—46",
+        "PACE — Public Assistance, Communication and Emergency Support",
+        "/social-technology/public-service-and-community-resilience/pace",
         "The common table.",
         "Not the halfway opinion.",
         "Democratic Centre",
@@ -1168,7 +1212,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 64 research library file set verified unchanged")
+    print("Version 65 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1193,7 +1237,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 64 release-content checksums verified")
+    print("Protected version 65 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
