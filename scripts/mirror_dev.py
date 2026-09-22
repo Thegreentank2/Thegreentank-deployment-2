@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 66 Release 36 portable deployment backup is the baseline. This script requires the
-exact known version 66 route, research-file and AI Sub Space sets and refuses
+version 67 Release 36 portable deployment backup is the baseline. This script requires the
+exact known version 67 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,17 +27,18 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "4901ed07487fe609fee4f69ca016cd2a29803eecc79928cb2b8878ad0248b489"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-21_v66.zip"
-SOURCE_SITE_VERSION = 66
+BACKUP_SHA256 = "98015ebe92865f40ae8e7d23180808f0fe34706b8e2afad5bb19282493aed666"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-22_v67.zip"
+SOURCE_SITE_VERSION = 67
 SOURCE_RELEASE = 36
 SOURCE_PUBLICATION_COUNT = 46
-SOURCE_COMMIT = "8e8c966f0ed682dcedafde37e60c2389c29d3c78"
+SOURCE_COMMIT = "72cb8dbdc9333bd46f6483db6d32a513893a4cc6"
 
 ROUTES = [
     "/",
     "/ai",
     "/ai/sub-space",
+    "/ai/sub-space/text-access",
     "/solutions-now",
     "/solutions-now/evidence",
     "/library",
@@ -179,7 +180,10 @@ BASELINE_LIBRARY_RESEARCH = {
 }
 
 EXTRA_BASELINE_PUBLIC_FILES = {
+    "/llms.txt",
     "/ai/sub-space/latest.json",
+    "/ai/sub-space/latest.txt",
+    "/ai/sub-space/llms.txt",
     "/ai/sub-space/manifest.json",
     "/ai/sub-space/modules.ndjson",
     "/ai/sub-space/portal-qr.svg",
@@ -195,6 +199,18 @@ EXTRA_BASELINE_PUBLIC_FILES = {
     "/ai/sub-space/releases/ddsk-v0001/semantic/index.json",
     "/ai/sub-space/releases/ddsk-v0001/source/README.txt",
     "/ai/sub-space/releases/ddsk-v0001/transfer/README.txt",
+    "/ai/sub-space/releases/ddsk-v0002/README.txt",
+    "/ai/sub-space/releases/ddsk-v0002/checksums.sha256",
+    "/ai/sub-space/releases/ddsk-v0002/manifest-files.ndjson",
+    "/ai/sub-space/releases/ddsk-v0002/manifest.json",
+    "/ai/sub-space/releases/ddsk-v0002/modules/index.ndjson",
+    "/ai/sub-space/releases/ddsk-v0002/permissions.json",
+    "/ai/sub-space/releases/ddsk-v0002/reconstruction/README.txt",
+    "/ai/sub-space/releases/ddsk-v0002/reconstruction/routes.json",
+    "/ai/sub-space/releases/ddsk-v0002/schemas/module.schema.json",
+    "/ai/sub-space/releases/ddsk-v0002/semantic/index.json",
+    "/ai/sub-space/releases/ddsk-v0002/source/README.txt",
+    "/ai/sub-space/releases/ddsk-v0002/transfer/README.txt",
     "/ai/sub-space/semantic.json",
     "/ai/sub-space/versions.json",
     "/research/AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.docx",
@@ -206,9 +222,12 @@ EXTRA_BASELINE_PUBLIC_FILES = {
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
-    "/ai/sub-space/latest.json": "6754bb829f3904c226b35318979678f18ecdc59b13847bf89fd94c894497fd92",
-    "/ai/sub-space/manifest.json": "429460f1d089bb58c656d5fb649e2e9d764684614d300b6664cc9c8043cc1bc8",
-    "/ai/sub-space/modules.ndjson": "543f2cd22b8f8ea458d549261c74db32d57da218d8a87d48aeec11970e354c5e",
+    "/llms.txt": "a4ae1daf9e6abec99324af81179a5080832583d5f2e9c6dabcd919b87506dfcb",
+    "/ai/sub-space/latest.json": "4a5bb1a01f3ff9d6d027b1b707fa55636c97301ef1e555d5b85416bc20720f18",
+    "/ai/sub-space/latest.txt": "62e82823f18eecd32a62a8abb80653b2a0ecb3e657a7c6dcefc327a9c6927b6a",
+    "/ai/sub-space/llms.txt": "c79538543854fb5dc428159e59abbc1cb128ca1b68455a759cd03fbe86b79238",
+    "/ai/sub-space/manifest.json": "fc24bce9a5956e144afa033ea12005b2b71f6b9f4a804ab6455c7d557ea31256",
+    "/ai/sub-space/modules.ndjson": "c32d3424f864f1852692b1bb5184e25ef0b7e41e8c34036cc8bb36c86fa94669",
     "/ai/sub-space/portal-qr.svg": "19bde9ff93489608f4e0cf2c81f05d03fff06e1845c728a9c0affb2bd633e9b8",
     "/ai/sub-space/releases/ddsk-v0001/README.txt": "cc77b3b3474987be41b5bf1949c9699a13dbfc73108163cf90b5a8f152778751",
     "/ai/sub-space/releases/ddsk-v0001/checksums.sha256": "21bcac16e536b3312cada3f2bb60a07b0025987abce681d6f9cd17da19d0d40f",
@@ -222,8 +241,20 @@ EXPECTED_CONTENT_SHA256 = {
     "/ai/sub-space/releases/ddsk-v0001/semantic/index.json": "4461829a1462fc54b90c9e7796040bdb6d90b942030254cdbf281fdb61b2d59b",
     "/ai/sub-space/releases/ddsk-v0001/source/README.txt": "ad997dbe26b1be08c2b4b44075a9c55a5685e9ad50bc27029e19349680d2c46e",
     "/ai/sub-space/releases/ddsk-v0001/transfer/README.txt": "9c34cb64d8f68968a5b530d1b8fe4690e7a1ad3d6c087469641da4b209bb6c94",
-    "/ai/sub-space/semantic.json": "4461829a1462fc54b90c9e7796040bdb6d90b942030254cdbf281fdb61b2d59b",
-    "/ai/sub-space/versions.json": "54dfa56509f3e70a9fe3af7d29e4295fabdbe65ed1197dfde6c61657ead2dd5d",
+    "/ai/sub-space/releases/ddsk-v0002/README.txt": "177b18fe4de3104d7af4c124df179f0d12194fe9a54b4a8d484593b29b5d5f3a",
+    "/ai/sub-space/releases/ddsk-v0002/checksums.sha256": "603c3886b436eef40e3a017854a6a9b7f5c201d20a69f3365c1b5a85b1001d5b",
+    "/ai/sub-space/releases/ddsk-v0002/manifest-files.ndjson": "9f7237263f62b7609ab8dd457b3dbec930f41386e3a687510d0584add5042c07",
+    "/ai/sub-space/releases/ddsk-v0002/manifest.json": "fc24bce9a5956e144afa033ea12005b2b71f6b9f4a804ab6455c7d557ea31256",
+    "/ai/sub-space/releases/ddsk-v0002/modules/index.ndjson": "c32d3424f864f1852692b1bb5184e25ef0b7e41e8c34036cc8bb36c86fa94669",
+    "/ai/sub-space/releases/ddsk-v0002/permissions.json": "edd983627f0d3bd09b1272da167ef3b0d227eceb0a835816d97fa28c2a1c7ddc",
+    "/ai/sub-space/releases/ddsk-v0002/reconstruction/README.txt": "36e693cba047de85f581954bda62e2dfe026f4127d0eef35500b43c8937703e7",
+    "/ai/sub-space/releases/ddsk-v0002/reconstruction/routes.json": "2b13c241d38495502d6cd6cf5d3c71a0de05961cd4007b43d80932f86f4bdc1d",
+    "/ai/sub-space/releases/ddsk-v0002/schemas/module.schema.json": "65b7b33f904c0b46046443e9dcb9263c47fb6cfaae7fb4a66ba8483f3b484601",
+    "/ai/sub-space/releases/ddsk-v0002/semantic/index.json": "c9a725e53d8894216ad05ef53778dd8afac8ccc8de9daade045ddd6e81630487",
+    "/ai/sub-space/releases/ddsk-v0002/source/README.txt": "11d01de2fe5b722f3c7a0eaf8c5a44fc2be8b66a6291b8f687a4adce3f9d0b08",
+    "/ai/sub-space/releases/ddsk-v0002/transfer/README.txt": "9c34cb64d8f68968a5b530d1b8fe4690e7a1ad3d6c087469641da4b209bb6c94",
+    "/ai/sub-space/semantic.json": "c9a725e53d8894216ad05ef53778dd8afac8ccc8de9daade045ddd6e81630487",
+    "/ai/sub-space/versions.json": "9e3ff2be1b5422d03353cc770fa64a0d03f58cc7e097e7f4ff5a956124b4bc3f",
     "/research/AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.docx": "3fde296c1c4761437088b81364d1bcb3e5fe4caedc316c685e95dcf6a1630ff2",
     "/research/AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.pdf": "68e7df20d6e7fd24a4f736821c170ce19b01920b42bb83aad4d287838d5913cf",
     "/research/National_PACE_Resilience_Service_Proposal.docx": "7208fb1d6f85b58e35861c5bfb873591139af8cc30236abefdf95671fd11564d",
@@ -303,7 +334,7 @@ EXPECTED_CONTENT_SHA256 = {
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
 FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.1-v66-subspace-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.2-v67-text-access-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -635,6 +666,7 @@ def main() -> int:
     library = original_pages["/library"]
     ai = original_pages["/ai"]
     subspace = original_pages["/ai/sub-space"]
+    text_access = original_pages["/ai/sub-space/text-access"]
     required_home = [
         "Before we judge",
         "Forty-six publications",
@@ -691,10 +723,12 @@ def main() -> int:
         "AI Sub Space",
         "Read-only machine portal",
         "/ai/sub-space",
+        "AI Text Access",
+        "/ai/sub-space/text-access",
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v66 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v67 structure: {missing_home}")
 
     required_ai = [
         "AI",
@@ -708,7 +742,7 @@ def main() -> int:
     ]
     missing_ai = [m for m in required_ai if m not in ai]
     if missing_ai:
-        raise RuntimeError(f"Dev AI doorway lost expected v66 structure: {missing_ai}")
+        raise RuntimeError(f"Dev AI doorway lost expected v67 structure: {missing_ai}")
 
     required_subspace = [
         "AI Sub Space · D-DSK",
@@ -717,6 +751,10 @@ def main() -> int:
         "No write surface",
         "Direct machine access",
         "Begin with the smallest object",
+        "AI Text Access",
+        "Open AI Text Access",
+        "/ai/sub-space/text-access",
+        "/ai/sub-space/latest.txt",
         "/ai/sub-space/latest.json",
         "/ai/sub-space/versions.json",
         "AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.pdf",
@@ -725,7 +763,32 @@ def main() -> int:
     missing_subspace = [m for m in required_subspace if m not in subspace]
     if missing_subspace:
         raise RuntimeError(
-            f"Dev AI Sub Space lost expected v66 structure: {missing_subspace}"
+            f"Dev AI Sub Space lost expected v67 structure: {missing_subspace}"
+        )
+
+    required_text_access = [
+        "AI Sub Space · compatibility entrance",
+        "AI Text Access",
+        "If you can read this sentence, the HTML compatibility entrance is working.",
+        "Essential release record",
+        "ddsk-v0002",
+        "sha256:c3bfd38d2bd2c6b165715ee1d3bf766c9b325346c497cbefd1a2771b7c8aee8f",
+        "Read-only publication",
+        "External only",
+        "One publication, several readable forms",
+        "/ai/sub-space/latest.txt",
+        "/ai/sub-space/llms.txt",
+        "/ai/sub-space/latest.json",
+        "/ai/sub-space/manifest.json",
+        "/ai/sub-space/modules.ndjson",
+        "/ai/sub-space/versions.json",
+        "It accepts no prompts, uploads, visitor code or returned results.",
+        "Two entrances. One read-only publication.",
+    ]
+    missing_text_access = [m for m in required_text_access if m not in text_access]
+    if missing_text_access:
+        raise RuntimeError(
+            f"Dev AI Text Access lost expected v67 structure: {missing_text_access}"
         )
 
     expected_project_destinations = [
@@ -824,7 +887,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v66 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v67 structure: {missing_library}")
 
     pace = original_pages[
         "/social-technology/public-service-and-community-resilience/pace"
@@ -1291,7 +1354,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 66 research library file set verified unchanged")
+    print("Version 67 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1316,7 +1379,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 66 release-content checksums verified")
+    print("Protected version 67 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
@@ -1364,15 +1427,18 @@ def main() -> int:
         "public_research_folder_count": len(research_files),
         "standalone_simulator": "simulators/Buddha_Net_Simulator_Standalone.html",
         "subspace_entry": "ai/sub-space/latest.json",
-        "subspace_release": "ddsk-v0001",
-        "subspace_publication_state_hash": "sha256:d5526236002ff91a3536eb8385578b06fb3f2a768a778d672837b89a50d3a702",
+        "subspace_text_entry": "ai/sub-space/text-access/index.html",
+        "subspace_plain_text_entry": "ai/sub-space/latest.txt",
+        "subspace_release": "ddsk-v0002",
+        "subspace_retained_releases": ["ddsk-v0001"],
+        "subspace_publication_state_hash": "sha256:c3bfd38d2bd2c6b165715ee1d3bf766c9b325346c497cbefd1a2771b7c8aee8f",
         "subspace_file_count": sum(
             1 for path in EXTRA_BASELINE_PUBLIC_FILES
             if path.startswith("/ai/sub-space/")
         ),
         "stylesheet_count": len(stylesheets),
         "presentation_asset_count": len(presentation_assets),
-        "integrity_markers": required_home + required_ai + required_subspace + required_library,
+        "integrity_markers": required_home + required_ai + required_subspace + required_text_access + required_library,
         "files": manifest_files,
     }
     write_bytes(OUT / "mirror-manifest.json", (json.dumps(manifest, indent=2) + "\n").encode())
