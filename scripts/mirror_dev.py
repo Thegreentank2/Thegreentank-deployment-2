@@ -2,7 +2,7 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 70 Release 37 portable deployment backup is the baseline. This script requires the
+version 73 Release 38 portable deployment backup is the baseline. This script requires the
 exact known version 70 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = None
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-22_v70.zip"
-SOURCE_SITE_VERSION = 70
-SOURCE_RELEASE = 37
-SOURCE_PUBLICATION_COUNT = 47
-SOURCE_COMMIT = "f763dbf8624f25b0296afc8990e07dbfc9d6a2a0"
+BACKUP_SHA256 = "61c6b6e21e650a6d0b783bc287a8d7eb672f5d504aaa24618203c45a3cd8c2d7"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-23_v73.zip"
+SOURCE_SITE_VERSION = 73
+SOURCE_RELEASE = 38
+SOURCE_PUBLICATION_COUNT = 48
+SOURCE_COMMIT = "c8d839d63619ff1a4f14cf0d8601decf2becd94a"
 
 ROUTES = [
     "/",
@@ -56,6 +56,9 @@ ROUTES = [
     "/submit",
     "/phantom-concorde",
     "/fashion-police",
+    "/climate-change-technology",
+    "/climate-technology",
+    "/climate-technology/rainwater-climate-and-rights",
     "/climate-technology/bubble-butt",
     "/climate-technology/emission-transitive-emission",
     "/economic-fairness/universal-basic-income",
@@ -180,18 +183,22 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/National_PACE_Resilience_Service_Proposal.pdf",
     "/research/Section_106_Coordinated_Cross_Agency_Covering_Letter_2026-09-22.pdf",
     "/research/Section_106_Cross_Agency_Combined_Investigation_2026-09-22.pdf",
+    "/research/Green_Tank_Rainwater_Climate_and_Rights_2026-09-23.pptx",
 }
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
-SUBSPACE_CURRENT_RELEASE = "ddsk-v0005"
+SUBSPACE_CURRENT_RELEASE = "ddsk-v0008"
 SUBSPACE_RELEASES = [
     "ddsk-v0001",
     "ddsk-v0002",
     "ddsk-v0003",
     "ddsk-v0004",
+    "ddsk-v0005",
+    "ddsk-v0006",
+    "ddsk-v0007",
     SUBSPACE_CURRENT_RELEASE,
 ]
-SUBSPACE_PUBLICATION_STATE_HASH = "sha256:bf6a45f1f84dac8144ad9e0dac67daa3211e50e34ea23defab93b7a0e8d18506"
+SUBSPACE_PUBLICATION_STATE_HASH = "sha256:460c8f77da9aba5d500b28de8b2e535c22d889906d5d7cfb35db0b2e7138a99f"
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
     "checksums.sha256",
@@ -313,10 +320,12 @@ EXPECTED_CONTENT_SHA256 = {
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
 FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.3-v70-github-subspace-guard"
+RAINWATER_SLIDES = {f"/climate-technology/rainwater-climate-and-rights/slides/slide-{index}.webp" for index in range(1, 24)}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.4-v73-github-subspace-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
+MODULE_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\brel=[\"']modulepreload[\"'])[^>]*>", re.I | re.S)
 CLOUDFLARE_CHALLENGE_RE = re.compile(
     r'<script\b[^>]*>'
     r'(?=(?:(?!</script\s*>)[\s\S])*(?:__CF\$cv\$params|challenge-platform/scripts/jsd/main\.js))'
@@ -497,6 +506,49 @@ FAMILY_CENTRE_SCRIPT = r"""
 """
 
 
+RAINWATER_SCRIPT = r"""
+(() => {
+  const viewer = document.getElementById('rainwater-presentation');
+  if (!viewer) return;
+  const titles = ["Rainwater", "The proposal: store some roof rain for useful work", "Gas from a bottle; water from an open surface", "A lake is an open water store", "UK climate: observed warming and variable rainfall", "UK seasonal high / low averages, 2011–2018", "UK seasonal high / low averages, 2019–2025", "UK rainfall year by year, 2011–2025", "Summer rain varies sharply from year to year", "Global mean temperature, 2006–2025", "Global temperatures rise across the 20-year series", "Independent climate sources agree on the warming trend", "El Niño raises global heat but does not set UK summer rain", "AMOC: a measured weakening signal with large uncertainty", "What the proposed reserves could actually do", "Small and medium tanks people can inspect", "Large storage exists, with different forms and costs", "Which England rules can apply to rainwater storage?", "Drinking, toilets and the mains need different checks", "Written contacts: England and a Mid Devon example", "Fire planning and the other UK nations", "Questions to ask after the facts", "Evidence, replies and the reader’s own judgement"];
+  const buttons = [...viewer.querySelectorAll('.rainwater-slide-index button')];
+  const controls = [...viewer.querySelectorAll('.rainwater-viewer-controls button')];
+  const image = viewer.querySelector('.rainwater-current-slide img');
+  const links = [...viewer.querySelectorAll('.rainwater-current-slide a')];
+  const heading = viewer.querySelector('#rainwater-viewer-title');
+  const counter = viewer.querySelector('header .eyebrow');
+  let current = 0;
+  function show(index, scroll = false) {
+    current = Math.max(0, Math.min(titles.length - 1, index));
+    const number = current + 1;
+    const url = '/Thegreentank-deployment-2/climate-technology/rainwater-climate-and-rights/slides/slide-' + number + '.webp';
+    const title = titles[current];
+    image.src = url;
+    image.alt = 'Slide ' + number + ' of 23: ' + title;
+    links.forEach(link => link.href = url);
+    links[0].setAttribute('aria-label', 'Open slide ' + number + ' full size: ' + title);
+    heading.textContent = title;
+    counter.textContent = 'Complete presentation · slide ' + number + ' of ' + titles.length;
+    buttons.forEach((button, i) => {
+      button.classList.toggle('is-current', i === current);
+      if (i === current) button.setAttribute('aria-current', 'true');
+      else button.removeAttribute('aria-current');
+    });
+    controls[0].disabled = current === 0;
+    controls[1].disabled = current === titles.length - 1;
+    if (scroll) viewer.scrollIntoView({behavior: 'smooth', block: 'start'});
+  }
+  controls[0].addEventListener('click', () => show(current - 1, true));
+  controls[1].addEventListener('click', () => show(current + 1, true));
+  buttons.forEach((button, i) => button.addEventListener('click', () => show(i, true)));
+  window.addEventListener('keydown', event => {
+    if (event.key === 'ArrowLeft') show(current - 1);
+    if (event.key === 'ArrowRight') show(current + 1);
+  });
+  show(0);
+})();
+"""
+
 def fetch(url: str, attempts: int = 3) -> bytes:
     parsed = urlparse(url)
     if LOCAL_SOURCE_ROOT is not None and parsed.netloc == BASE_HOST:
@@ -566,7 +618,11 @@ def patch_html_paths(text: str) -> str:
 
 
 def clean_html(text: str) -> str:
-    return patch_html_paths(SCRIPT_PRELOAD_RE.sub("", SCRIPT_RE.sub("", text)))
+    text = SCRIPT_RE.sub("", text)
+    text = SCRIPT_PRELOAD_RE.sub("", text)
+    text = MODULE_PRELOAD_RE.sub("", text)
+    text = text.replace('<meta name="codex-preview" content="development"/>', "")
+    return patch_html_paths(text)
 
 
 def collect_same_origin_urls(text: str) -> set[str]:
@@ -766,12 +822,16 @@ def main() -> int:
         if route == "/finances/the-family-centre":
             mirror_script = f"{PREFIX}/assets/family-centre.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+        if route == "/climate-technology/rainwater-climate-and-rights":
+            mirror_script = f"{PREFIX}/assets/rainwater-viewer.js"
+            cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
         write_bytes(route_output(route), cleaned.encode("utf-8"))
         print(f"mirrored route {route}")
 
     write_bytes(OUT / "assets" / "monkey-banana.js", MONKEY_BANANA_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "solutions-evidence.js", SOLUTIONS_EVIDENCE_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "family-centre.js", FAMILY_CENTRE_SCRIPT.encode("utf-8"))
+    write_bytes(OUT / "assets" / "rainwater-viewer.js", RAINWATER_SCRIPT.encode("utf-8"))
 
     home = original_pages["/"]
     library = original_pages["/library"]
@@ -797,7 +857,7 @@ def main() -> int:
 
     required_home = [
         "Before we judge",
-        "Forty-seven publications",
+        "Forty-eight publications",
         "P—29",
         "P—30",
         "P—31",
@@ -817,6 +877,11 @@ def main() -> int:
         "P—45",
         "P—46",
         "P—47",
+        "P—48",
+        "Climate Technology",
+        "Climate Change Technology",
+        "/climate-change-technology",
+        "/climate-technology/rainwater-climate-and-rights",
         "Where Have All the Houses Gone?",
         "/social-technology/justice-and-accountability/where-have-all-the-houses-gone",
         "PACE — Public Assistance, Communication and Emergency Support",
@@ -967,9 +1032,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 37",
-        "47 publications",
-        "99 public research files",
+        "Release 38",
+        "48 publications",
+        "100 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -989,6 +1054,8 @@ def main() -> int:
         "P—45",
         "P—46",
         "P—47",
+        "P—48",
+        "Green_Tank_Rainwater_Climate_and_Rights_2026-09-23.pptx",
         "Where Have All the Houses Gone?",
         "/social-technology/justice-and-accountability/where-have-all-the-houses-gone",
         "Section_106_Coordinated_Cross_Agency_Covering_Letter_2026-09-22.pdf",
@@ -1498,6 +1565,18 @@ def main() -> int:
     if missing_cl17:
         raise RuntimeError(f"CL17 publication verification failed: {missing_cl17}")
 
+    climate_index = original_pages["/climate-change-technology"]
+    technology_index = original_pages["/climate-technology"]
+    rainwater = original_pages["/climate-technology/rainwater-climate-and-rights"]
+    for label, page, markers in [
+        ("climate change tab", climate_index, ["Climate Change Technology", "P—48", "/climate-technology/rainwater-climate-and-rights", "CL17", "Bubble Butt"]),
+        ("climate technology", technology_index, ["Climate Technology", "P—48", "/climate-technology/rainwater-climate-and-rights"]),
+        ("rainwater publication", rainwater, ["P—48", "Complete presentation · slide", "/slides/slide-1.webp", "Green_Tank_Rainwater_Climate_and_Rights_2026-09-23.pptx", "5e16a6582a4f9555d12ea1db2a3541f95805e2e07874b9275a5afe2a3d484944"]),
+    ]:
+        missing = [marker for marker in markers if marker not in page]
+        if missing:
+            raise RuntimeError(f"{label} content is incomplete: {missing}")
+
     solution_slide_urls = {u for u in discovered_urls if u.startswith("/solutions-now/slides/")}
     missing_slides = sorted(SOLUTION_SLIDES - solution_slide_urls)
     unexpected_slides = sorted(solution_slide_urls - SOLUTION_SLIDES)
@@ -1518,7 +1597,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 70 research library file set verified unchanged")
+    print("Version 73 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1529,6 +1608,7 @@ def main() -> int:
     asset_urls.update(EXTRA_BASELINE_PUBLIC_FILES)
     asset_urls.update(SOLUTION_SLIDES)
     asset_urls.update(FAMILY_CENTRE_SLIDES)
+    asset_urls.update(RAINWATER_SLIDES)
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
@@ -1545,7 +1625,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 70 release-content checksums verified")
+    print("Protected version 73 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
@@ -1555,6 +1635,12 @@ def main() -> int:
         raise RuntimeError(
             f"Expected {expected_research_folder_count} public/research files; found {len(research_files)}"
         )
+
+    rainwater_files = sorted((OUT / "climate-technology" / "rainwater-climate-and-rights" / "slides").glob("slide-*.webp"))
+    if len(rainwater_files) != 23:
+        raise RuntimeError(f"Expected 23 rainwater slide images; found {len(rainwater_files)}")
+    if hashlib.sha256((OUT / "research" / "Green_Tank_Rainwater_Climate_and_Rights_2026-09-23.pptx").read_bytes()).hexdigest() != "5e16a6582a4f9555d12ea1db2a3541f95805e2e07874b9275a5afe2a3d484944":
+        raise RuntimeError("P—48 source PowerPoint changed")
 
     simulator_file = OUT / "simulators" / "Buddha_Net_Simulator_Standalone.html"
     if not simulator_file.is_file():
