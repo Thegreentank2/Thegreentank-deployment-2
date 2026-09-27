@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 73 Release 38 portable deployment backup is the baseline. This script requires the
-exact known version 70 route, research-file and AI Sub Space sets and refuses
+version 75 Release 38 portable deployment backup is the baseline. This script requires the
+exact known version 75 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "61c6b6e21e650a6d0b783bc287a8d7eb672f5d504aaa24618203c45a3cd8c2d7"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-23_v73.zip"
-SOURCE_SITE_VERSION = 73
+BACKUP_SHA256 = "6559bf8230fcd3a378b87bd941c79ec1dfba5eab0dee57de1a877fea86432787"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-27_v75.zip"
+SOURCE_SITE_VERSION = 75
 SOURCE_RELEASE = 38
 SOURCE_PUBLICATION_COUNT = 48
-SOURCE_COMMIT = "c8d839d63619ff1a4f14cf0d8601decf2becd94a"
+SOURCE_COMMIT = "6c8e5aae1dba4c578522a990db7bfdb369b15dba"
 
 ROUTES = [
     "/",
@@ -51,6 +51,9 @@ ROUTES = [
     "/music",
     "/music/knots-untying-through-perspective",
     "/music/knots-1",
+    "/culture",
+    "/pasty-quest",
+    "/archive-viewer",
     "/simulators",
     "/press",
     "/submit",
@@ -187,7 +190,7 @@ BASELINE_LIBRARY_RESEARCH = {
 }
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
-SUBSPACE_CURRENT_RELEASE = "ddsk-v0008"
+SUBSPACE_CURRENT_RELEASE = "ddsk-v0010"
 SUBSPACE_RELEASES = [
     "ddsk-v0001",
     "ddsk-v0002",
@@ -196,9 +199,11 @@ SUBSPACE_RELEASES = [
     "ddsk-v0005",
     "ddsk-v0006",
     "ddsk-v0007",
+    "ddsk-v0008",
+    "ddsk-v0009",
     SUBSPACE_CURRENT_RELEASE,
 ]
-SUBSPACE_PUBLICATION_STATE_HASH = "sha256:460c8f77da9aba5d500b28de8b2e535c22d889906d5d7cfb35db0b2e7138a99f"
+SUBSPACE_PUBLICATION_STATE_HASH = "sha256:da19b9cff23e7463ab402f53f7f0cd63ec9e868699cfae3f936b419cd5ef3b2f"
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
     "checksums.sha256",
@@ -321,7 +326,11 @@ EXPECTED_CONTENT_SHA256 = {
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
 FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
 RAINWATER_SLIDES = {f"/climate-technology/rainwater-climate-and-rights/slides/slide-{index}.webp" for index in range(1, 24)}
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.4-v73-github-subspace-guard"
+FASHION_POSTER_FILES = {
+    "/fashion-police/devon-retro-fashion-wanted.png": "5440a07dcbb8b12d1fec2c1b77ad5fb8c0e8563c6a93368999b69b610b4be8f2",
+    "/fashion-police/devonshire-fashion-comeback.png": "064c6a4c079c8ac2ce753a86473fee09b537d094cd5d1204d4274c4503c40773",
+}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.5-v75-github-subspace-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -549,6 +558,47 @@ RAINWATER_SCRIPT = r"""
 })();
 """
 
+ARCHIVE_VIEWER_SCRIPT = r"""
+(() => {
+  const page = document.querySelector('main');
+  const toolbar = page?.querySelector('header');
+  const heading = toolbar?.querySelector('strong');
+  const loading = page?.querySelector('p');
+  if (!page || !toolbar || !heading || !loading) return;
+
+  const params = new URLSearchParams(location.search);
+  const id = (params.get('id') || '').trim();
+  const title = (params.get('title') || 'The Green Tank archive viewer').trim().slice(0, 120);
+  const file = (params.get('file') || '').trim();
+  loading.remove();
+  if (!/^[A-Za-z0-9._-]+$/.test(id) || (file && !/^[A-Za-z0-9._-]+\.pdf$/i.test(file))) {
+    const message = document.createElement('section');
+    message.style.cssText = 'max-width:740px;margin:auto;padding:50px 24px;line-height:1.7';
+    message.innerHTML = '<h1>Choose an Archive item.</h1><p>Use <code>/archive-viewer?id=ARCHIVE_IDENTIFIER</code> to open an item. Add <code>&amp;file=FILENAME.pdf</code> to read a particular PDF.</p>';
+    page.append(message);
+    return;
+  }
+
+  heading.textContent = title;
+  const archiveUrl = 'https://archive.org/details/' + encodeURIComponent(id);
+  const archiveLink = document.createElement('a');
+  archiveLink.href = archiveUrl;
+  archiveLink.target = '_blank';
+  archiveLink.rel = 'noopener noreferrer';
+  archiveLink.textContent = 'Open Archive ↗';
+  toolbar.append(archiveLink);
+
+  const reader = document.createElement('iframe');
+  reader.src = file
+    ? 'https://archive.org/download/' + encodeURIComponent(id) + '/' + encodeURIComponent(file)
+    : 'https://archive.org/embed/' + encodeURIComponent(id);
+  reader.title = title + ' on Internet Archive';
+  reader.allowFullscreen = true;
+  reader.style.cssText = 'display:block;flex:1;width:100%;min-height:calc(100vh - 90px);border:0;background:white';
+  page.append(reader);
+})();
+"""
+
 def fetch(url: str, attempts: int = 3) -> bytes:
     parsed = urlparse(url)
     if LOCAL_SOURCE_ROOT is not None and parsed.netloc == BASE_HOST:
@@ -611,6 +661,8 @@ def patch_html_paths(text: str) -> str:
             return match.group(0)
         fragment = urlparse(urljoin(BASE, html.unescape(value).strip())).fragment
         target = prefixed_path(normalized)
+        if target.startswith(PREFIX + "/archive-viewer?"):
+            target = target.replace(PREFIX + "/archive-viewer?", PREFIX + "/archive-viewer/?", 1)
         if fragment:
             target += "#" + fragment
         return f'{match.group("attr")}={match.group("q")}{target}{match.group("q")}'
@@ -825,6 +877,9 @@ def main() -> int:
         if route == "/climate-technology/rainwater-climate-and-rights":
             mirror_script = f"{PREFIX}/assets/rainwater-viewer.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+        if route == "/archive-viewer":
+            mirror_script = f"{PREFIX}/assets/archive-viewer.js"
+            cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
         write_bytes(route_output(route), cleaned.encode("utf-8"))
         print(f"mirrored route {route}")
 
@@ -832,6 +887,7 @@ def main() -> int:
     write_bytes(OUT / "assets" / "solutions-evidence.js", SOLUTIONS_EVIDENCE_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "family-centre.js", FAMILY_CENTRE_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "rainwater-viewer.js", RAINWATER_SCRIPT.encode("utf-8"))
+    write_bytes(OUT / "assets" / "archive-viewer.js", ARCHIVE_VIEWER_SCRIPT.encode("utf-8"))
 
     home = original_pages["/"]
     library = original_pages["/library"]
@@ -880,6 +936,8 @@ def main() -> int:
         "P—48",
         "Climate Technology",
         "Climate Change Technology",
+        "Culture",
+        "/culture",
         "/climate-change-technology",
         "/climate-technology/rainwater-climate-and-rights",
         "Where Have All the Houses Gone?",
@@ -1235,10 +1293,53 @@ def main() -> int:
         "www.zappa.com",
         "An unofficial cultural tribute and interpretation.",
         "It does not claim endorsement by David Bowie’s estate or representatives.",
+        'id="wanted"',
+        "Hug boss energy.",
+        "/fashion-police/devon-retro-fashion-wanted.png",
+        "/fashion-police/devonshire-fashion-comeback.png",
     ]
     missing_fashion_police = [m for m in required_fashion_police if m not in fashion_police]
     if missing_fashion_police:
         raise RuntimeError(f"Fashion Police verification failed: {missing_fashion_police}")
+
+    culture = original_pages["/culture"]
+    required_culture = [
+        "leaves clues.",
+        "Pasty Quest",
+        "/pasty-quest",
+        "hug boss energy",
+        "/fashion-police#wanted",
+        "/music",
+    ]
+    missing_culture = [marker for marker in required_culture if marker not in culture]
+    if missing_culture:
+        raise RuntimeError(f"Culture collection verification failed: {missing_culture}")
+
+    pasty_quest = original_pages["/pasty-quest"]
+    required_pasty_quest = [
+        "Who rolled the first pasty",
+        "The Source of Pasty Truth Challenge",
+        "/archive-viewer?id=source-of-pasty-truth-challenge",
+        "Source_of_Pasty_Truth_Challenge.pdf",
+        "Source_of_Pasty_Truth_Challenge.pptx",
+        "Source_of_Pasty_Truth_Challenge_Report.pdf",
+        "Source_of_Pasty_Truth_Challenge_Report.docx",
+        "Can you find more proof?",
+        "Pasty%20Quest%20evidence",
+    ]
+    missing_pasty_quest = [marker for marker in required_pasty_quest if marker not in pasty_quest]
+    if missing_pasty_quest:
+        raise RuntimeError(f"Pasty Quest verification failed: {missing_pasty_quest}")
+
+    viewer = original_pages["/archive-viewer"]
+    if "The Green Tank archive viewer" not in viewer or "Opening reader" not in viewer:
+        raise RuntimeError("Reusable Archive viewer source is incomplete")
+    mirrored_viewer = route_output("/archive-viewer").read_text(encoding="utf-8")
+    if f"{PREFIX}/assets/archive-viewer.js" not in mirrored_viewer:
+        raise RuntimeError("Reusable Archive viewer script was not installed")
+    mirrored_pasty = route_output("/pasty-quest").read_text(encoding="utf-8")
+    if f"{PREFIX}/archive-viewer/?id=source-of-pasty-truth-challenge" not in mirrored_pasty:
+        raise RuntimeError("Pasty Quest viewer path is not valid for GitHub Pages")
 
     music = original_pages["/music"]
     required_music = [
@@ -1597,7 +1698,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 73 research library file set verified unchanged")
+    print("Version 75 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1609,6 +1710,7 @@ def main() -> int:
     asset_urls.update(SOLUTION_SLIDES)
     asset_urls.update(FAMILY_CENTRE_SLIDES)
     asset_urls.update(RAINWATER_SLIDES)
+    asset_urls.update(FASHION_POSTER_FILES)
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
@@ -1618,6 +1720,11 @@ def main() -> int:
 
     verify_subspace_snapshot()
 
+    for poster, expected_digest in FASHION_POSTER_FILES.items():
+        actual_digest = hashlib.sha256(local_path_for_url(poster).read_bytes()).hexdigest()
+        if actual_digest != expected_digest:
+            raise RuntimeError(f"Fashion Police poster changed unexpectedly: {poster}")
+
     for asset, expected_sha256 in EXPECTED_CONTENT_SHA256.items():
         data = local_path_for_url(asset).read_bytes()
         actual_sha256 = hashlib.sha256(data).hexdigest()
@@ -1625,7 +1732,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 73 release-content checksums verified")
+    print("Protected version 75 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
