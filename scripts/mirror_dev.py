@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 75 Release 38 portable deployment backup is the baseline. This script requires the
-exact known version 75 route, research-file and AI Sub Space sets and refuses
+version 77 Release 40 portable deployment backup is the baseline. This script requires the
+exact known version 77 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "6559bf8230fcd3a378b87bd941c79ec1dfba5eab0dee57de1a877fea86432787"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-27_v75.zip"
-SOURCE_SITE_VERSION = 75
-SOURCE_RELEASE = 38
-SOURCE_PUBLICATION_COUNT = 48
-SOURCE_COMMIT = "6c8e5aae1dba4c578522a990db7bfdb369b15dba"
+BACKUP_SHA256 = "721fdefb02b9e7b483c59c86f80eb2dec7b75b16bf8167947fed6c4959918f94"
+BACKUP_LABEL = "Green_Tank_Full_Deployment_Backup_v77_2026-09-27.zip"
+SOURCE_SITE_VERSION = 77
+SOURCE_RELEASE = 40
+SOURCE_PUBLICATION_COUNT = 50
+SOURCE_COMMIT = "2ec97874668949eaa8f6939886d0c85ee2dc9f14"
 
 ROUTES = [
     "/",
@@ -83,6 +83,8 @@ ROUTES = [
     "/social-technology/voting-without-fear",
     "/social-technology/health-systems-and-patient-choice",
     "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
+    "/social-technology/health-systems-and-patient-choice/law-and-policy-in-medicine",
+    "/social-technology/pre-enabler",
     "/social-technology/justice-and-accountability",
     "/social-technology/justice-and-accountability/where-have-all-the-houses-gone",
     "/social-technology/public-duty-and-democratic-accountability",
@@ -187,10 +189,28 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/Section_106_Coordinated_Cross_Agency_Covering_Letter_2026-09-22.pdf",
     "/research/Section_106_Cross_Agency_Combined_Investigation_2026-09-22.pdf",
     "/research/Green_Tank_Rainwater_Climate_and_Rights_2026-09-23.pptx",
+    "/research/Doctor_Legal_Abilities_and_Duties_v1.docx",
+    "/research/Doctor_Legal_Abilities_and_Duties_v1.pdf",
+    "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.docx",
+    "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.pdf",
+    "/research/Law_and_Policy_in_Medicine_Evidence_Paper_v1.docx",
+    "/research/Law_and_Policy_in_Medicine_Evidence_Paper_v1.pdf",
+    "/research/Law_and_Policy_in_Medicine_Introduction_2026-09-27.txt",
+    "/research/NHS_Policy_vs_Law_Assessment_v1.docx",
+    "/research/NHS_Policy_vs_Law_Assessment_v1.pdf",
+    "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.docx",
+    "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.pdf",
+    "/research/PRE_ENABLER_Concept_Paper_v3_0.docx",
+    "/research/PRE_ENABLER_Concept_Paper_v3_0.pdf",
+    "/research/PRE_ENABLER_Following_Introduction_Context_2026-09-27.txt",
+    "/research/PRE_ENABLER_Form_Pack_PE1_v1_0.docx",
+    "/research/PRE_ENABLER_Form_Pack_PE1_v1_0.pdf",
+    "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.docx",
+    "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.pdf",
 }
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
-SUBSPACE_CURRENT_RELEASE = "ddsk-v0010"
+SUBSPACE_CURRENT_RELEASE = "ddsk-v0012"
 SUBSPACE_RELEASES = [
     "ddsk-v0001",
     "ddsk-v0002",
@@ -201,9 +221,11 @@ SUBSPACE_RELEASES = [
     "ddsk-v0007",
     "ddsk-v0008",
     "ddsk-v0009",
+    "ddsk-v0010",
+    "ddsk-v0011",
     SUBSPACE_CURRENT_RELEASE,
 ]
-SUBSPACE_PUBLICATION_STATE_HASH = "sha256:da19b9cff23e7463ab402f53f7f0cd63ec9e868699cfae3f936b419cd5ef3b2f"
+SUBSPACE_PUBLICATION_STATE_HASH = "sha256:83a3a1cb69496a7817619dacf95469248d76e38cb225841628ad247003ace6b9"
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
     "checksums.sha256",
@@ -243,6 +265,24 @@ EXTRA_BASELINE_PUBLIC_FILES = SUBSPACE_PUBLIC_FILES | {
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
+    "/research/Doctor_Legal_Abilities_and_Duties_v1.docx": "3e1b44698c1613fe2d9e8596152ae20a9474c5d133d27db622a72c68b2b38a56",
+    "/research/Doctor_Legal_Abilities_and_Duties_v1.pdf": "8500fadd0888f582ea3e3f45baf444fdc8738a09d11cadd130c57869de0cd674",
+    "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.docx": "742120537207b70058543044c7795261c10d659d6b1b41e123fdd2e89d87a7c6",
+    "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.pdf": "a10077f192edbd3657963a2bd35484779e0371048925c1f2e6327e8262a0921e",
+    "/research/Law_and_Policy_in_Medicine_Evidence_Paper_v1.docx": "be248c856ff1af57d59c75c7bd27ff318add2981934f515c3b83c8443d96329a",
+    "/research/Law_and_Policy_in_Medicine_Evidence_Paper_v1.pdf": "6af0210722cdfdcfed286d0cb65b887922019e887d434003fb43c4bd6fb6cba9",
+    "/research/Law_and_Policy_in_Medicine_Introduction_2026-09-27.txt": "f34c743b978657bc881d88b7f07bc73d50f2ebc546e45c4147c9d12fe6be540b",
+    "/research/NHS_Policy_vs_Law_Assessment_v1.docx": "fbeea78f1787933f5a63e881e0c33a0e5c3844709359bd5d34593eb44b0d362a",
+    "/research/NHS_Policy_vs_Law_Assessment_v1.pdf": "55e828dc97922172735cb03f292bf38bdbfdd4391794e81c94a683a84dc36da0",
+    "/research/PRE_ENABLER_Concept_Paper_v3_0.docx": "41f5d731a0ebd57cf5f303a6e2f2628d8425b1425ae6c7c0a2e5854e71eee8a5",
+    "/research/PRE_ENABLER_Concept_Paper_v3_0.pdf": "15ac04b42b43bf7b2f61476e5950f6d2830b4e2fcf29fc487a20d451ddf3e9c8",
+    "/research/PRE_ENABLER_Following_Introduction_Context_2026-09-27.txt": "d4940c796d1a16462fc8663515b81e9ca6312a86c1f6adedd0efe63330efe9f5",
+    "/research/PRE_ENABLER_Form_Pack_PE1_v1_0.docx": "0174a5b94d06ebdb1fa7b694aff551206d1b5187622b03690c8ff74bb9b5811e",
+    "/research/PRE_ENABLER_Form_Pack_PE1_v1_0.pdf": "bb1f386b5ddad68b329361972bb21b19f6b30a36644c65c551c0dd4c8376d7dd",
+    "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.docx": "76e9828b1e6147b4c3a5d137584e3dad8ec9c6e3d766bc2c813805ba467cabe2",
+    "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.pdf": "fdca50aea7d24687d92d4e0f8eb3cca7f9e19e82edab1d8596d583ada2e58e01",
+    "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.docx": "4f72eb619534e3a32f187c006aab09dd6daae1a454465e1d6b0b9800ab62a173",
+    "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.pdf": "799212bed105a6d48f8290250da9f24d14ad5b30a2def51efe572b9bb261a6a6",
     "/llms.txt": "3ab55acf4b6b9cbcc24958b66a054eb68450da94135ded94ab5a3bf184bd052a",
     "/research/AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.docx": "3fde296c1c4761437088b81364d1bcb3e5fe4caedc316c685e95dcf6a1630ff2",
     "/research/AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.pdf": "68e7df20d6e7fd24a4f736821c170ce19b01920b42bb83aad4d287838d5913cf",
@@ -330,7 +370,7 @@ FASHION_POSTER_FILES = {
     "/fashion-police/devon-retro-fashion-wanted.png": "5440a07dcbb8b12d1fec2c1b77ad5fb8c0e8563c6a93368999b69b610b4be8f2",
     "/fashion-police/devonshire-fashion-comeback.png": "064c6a4c079c8ac2ce753a86473fee09b537d094cd5d1204d4274c4503c40773",
 }
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.5-v75-github-subspace-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.6-v77-github-subspace-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -913,7 +953,7 @@ def main() -> int:
 
     required_home = [
         "Before we judge",
-        "Forty-eight publications",
+        "Fifty publications",
         "P—29",
         "P—30",
         "P—31",
@@ -934,6 +974,12 @@ def main() -> int:
         "P—46",
         "P—47",
         "P—48",
+        "P—49",
+        "P—50",
+        "PRE-ENABLER",
+        "/social-technology/pre-enabler",
+        "Law and Policy in Medicine",
+        "/social-technology/health-systems-and-patient-choice/law-and-policy-in-medicine",
         "Climate Technology",
         "Climate Change Technology",
         "Culture",
@@ -982,7 +1028,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v70 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v77 structure: {missing_home}")
 
     required_ai = [
         "AI",
@@ -996,7 +1042,7 @@ def main() -> int:
     ]
     missing_ai = [m for m in required_ai if m not in ai]
     if missing_ai:
-        raise RuntimeError(f"Dev AI doorway lost expected v70 structure: {missing_ai}")
+        raise RuntimeError(f"Dev AI doorway lost expected v77 structure: {missing_ai}")
 
     required_subspace = [
         "AI Sub Space · D-DSK",
@@ -1019,7 +1065,7 @@ def main() -> int:
     missing_subspace = [m for m in required_subspace if m not in subspace]
     if missing_subspace:
         raise RuntimeError(
-            f"Dev AI Sub Space lost expected v70 structure: {missing_subspace}"
+            f"Dev AI Sub Space lost expected v77 structure: {missing_subspace}"
         )
 
     required_text_access = [
@@ -1048,7 +1094,7 @@ def main() -> int:
     missing_text_access = [m for m in required_text_access if m not in text_access]
     if missing_text_access:
         raise RuntimeError(
-            f"Dev AI Text Access lost expected v70 structure: {missing_text_access}"
+            f"Dev AI Text Access lost expected v77 structure: {missing_text_access}"
         )
 
     expected_project_destinations = [
@@ -1090,9 +1136,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 38",
-        "48 publications",
-        "100 public research files",
+        "Release 40",
+        "50 publications",
+        "118 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -1113,6 +1159,14 @@ def main() -> int:
         "P—46",
         "P—47",
         "P—48",
+        "P—49",
+        "P—50",
+        "PRE-ENABLER",
+        "/social-technology/pre-enabler",
+        "Law and Policy in Medicine",
+        "/social-technology/health-systems-and-patient-choice/law-and-policy-in-medicine",
+        "Law_and_Policy_in_Medicine_Evidence_Paper_v1.pdf",
+        "PRE_ENABLER_Form_Pack_PE1_v1_0.pdf",
         "Green_Tank_Rainwater_Climate_and_Rights_2026-09-23.pptx",
         "Where Have All the Houses Gone?",
         "/social-technology/justice-and-accountability/where-have-all-the-houses-gone",
@@ -1154,7 +1208,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v70 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v77 structure: {missing_library}")
 
     houses = original_pages[
         "/social-technology/justice-and-accountability/where-have-all-the-houses-gone"
@@ -1414,6 +1468,9 @@ def main() -> int:
     social = original_pages["/social-technology"]
     required_social = [
         "Technology is also",
+        "Safeguarding · evidence · prevention · P—50",
+        "PRE-ENABLER",
+        "/social-technology/pre-enabler",
         "Public Service &amp; Community Resilience · new proposal · P—46",
         "PACE — Public Assistance, Communication and Emergency Support",
         "/social-technology/public-service-and-community-resilience/pace",
@@ -1426,7 +1483,7 @@ def main() -> int:
         "Health Systems",
         "Patient choice should include the right to remain in continuous NHS care",
         "NHS Interim Needs and Adjustments Certificate",
-        "existing study in formation",
+        "open provider study",
         "/social-technology/drugs-and-society",
         "/social-technology/health-systems-and-patient-choice",
         "Justice &amp; Accountability",
@@ -1549,9 +1606,13 @@ def main() -> int:
     required_health_study = [
         "Choice should include",
         "staying with the NHS.",
-        "Two distinct publications",
+        "Three distinct pieces of work",
+        "Law and Policy in Medicine",
+        "/social-technology/health-systems-and-patient-choice/law-and-policy-in-medicine",
+        "Related across agencies · P—50",
+        "/social-technology/pre-enabler",
         "New policy proposal · P—44",
-        "Open the NHS continuity proposal",
+        "Read the complete publication frame",
         "A right to choose",
         "long-term NHS care.",
         "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
@@ -1567,6 +1628,38 @@ def main() -> int:
     missing_health_study = [m for m in required_health_study if m not in health_study]
     if missing_health_study:
         raise RuntimeError(f"Health Systems study verification failed: {missing_health_study}")
+
+    medicine = original_pages[
+        "/social-technology/health-systems-and-patient-choice/law-and-policy-in-medicine"
+    ]
+    required_medicine = [
+        "P—49", "Law and Policy", "in Medicine.", "Research and decision support",
+        "not individual legal advice", "17-page evidence paper", "four practical tools",
+        "Law_and_Policy_in_Medicine_Introduction_2026-09-27.txt",
+        "Law_and_Policy_in_Medicine_Evidence_Paper_v1.pdf",
+        "Doctor_Legal_Abilities_and_Duties_v1.pdf",
+        "Patient_Legal_Standing_Against_NHS_Policy_v1.pdf",
+        "NHS_Policy_vs_Law_Assessment_v1.pdf",
+        "GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.pdf",
+    ]
+    missing_medicine = [marker for marker in required_medicine if marker not in medicine]
+    if missing_medicine:
+        raise RuntimeError(f"Law and Policy in Medicine verification failed: {missing_medicine}")
+
+    pre_enabler = original_pages["/social-technology/pre-enabler"]
+    required_pre_enabler = [
+        "P—50", "PRE-", "ENABLER.", "persistent case reference",
+        "evidence that may clear", "not an operating public registry",
+        "does not register a case", "personal testimony",
+        "have not been independently verified", "blank PE-1",
+        "PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.pdf",
+        "PRE_ENABLER_Following_Introduction_Context_2026-09-27.txt",
+        "PRE_ENABLER_Concept_Paper_v3_0.pdf",
+        "PRE_ENABLER_Form_Pack_PE1_v1_0.pdf",
+    ]
+    missing_pre_enabler = [marker for marker in required_pre_enabler if marker not in pre_enabler]
+    if missing_pre_enabler:
+        raise RuntimeError(f"PRE-ENABLER verification failed: {missing_pre_enabler}")
 
     interim_certificate = original_pages[
         "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate"
@@ -1698,7 +1791,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 75 research library file set verified unchanged")
+    print("Version 77 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1732,7 +1825,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 75 release-content checksums verified")
+    print("Protected version 77 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
