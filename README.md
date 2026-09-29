@@ -1,39 +1,34 @@
 # The Green Tank — GitHub deployment
 
-This repository is the reference GitHub deployment of **The Green Tank**.
+This repository is the reference GitHub Pages deployment of **The Green Tank**.
 
-Development/master source:
-https://the-green-tank.alexiscoderpenguy.chatgpt.site
+- Development/master Site: https://the-green-tank.alexiscoderpenguy.chatgpt.site
+- Public mirror: https://thegreentank2.github.io/Thegreentank-deployment-2/
+- `Thegreentank-deployment-2`: reference deployment and operational AI Sub Space container
+- `The-green-tank-condition-test`: experimental/condition-test deployment
 
-Deployment role:
+The Pages workflow builds a guarded static mirror from the public development Site. Its version 80 baseline preserves 57 guarded routes plus the 12-page Ghostbusters section, 52 publications, 122 Library-linked research files, 126 files physically copied into `site/research`, the Buddha Net simulator and public presentation assets. The Site itself displays a 124-public-research-file summary; the mirror inventory separately counts every copied file, including four assets outside the Library's direct links.
 
-- `Thegreentank-deployment-2` — reference deployment and operational AI Sub Space container
-- `The-green-tank-condition-test` — experimental/condition-test deployment
+Release 42 includes P—51, *A Call for Legalisation of Cannabis Through the NHS*, with its paper and evidence/finance/registry supplement; and P—52, *Emotioning*, with its OED evidence submission. The TIME section, homepage UTC counter, compact widget, world clocks and reconstruction use the public Site's read-only HTTPS API from this static mirror. They openly label the hosting clock as an **unverified server estimate** and stop when the service is unavailable. This is not a disciplined NPL or independently verified atomic time source. The media and publication consistency checks cannot establish whether material was made by AI.
 
-The GitHub Pages build is a guarded full mirror of the public development Site. Version 77 preserves 53 guarded application routes plus the Ghostbusters static section, 50 publications, 116 library-linked research files, 120 total public/research mirror files, the Buddha Net simulator, the complete Ghostbusters learning journey, and the current public presentation assets, including all 23 slides of P—48. The development Site displays a summary count of 118 public research files; the mirror also carries four research assets outside the Library's direct file links.
-
-Publication P—50, *PRE-ENABLER*, has its own page with both introductions, the concept paper and the blank PE-1 form pack in their source formats. Its personal testimony is identified as unverified, and the proposed registration and death-check service is identified as not yet operational. P—49, *Law and Policy in Medicine*, has its introduction, evidence paper and four practical tools in the Health Systems collection. All 18 new research files are pinned by checksum in the guarded build.
-
-Publication P—48, *Rainwater: Climate Evidence, Useful Storage and Public Questions*, is preserved with its original PowerPoint, 23-slide viewer and the Climate Technology and Climate Change Technology pages. P—47, *Where Have All the Houses Gone?*, retains its complete public HTML frame, coordinated covering letter and combined Section 106 investigation. The earlier publication record remains intact, including P—46 *PACE — Public Assistance, Communication and Emergency Support*, P—45 *Where Do We Expect God to Live?*, the NHS continuity work, Public Duty and Democratic Accountability, The Family Centre and its 18-slide presentation, CL17, Solutions Now and its 32-slide evidence reader, the three Friendship letters, Music and KNOTS/1.0, Justice & Accountability, Drugs & Society, Psy-chology, Monkey Banana, Fashion Police, Ghostbusters and the standalone simulators.
-
-The Culture section includes Pasty Quest, whose presentation and report stay on Internet Archive. Its reusable Archive viewer works with a different Archive identifier and optional PDF filename through URL parameters. The Fashion Police page ends with the Devonshire wanted posters, including the “Hug boss” caption. The mirror keeps a small viewer script so the reader works after the framework hydration scripts are removed for GitHub Pages.
+Earlier publications and their downloads remain, including *PRE-ENABLER*, *Law and Policy in Medicine*, the 23-slide Rainwater presentation, PACE, housing/Section 106, the Family Centre, CL17, Solutions Now, Psy-chology, Drugs & Society, the three Friendship letters and the Culture section's Pasty Quest Archive viewer. Fashion Police retains the Devonshire wanted posters with the “Hug boss” caption. Ghostbusters remains a reviewed static section supplied by `ghostbusters_source/` during deployment.
 
 ## AI Sub Space routing and inheritance
 
 The operational AI Sub Space is:
 https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space/
 
-AI Text Access, the QR code and every advertised machine-entry link resolve only to that GitHub container. The development Site, this deployment and future mirrors still carry the complete local `ai/sub-space` tree as inherited recovery data. The local copy is verified and restorable, but is not substituted for the public GitHub entrance.
+AI Text Access, the QR code and advertised machine-entry links resolve to that GitHub container. The development Site, this deployment and future mirrors also carry the complete local `ai/sub-space` tree as inherited recovery data. The guarded build checks current routing, publication state and historical release checksums.
 
-The current immutable machine publication is D-DSK `ddsk-v0012`, with retained releases `ddsk-v0001` through `ddsk-v0011`. Historical release bytes remain unchanged; the current version catalogue marks legacy embedded links non-operational and applies the GitHub-only routing contract to current access.
+The current immutable machine publication is D-DSK `ddsk-v0015`, with retained releases `ddsk-v0001` through `ddsk-v0014`. Historical release bytes remain unchanged. The version catalogue marks legacy embedded links non-operational and applies the GitHub-only routing contract to current access.
 
 Trusted portable baseline:
 
-- `Green_Tank_Full_Deployment_Backup_v77_2026-09-27.zip`
-- SHA-256 `721fdefb02b9e7b483c59c86f80eb2dec7b75b16bf8167947fed6c4959918f94`
-- Development source commit `2ec97874668949eaa8f6939886d0c85ee2dc9f14`
-- Sites version `77` · publication Release `40`
+- `The_Green_Tank_Full_Site_Backup_2026-09-29_v80.zip`
+- SHA-256 `1e541291ada3f4db6adcd23c90cd43dd09e2c6c7c69ef52aa7c477657e374c4e`
+- Development source commit `85c326d571d78b03025a5f3a460f640ccc97bf2d`
+- Sites version `80` · publication Release `42`
 
 ## Restore rule
 
-If a deployment becomes damaged or inconsistent, restore from the trusted version-77 development source, the verified Release 40 full backup and Git history rather than repairing an unknown state in place. Preserve the full local Sub Space inheritance in every restored or future mirror, while keeping all public Sub Space entrances fixed to the GitHub operational container.
+If a deployment becomes damaged or inconsistent, restore from the trusted version 80 development source, verified Release 42 full backup and Git history. Preserve the full local Sub Space inheritance in every restored or future mirror, while keeping all public Sub Space entrances fixed to the GitHub operational container.

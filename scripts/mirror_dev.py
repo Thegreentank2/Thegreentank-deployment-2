@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 77 Release 40 portable deployment backup is the baseline. This script requires the
-exact known version 77 route, research-file and AI Sub Space sets and refuses
+version 80 Release 42 portable deployment backup is the baseline. This script requires the
+exact known version 80 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "721fdefb02b9e7b483c59c86f80eb2dec7b75b16bf8167947fed6c4959918f94"
-BACKUP_LABEL = "Green_Tank_Full_Deployment_Backup_v77_2026-09-27.zip"
-SOURCE_SITE_VERSION = 77
-SOURCE_RELEASE = 40
-SOURCE_PUBLICATION_COUNT = 50
-SOURCE_COMMIT = "2ec97874668949eaa8f6939886d0c85ee2dc9f14"
+BACKUP_SHA256 = "1e541291ada3f4db6adcd23c90cd43dd09e2c6c7c69ef52aa7c477657e374c4e"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-29_v80.zip"
+SOURCE_SITE_VERSION = 80
+SOURCE_RELEASE = 42
+SOURCE_PUBLICATION_COUNT = 52
+SOURCE_COMMIT = "85c326d571d78b03025a5f3a460f640ccc97bf2d"
 
 ROUTES = [
     "/",
@@ -46,6 +46,7 @@ ROUTES = [
     "/finances/the-family-centre",
     "/finances/universal-payment-and-shared-growth",
     "/psy-chology",
+    "/psy-chology/emotioning",
     "/psy-chology/learning-is-a-matter-of-perspective",
     "/psy-chology/ocd-to-curl",
     "/music",
@@ -70,6 +71,7 @@ ROUTES = [
     "/social-technology/democratic-centre",
     "/social-technology/care-for-those-who-care-for-us",
     "/social-technology/drugs-and-society",
+    "/social-technology/drugs-and-society/cannabis-through-the-nhs",
     "/social-technology/drugs-and-society/drug-knowledge-body-autonomy-and-patient-choice",
     "/social-technology/friendship-love-respect",
     "/social-technology/friendship-two",
@@ -88,6 +90,8 @@ ROUTES = [
     "/social-technology/justice-and-accountability",
     "/social-technology/justice-and-accountability/where-have-all-the-houses-gone",
     "/social-technology/public-duty-and-democratic-accountability",
+    "/time",
+    "/time/embed",
 ]
 
 BASELINE_LIBRARY_RESEARCH = {
@@ -207,10 +211,16 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/PRE_ENABLER_Form_Pack_PE1_v1_0.pdf",
     "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.docx",
     "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.pdf",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_2026-09-28.docx",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_2026-09-28.pdf",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.docx",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.pdf",
+    "/research/Emotioning_OED_Evidence_Submission_2026-09-20.docx",
+    "/research/Emotioning_OED_Evidence_Submission_2026-09-20.pdf",
 }
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
-SUBSPACE_CURRENT_RELEASE = "ddsk-v0012"
+SUBSPACE_CURRENT_RELEASE = "ddsk-v0015"
 SUBSPACE_RELEASES = [
     "ddsk-v0001",
     "ddsk-v0002",
@@ -223,9 +233,12 @@ SUBSPACE_RELEASES = [
     "ddsk-v0009",
     "ddsk-v0010",
     "ddsk-v0011",
+    "ddsk-v0012",
+    "ddsk-v0013",
+    "ddsk-v0014",
     SUBSPACE_CURRENT_RELEASE,
 ]
-SUBSPACE_PUBLICATION_STATE_HASH = "sha256:83a3a1cb69496a7817619dacf95469248d76e38cb225841628ad247003ace6b9"
+SUBSPACE_PUBLICATION_STATE_HASH = "sha256:4916467f605f2c3f26888f9c4f087cd115ac4feef084c000373716fd34418881"
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
     "checksums.sha256",
@@ -283,6 +296,12 @@ EXPECTED_CONTENT_SHA256 = {
     "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.pdf": "fdca50aea7d24687d92d4e0f8eb3cca7f9e19e82edab1d8596d583ada2e58e01",
     "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.docx": "4f72eb619534e3a32f187c006aab09dd6daae1a454465e1d6b0b9800ab62a173",
     "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.pdf": "799212bed105a6d48f8290250da9f24d14ad5b30a2def51efe572b9bb261a6a6",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_2026-09-28.docx": "6192db1714fe67a2f754f6d3f26ce7a9fdc900e7394f1ea40774f67dc9a27ea1",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_2026-09-28.pdf": "2e44610ecd7ea8c62f0c166a3ec0ccd4239d98f561308eaa698f3649d0ea068c",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.docx": "f811e05cb37a20949bb7bb193fbffd44c6dcc0786ff749ca0a56f7e18134c18b",
+    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.pdf": "163292c83a5630ac3bf3a5326c12255104889b08f867111e92d84596fe141226",
+    "/research/Emotioning_OED_Evidence_Submission_2026-09-20.docx": "81ddecc88f22cefa21b626b61379edc4db1fd94bb75134bb9818aa4d2f8cda90",
+    "/research/Emotioning_OED_Evidence_Submission_2026-09-20.pdf": "42a91200807de3658d3c90a5832565f245582da9b69f19eb93a7a09636c3c5b4",
     "/llms.txt": "3ab55acf4b6b9cbcc24958b66a054eb68450da94135ded94ab5a3bf184bd052a",
     "/research/AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.docx": "3fde296c1c4761437088b81364d1bcb3e5fe4caedc316c685e95dcf6a1630ff2",
     "/research/AI_Sub_Space_D_DSK_Design_and_Publishing_Instructions.pdf": "68e7df20d6e7fd24a4f736821c170ce19b01920b42bb83aad4d287838d5913cf",
@@ -370,7 +389,7 @@ FASHION_POSTER_FILES = {
     "/fashion-police/devon-retro-fashion-wanted.png": "5440a07dcbb8b12d1fec2c1b77ad5fb8c0e8563c6a93368999b69b610b4be8f2",
     "/fashion-police/devonshire-fashion-comeback.png": "064c6a4c079c8ac2ce753a86473fee09b537d094cd5d1204d4274c4503c40773",
 }
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.6-v77-github-subspace-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.7-v80-github-subspace-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -920,6 +939,16 @@ def main() -> int:
         if route == "/archive-viewer":
             mirror_script = f"{PREFIX}/assets/archive-viewer.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+        if route in {"/", "/time", "/time/embed"}:
+            mirror_script = f"{PREFIX}/assets/time-mirror.js"
+            cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+            if route == "/time":
+                cleaned = cleaned.replace(
+                    '<section class="time-hero"',
+                    '<p class="time-health-note">On this GitHub mirror, live TIME functions call the Green Tank development Site API. The display stops when that service is unavailable.</p><section class="time-hero"',
+                    1,
+                )
+                cleaned = cleaned.replace(f'href="{PREFIX}/v1/', f'href="{BASE}/v1/')
         write_bytes(route_output(route), cleaned.encode("utf-8"))
         print(f"mirrored route {route}")
 
@@ -928,6 +957,7 @@ def main() -> int:
     write_bytes(OUT / "assets" / "family-centre.js", FAMILY_CENTRE_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "rainwater-viewer.js", RAINWATER_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "archive-viewer.js", ARCHIVE_VIEWER_SCRIPT.encode("utf-8"))
+    write_bytes(OUT / "assets" / "time-mirror.js", Path(__file__).with_name("time-mirror.js").read_bytes())
 
     home = original_pages["/"]
     library = original_pages["/library"]
@@ -953,7 +983,7 @@ def main() -> int:
 
     required_home = [
         "Before we judge",
-        "Fifty publications",
+        "Fifty-two publications",
         "P—29",
         "P—30",
         "P—31",
@@ -976,6 +1006,12 @@ def main() -> int:
         "P—48",
         "P—49",
         "P—50",
+        "P—51",
+        "P—52",
+        "Emotioning",
+        "A Call for Legalisation of Cannabis Through the NHS",
+        "home-utc-clock",
+        "/time",
         "PRE-ENABLER",
         "/social-technology/pre-enabler",
         "Law and Policy in Medicine",
@@ -1028,7 +1064,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v77 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v80 structure: {missing_home}")
 
     required_ai = [
         "AI",
@@ -1042,7 +1078,7 @@ def main() -> int:
     ]
     missing_ai = [m for m in required_ai if m not in ai]
     if missing_ai:
-        raise RuntimeError(f"Dev AI doorway lost expected v77 structure: {missing_ai}")
+        raise RuntimeError(f"Dev AI doorway lost expected v80 structure: {missing_ai}")
 
     required_subspace = [
         "AI Sub Space · D-DSK",
@@ -1065,7 +1101,7 @@ def main() -> int:
     missing_subspace = [m for m in required_subspace if m not in subspace]
     if missing_subspace:
         raise RuntimeError(
-            f"Dev AI Sub Space lost expected v77 structure: {missing_subspace}"
+            f"Dev AI Sub Space lost expected v80 structure: {missing_subspace}"
         )
 
     required_text_access = [
@@ -1094,7 +1130,7 @@ def main() -> int:
     missing_text_access = [m for m in required_text_access if m not in text_access]
     if missing_text_access:
         raise RuntimeError(
-            f"Dev AI Text Access lost expected v77 structure: {missing_text_access}"
+            f"Dev AI Text Access lost expected v80 structure: {missing_text_access}"
         )
 
     expected_project_destinations = [
@@ -1136,9 +1172,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 40",
-        "50 publications",
-        "118 public research files",
+        "Release 42",
+        "52 publications",
+        "124 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -1161,6 +1197,12 @@ def main() -> int:
         "P—48",
         "P—49",
         "P—50",
+        "P—51",
+        "P—52",
+        "Emotioning",
+        "Emotioning_OED_Evidence_Submission_2026-09-20.pdf",
+        "A Call for Legalisation of Cannabis Through the NHS",
+        "A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.pdf",
         "PRE-ENABLER",
         "/social-technology/pre-enabler",
         "Law and Policy in Medicine",
@@ -1208,7 +1250,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v77 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v80 structure: {missing_library}")
 
     houses = original_pages[
         "/social-technology/justice-and-accountability/where-have-all-the-houses-gone"
@@ -1791,7 +1833,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 77 research library file set verified unchanged")
+    print("Version 80 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1825,12 +1867,13 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 77 release-content checksums verified")
+    print("Protected version 80 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
-    extra_research_count = sum(path.startswith("/research/") for path in EXTRA_BASELINE_PUBLIC_FILES)
-    expected_research_folder_count = len(research_urls) + extra_research_count
+    expected_research_folder_count = len(research_urls | {
+        path for path in EXTRA_BASELINE_PUBLIC_FILES if path.startswith("/research/")
+    })
     if len(research_files) != expected_research_folder_count:
         raise RuntimeError(
             f"Expected {expected_research_folder_count} public/research files; found {len(research_files)}"
