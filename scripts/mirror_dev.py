@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 80 Release 42 portable deployment backup is the baseline. This script requires the
-exact known version 80 route, research-file and AI Sub Space sets and refuses
+version 81 Release 43 portable deployment backup is the baseline. This script requires the
+exact known version 81 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "1e541291ada3f4db6adcd23c90cd43dd09e2c6c7c69ef52aa7c477657e374c4e"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-29_v80.zip"
-SOURCE_SITE_VERSION = 80
-SOURCE_RELEASE = 42
-SOURCE_PUBLICATION_COUNT = 52
-SOURCE_COMMIT = "85c326d571d78b03025a5f3a460f640ccc97bf2d"
+BACKUP_SHA256 = "49df41063bae60efe84751e6b574f469fdd7d2dd661fbda1bbada61d242e29b1"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-30_v81.zip"
+SOURCE_SITE_VERSION = 81
+SOURCE_RELEASE = 43
+SOURCE_PUBLICATION_COUNT = 53
+SOURCE_COMMIT = "381452d6413e7758df70f04d2dfe47b437f322a7"
 
 ROUTES = [
     "/",
@@ -46,6 +46,7 @@ ROUTES = [
     "/finances/the-family-centre",
     "/finances/universal-payment-and-shared-growth",
     "/psy-chology",
+    "/psy-chology/ego",
     "/psy-chology/emotioning",
     "/psy-chology/learning-is-a-matter-of-perspective",
     "/psy-chology/ocd-to-curl",
@@ -217,10 +218,14 @@ BASELINE_LIBRARY_RESEARCH = {
     "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.pdf",
     "/research/Emotioning_OED_Evidence_Submission_2026-09-20.docx",
     "/research/Emotioning_OED_Evidence_Submission_2026-09-20.pdf",
+    "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.docx",
+    "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.pdf",
+    "/research/Ego_Simple_Universal_Model_2026-09-30.docx",
+    "/research/Ego_Simple_Universal_Model_2026-09-30.pdf",
 }
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
-SUBSPACE_CURRENT_RELEASE = "ddsk-v0015"
+SUBSPACE_CURRENT_RELEASE = "ddsk-v0016"
 SUBSPACE_RELEASES = [
     "ddsk-v0001",
     "ddsk-v0002",
@@ -236,9 +241,10 @@ SUBSPACE_RELEASES = [
     "ddsk-v0012",
     "ddsk-v0013",
     "ddsk-v0014",
+    "ddsk-v0015",
     SUBSPACE_CURRENT_RELEASE,
 ]
-SUBSPACE_PUBLICATION_STATE_HASH = "sha256:4916467f605f2c3f26888f9c4f087cd115ac4feef084c000373716fd34418881"
+SUBSPACE_PUBLICATION_STATE_HASH = "sha256:6f149679d62accae2bf534aa57d3e62b143067656d87fefc9863f12b0adbb2e6"
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
     "checksums.sha256",
@@ -278,6 +284,23 @@ EXTRA_BASELINE_PUBLIC_FILES = SUBSPACE_PUBLIC_FILES | {
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
+    "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.docx": "59aa2b1c279ad59865a60e2f33750d9cc64e56d8a501f27fc3a18d97a98807a9",
+    "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.pdf": "b4b9093f67656c1acac74001e5da83cde2382a975bd3e25fb1194706ba0b5e32",
+    "/research/Ego_Simple_Universal_Model_2026-09-30.docx": "5fc04460049f6c3d7bd27a1bef274889c344a837ff21114e0e1c391ba310af9b",
+    "/research/Ego_Simple_Universal_Model_2026-09-30.pdf": "2d9b1c567ff7ebbd45627855e91c9a58b51f7e25a7bc907ac4e53225d8a494de",
+    "/psy-chology/ego/01-best-possible-guess.png": "7b8e0a5e48348502dedc6f6e0c62463189bcb420551feddac11a68224dd37233",
+    "/psy-chology/ego/02-imagination-makes-something-new.png": "5817f8686ba6bc0e1dff3b83dd90737bff0d1fd33cc6c47d1e25b2e08caef62d",
+    "/psy-chology/ego/03-imagination-can-misfire.png": "97cb7ebbe693b682e8e89e4ace438955db3611d42187f7cd5449d0c59318a411",
+    "/psy-chology/ego/04-maths-problem.png": "3954d23705c1c64da043eefe53a50e84f85f210c5a67535d69b7496ab37a5095",
+    "/psy-chology/ego/05-wrong-maths-answer.png": "f852d2676c44806e6fe1aa96bd1a43a0e8f4ae902fee559b2278c8ddc514310a",
+    "/psy-chology/ego/06-mechanical-problem.png": "5d2b722eaf305684cded1a8a9d0e18247aa2cab9038c3ed0239d56755e723c41",
+    "/psy-chology/ego/07-wrong-repair.png": "efcf1e602871e63cfcca3e9aebe2d45c1c80c3c9e694cd3167f478d34ce669b9",
+    "/psy-chology/ego/08-cooking-problem.png": "3cc92d507a6e855d327ee4b26e6a549e9e3df9f90033b2c12bb9754889f0a96c",
+    "/psy-chology/ego/09-wrong-cooking-guess.png": "38cfdabb5975ca27e94e1d6916a80c6fe2791df9083304468e14f0c671ef8812",
+    "/psy-chology/ego/10-cleaning-problem.png": "37c77a045666c3583ceb0fbe5e62624c9b1165e48758429b649919fc7bcc38fc",
+    "/psy-chology/ego/11-wrong-cleaning-guess.png": "6e33f4b3054b509bcff888a3820f7c491d0900f70f7053f302351ca226e376db",
+    "/psy-chology/ego/12-when-null-is-forbidden.png": "51d329e718cde91ab0ad93dc6d188a720f77f1ca88cd77a606c1bad8d9aa0de7",
+    "/psy-chology/ego/13-when-no-is-not-allowed.png": "e4c11459a6b57bb719b677c108ecbd44b84ae5a77cea4a4e3e3a181c0890a3b4",
     "/research/Doctor_Legal_Abilities_and_Duties_v1.docx": "3e1b44698c1613fe2d9e8596152ae20a9474c5d133d27db622a72c68b2b38a56",
     "/research/Doctor_Legal_Abilities_and_Duties_v1.pdf": "8500fadd0888f582ea3e3f45baf444fdc8738a09d11cadd130c57869de0cd674",
     "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.docx": "742120537207b70058543044c7795261c10d659d6b1b41e123fdd2e89d87a7c6",
@@ -389,7 +412,22 @@ FASHION_POSTER_FILES = {
     "/fashion-police/devon-retro-fashion-wanted.png": "5440a07dcbb8b12d1fec2c1b77ad5fb8c0e8563c6a93368999b69b610b4be8f2",
     "/fashion-police/devonshire-fashion-comeback.png": "064c6a4c079c8ac2ce753a86473fee09b537d094cd5d1204d4274c4503c40773",
 }
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.7-v80-github-subspace-guard"
+EGO_IMAGE_FILES = {
+    "/psy-chology/ego/01-best-possible-guess.png": "7b8e0a5e48348502dedc6f6e0c62463189bcb420551feddac11a68224dd37233",
+    "/psy-chology/ego/02-imagination-makes-something-new.png": "5817f8686ba6bc0e1dff3b83dd90737bff0d1fd33cc6c47d1e25b2e08caef62d",
+    "/psy-chology/ego/03-imagination-can-misfire.png": "97cb7ebbe693b682e8e89e4ace438955db3611d42187f7cd5449d0c59318a411",
+    "/psy-chology/ego/04-maths-problem.png": "3954d23705c1c64da043eefe53a50e84f85f210c5a67535d69b7496ab37a5095",
+    "/psy-chology/ego/05-wrong-maths-answer.png": "f852d2676c44806e6fe1aa96bd1a43a0e8f4ae902fee559b2278c8ddc514310a",
+    "/psy-chology/ego/06-mechanical-problem.png": "5d2b722eaf305684cded1a8a9d0e18247aa2cab9038c3ed0239d56755e723c41",
+    "/psy-chology/ego/07-wrong-repair.png": "efcf1e602871e63cfcca3e9aebe2d45c1c80c3c9e694cd3167f478d34ce669b9",
+    "/psy-chology/ego/08-cooking-problem.png": "3cc92d507a6e855d327ee4b26e6a549e9e3df9f90033b2c12bb9754889f0a96c",
+    "/psy-chology/ego/09-wrong-cooking-guess.png": "38cfdabb5975ca27e94e1d6916a80c6fe2791df9083304468e14f0c671ef8812",
+    "/psy-chology/ego/10-cleaning-problem.png": "37c77a045666c3583ceb0fbe5e62624c9b1165e48758429b649919fc7bcc38fc",
+    "/psy-chology/ego/11-wrong-cleaning-guess.png": "6e33f4b3054b509bcff888a3820f7c491d0900f70f7053f302351ca226e376db",
+    "/psy-chology/ego/12-when-null-is-forbidden.png": "51d329e718cde91ab0ad93dc6d188a720f77f1ca88cd77a606c1bad8d9aa0de7",
+    "/psy-chology/ego/13-when-no-is-not-allowed.png": "e4c11459a6b57bb719b677c108ecbd44b84ae5a77cea4a4e3e3a181c0890a3b4",
+}
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.8-v81-github-subspace-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -983,7 +1021,7 @@ def main() -> int:
 
     required_home = [
         "Before we judge",
-        "Fifty-two publications",
+        "Fifty-three publications",
         "P—29",
         "P—30",
         "P—31",
@@ -1008,6 +1046,8 @@ def main() -> int:
         "P—50",
         "P—51",
         "P—52",
+        "P—53",
+        "The Ego as Predictive Imagination",
         "Emotioning",
         "A Call for Legalisation of Cannabis Through the NHS",
         "home-utc-clock",
@@ -1064,7 +1104,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v80 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v81 structure: {missing_home}")
 
     required_ai = [
         "AI",
@@ -1078,7 +1118,7 @@ def main() -> int:
     ]
     missing_ai = [m for m in required_ai if m not in ai]
     if missing_ai:
-        raise RuntimeError(f"Dev AI doorway lost expected v80 structure: {missing_ai}")
+        raise RuntimeError(f"Dev AI doorway lost expected v81 structure: {missing_ai}")
 
     required_subspace = [
         "AI Sub Space · D-DSK",
@@ -1101,7 +1141,7 @@ def main() -> int:
     missing_subspace = [m for m in required_subspace if m not in subspace]
     if missing_subspace:
         raise RuntimeError(
-            f"Dev AI Sub Space lost expected v80 structure: {missing_subspace}"
+            f"Dev AI Sub Space lost expected v81 structure: {missing_subspace}"
         )
 
     required_text_access = [
@@ -1130,7 +1170,7 @@ def main() -> int:
     missing_text_access = [m for m in required_text_access if m not in text_access]
     if missing_text_access:
         raise RuntimeError(
-            f"Dev AI Text Access lost expected v80 structure: {missing_text_access}"
+            f"Dev AI Text Access lost expected v81 structure: {missing_text_access}"
         )
 
     expected_project_destinations = [
@@ -1172,9 +1212,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 42",
-        "52 publications",
-        "124 public research files",
+        "Release 43",
+        "53 publications",
+        "128 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -1199,8 +1239,12 @@ def main() -> int:
         "P—50",
         "P—51",
         "P—52",
+        "P—53",
+        "The Ego as Predictive Imagination",
         "Emotioning",
         "Emotioning_OED_Evidence_Submission_2026-09-20.pdf",
+        "Ego_Simple_Universal_Model_2026-09-30.pdf",
+        "Ego_Predictive_Imagination_Detailed_Model_2026-09-30.pdf",
         "A Call for Legalisation of Cannabis Through the NHS",
         "A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.pdf",
         "PRE-ENABLER",
@@ -1250,7 +1294,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v80 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v81 structure: {missing_library}")
 
     houses = original_pages[
         "/social-technology/justice-and-accountability/where-have-all-the-houses-gone"
@@ -1833,7 +1877,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 80 research library file set verified unchanged")
+    print("Version 81 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1846,6 +1890,7 @@ def main() -> int:
     asset_urls.update(FAMILY_CENTRE_SLIDES)
     asset_urls.update(RAINWATER_SLIDES)
     asset_urls.update(FASHION_POSTER_FILES)
+    asset_urls.update(EGO_IMAGE_FILES)
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
@@ -1854,6 +1899,7 @@ def main() -> int:
             print(f"mirrored research file {asset.rsplit('/', 1)[-1]}")
 
     verify_subspace_snapshot()
+    assert len(EGO_IMAGE_FILES) == 13 and all(local_path_for_url(name).is_file() for name in EGO_IMAGE_FILES)
 
     for poster, expected_digest in FASHION_POSTER_FILES.items():
         actual_digest = hashlib.sha256(local_path_for_url(poster).read_bytes()).hexdigest()
@@ -1867,7 +1913,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 80 release-content checksums verified")
+    print("Protected version 81 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
