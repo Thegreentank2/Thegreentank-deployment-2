@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 81 Release 43 portable deployment backup is the baseline. This script requires the
-exact known version 81 route, research-file and AI Sub Space sets and refuses
+version 87 Release 43 portable deployment backup is the baseline. This script requires the
+exact known version 87 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,12 +27,12 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "49df41063bae60efe84751e6b574f469fdd7d2dd661fbda1bbada61d242e29b1"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-09-30_v81.zip"
-SOURCE_SITE_VERSION = 81
+BACKUP_SHA256 = "bb7c064566a483f80e34ef2bd6692084ac986e888246c8473a06d4f15771bd71"
+BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-10-10_v87.zip"
+SOURCE_SITE_VERSION = 87
 SOURCE_RELEASE = 43
 SOURCE_PUBLICATION_COUNT = 53
-SOURCE_COMMIT = "381452d6413e7758df70f04d2dfe47b437f322a7"
+SOURCE_COMMIT = "c6ecfdd967a6e274867c28b8445a94b3a67c97bd"
 
 ROUTES = [
     "/",
@@ -225,26 +225,9 @@ BASELINE_LIBRARY_RESEARCH = {
 }
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
-SUBSPACE_CURRENT_RELEASE = "ddsk-v0016"
-SUBSPACE_RELEASES = [
-    "ddsk-v0001",
-    "ddsk-v0002",
-    "ddsk-v0003",
-    "ddsk-v0004",
-    "ddsk-v0005",
-    "ddsk-v0006",
-    "ddsk-v0007",
-    "ddsk-v0008",
-    "ddsk-v0009",
-    "ddsk-v0010",
-    "ddsk-v0011",
-    "ddsk-v0012",
-    "ddsk-v0013",
-    "ddsk-v0014",
-    "ddsk-v0015",
-    SUBSPACE_CURRENT_RELEASE,
-]
-SUBSPACE_PUBLICATION_STATE_HASH = "sha256:6f149679d62accae2bf534aa57d3e62b143067656d87fefc9863f12b0adbb2e6"
+SUBSPACE_CURRENT_RELEASE = "ddsk-v0022"
+SUBSPACE_RELEASES = [f"ddsk-v{number:04d}" for number in range(1, 23)]
+SUBSPACE_PUBLICATION_STATE_HASH = "sha256:9697fe6d99235950d69d3620caa099bc16ded187382952faaee6008ebd3ee248"
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
     "checksums.sha256",
@@ -281,9 +264,11 @@ EXTRA_BASELINE_PUBLIC_FILES = SUBSPACE_PUBLIC_FILES | {
     "/research/NHS_Right_to_Choose_Data_Acquisition_Survey.docx",
     "/simulators/Buddha_Net_Simulator_Standalone.html",
     "/social-technology/pace/pace-community-vehicle-concept.png",
+    "/music/red-hot-voodoo-let-me-untie-you.png",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
+    "/music/red-hot-voodoo-let-me-untie-you.png": "b33fe06666ba1c08a6349736b9dba6879154b90b9c26d1042388ea6d14f17585",
     "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.docx": "59aa2b1c279ad59865a60e2f33750d9cc64e56d8a501f27fc3a18d97a98807a9",
     "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.pdf": "b4b9093f67656c1acac74001e5da83cde2382a975bd3e25fb1194706ba0b5e32",
     "/research/Ego_Simple_Universal_Model_2026-09-30.docx": "5fc04460049f6c3d7bd27a1bef274889c344a837ff21114e0e1c391ba310af9b",
@@ -411,6 +396,9 @@ RAINWATER_SLIDES = {f"/climate-technology/rainwater-climate-and-rights/slides/sl
 FASHION_POSTER_FILES = {
     "/fashion-police/devon-retro-fashion-wanted.png": "5440a07dcbb8b12d1fec2c1b77ad5fb8c0e8563c6a93368999b69b610b4be8f2",
     "/fashion-police/devonshire-fashion-comeback.png": "064c6a4c079c8ac2ce753a86473fee09b537d094cd5d1204d4274c4503c40773",
+    "/fashion-police/tigger-family-wellies-sighting.png": "22e766db44646b18badbe99031c4792e6e87ff10ca150c6f1c476e8b59134fee",
+    "/fashion-police/wheely-shoes-wanted.png": "f5dd857b2cbabc2620f967a9bad490b4f262fcf6ec9a2c7d820a56af60136107",
+    "/fashion-police/light-up-disco-wanted.png": "5d032eee35ab42cd5ecb52ea207ef87613bd8cbd6445c520bb50473f88f6bb63",
 }
 EGO_IMAGE_FILES = {
     "/psy-chology/ego/01-best-possible-guess.png": "7b8e0a5e48348502dedc6f6e0c62463189bcb420551feddac11a68224dd37233",
@@ -427,7 +415,7 @@ EGO_IMAGE_FILES = {
     "/psy-chology/ego/12-when-null-is-forbidden.png": "51d329e718cde91ab0ad93dc6d188a720f77f1ca88cd77a606c1bad8d9aa0de7",
     "/psy-chology/ego/13-when-no-is-not-allowed.png": "e4c11459a6b57bb719b677c108ecbd44b84ae5a77cea4a4e3e3a181c0890a3b4",
 }
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.8-v81-github-subspace-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/2.9-v87-github-subspace-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -704,6 +692,7 @@ def fetch(url: str, attempts: int = 3) -> bytes:
             candidate = candidate / "index.html"
         if candidate.is_file():
             return candidate.read_bytes()
+        raise FileNotFoundError(f"Missing asset in local development snapshot: {candidate}")
     last = None
     for attempt in range(1, attempts + 1):
         try:
@@ -1104,7 +1093,7 @@ def main() -> int:
     ]
     missing_home = [m for m in required_home if m not in home]
     if missing_home:
-        raise RuntimeError(f"Dev homepage lost expected v81 structure: {missing_home}")
+        raise RuntimeError(f"Dev homepage lost expected v87 structure: {missing_home}")
 
     required_ai = [
         "AI",
@@ -1118,7 +1107,7 @@ def main() -> int:
     ]
     missing_ai = [m for m in required_ai if m not in ai]
     if missing_ai:
-        raise RuntimeError(f"Dev AI doorway lost expected v81 structure: {missing_ai}")
+        raise RuntimeError(f"Dev AI doorway lost expected v87 structure: {missing_ai}")
 
     required_subspace = [
         "AI Sub Space · D-DSK",
@@ -1141,7 +1130,7 @@ def main() -> int:
     missing_subspace = [m for m in required_subspace if m not in subspace]
     if missing_subspace:
         raise RuntimeError(
-            f"Dev AI Sub Space lost expected v81 structure: {missing_subspace}"
+            f"Dev AI Sub Space lost expected v87 structure: {missing_subspace}"
         )
 
     required_text_access = [
@@ -1170,7 +1159,7 @@ def main() -> int:
     missing_text_access = [m for m in required_text_access if m not in text_access]
     if missing_text_access:
         raise RuntimeError(
-            f"Dev AI Text Access lost expected v81 structure: {missing_text_access}"
+            f"Dev AI Text Access lost expected v87 structure: {missing_text_access}"
         )
 
     expected_project_destinations = [
@@ -1294,7 +1283,7 @@ def main() -> int:
     ]
     missing_library = [m for m in required_library if m not in library]
     if missing_library:
-        raise RuntimeError(f"Dev library lost expected v81 structure: {missing_library}")
+        raise RuntimeError(f"Dev library lost expected v87 structure: {missing_library}")
 
     houses = original_pages[
         "/social-technology/justice-and-accountability/where-have-all-the-houses-gone"
@@ -1437,6 +1426,9 @@ def main() -> int:
         "Hug boss energy.",
         "/fashion-police/devon-retro-fashion-wanted.png",
         "/fashion-police/devonshire-fashion-comeback.png",
+        "/fashion-police/tigger-family-wellies-sighting.png",
+        "/fashion-police/wheely-shoes-wanted.png",
+        "/fashion-police/light-up-disco-wanted.png",
     ]
     missing_fashion_police = [m for m in required_fashion_police if m not in fashion_police]
     if missing_fashion_police:
@@ -1487,16 +1479,17 @@ def main() -> int:
         "Mini Knots – Let Me Untie You Tuo",
         "/music/knots-untying-through-perspective",
         "/music/knots-1",
-        "Six stages of one developing experiment",
         "CC0 — No Rights Reserved",
         "Internet Archive players",
-        "Seven unique players from the Knots archive.",
-        "The Commercial player has been included once",
+        "Eight unique players from the Knots archive",
+        "Red Hot Voodoo — Let Me Untie You",
+        "knots-red-hot-voodoo-let-me-untie-you",
+        "/music/red-hot-voodoo-let-me-untie-you.png",
         "SoundCloud and Internet Archive",
     ]
     missing_music = [m for m in required_music if m not in music]
     if missing_music:
-        raise RuntimeError(f"Dev Music page lost expected version 63 structure: {missing_music}")
+        raise RuntimeError(f"Dev Music page lost expected version 87 structure: {missing_music}")
 
     expected_archive_player_ids = [
         "knots-let-me-untie-you-3",
@@ -1506,6 +1499,7 @@ def main() -> int:
         "knots-let-me-auntie-uoo-say-hello",
         "knots-Let-me-untie-you",
         "Knots-POP-Let-me-untie-you",
+        "knots-red-hot-voodoo-let-me-untie-you",
     ]
     actual_archive_player_ids = re.findall(
         r'src=["\']https://archive\.org/embed/([^"\']+)["\']',
@@ -1877,7 +1871,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 81 research library file set verified unchanged")
+    print("Version 87 research library file set verified unchanged")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1913,7 +1907,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 81 release-content checksums verified")
+    print("Protected version 87 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
