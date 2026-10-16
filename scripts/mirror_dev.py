@@ -568,7 +568,29 @@ def patch_html_paths(text: str) -> str:
         if fragment:
             target += "#" + fragment
         return f'{match.group("attr")}={match.group("q")}{target}{match.group("q")}'
-    return ATTR_URL_RE.sub(repl, text)
+    text = ATTR_URL_RE.sub(repl, text)
+
+    def refresh_tag(match: re.Match[str]) -> str:
+        tag = match.group(0)
+        if not re.search(r'http-equiv=["\']refresh["\']', tag, re.I):
+            return tag
+
+        def refresh_target(content: re.Match[str]) -> str:
+            target = normalize_same_origin(content.group("url"))
+            if target is None:
+                return content.group(0)
+            fragment = urlparse(urljoin(BASE, html.unescape(content.group("url")))).fragment
+            return (
+                content.group("start") + prefixed_path(target)
+                + ("#" + fragment if fragment else "") + content.group("q")
+            )
+
+        return re.sub(
+            r'(?P<start>content=(?P<q>["\'])\s*\d+(?:\.\d+)?;\s*url=)(?P<url>[^"\']+)(?P=q)',
+            refresh_target, tag, flags=re.I,
+        )
+
+    return re.sub(r'<meta\b[^>]*>', refresh_tag, text, flags=re.I)
 
 
 def clean_html(text: str) -> str:
