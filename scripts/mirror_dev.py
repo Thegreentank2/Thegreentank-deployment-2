@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 87 Release 43 portable deployment backup is the baseline. This script requires the
-exact known version 87 route, research-file and AI Sub Space sets and refuses
+version 92 Release 47 portable deployment backup is the baseline. This script requires the
+exact approved version 92 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,207 +27,23 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-BACKUP_SHA256 = "bb7c064566a483f80e34ef2bd6692084ac986e888246c8473a06d4f15771bd71"
-BACKUP_LABEL = "The_Green_Tank_Full_Site_Backup_2026-10-10_v87.zip"
-SOURCE_SITE_VERSION = 87
-SOURCE_RELEASE = 43
-SOURCE_PUBLICATION_COUNT = 53
-SOURCE_COMMIT = "c6ecfdd967a6e274867c28b8445a94b3a67c97bd"
+APPROVED = json.loads(Path(__file__).with_name("approved-v92.json").read_text(encoding="utf-8"))
+APPROVED_PUBLIC_SHA256 = APPROVED["public_files"]
+BACKUP_SHA256 = APPROVED["backup_sha256"]
+BACKUP_LABEL = APPROVED["backup_reference"]
+SOURCE_SITE_VERSION = APPROVED["source_site_version"]
+SOURCE_RELEASE = APPROVED["source_release"]
+SOURCE_PUBLICATION_COUNT = APPROVED["source_publication_count"]
+SOURCE_COMMIT = APPROVED["source_commit"]
 
-ROUTES = [
-    "/",
-    "/ai",
-    "/ai/sub-space",
-    "/ai/sub-space/text-access",
-    "/solutions-now",
-    "/solutions-now/evidence",
-    "/library",
-    "/finances",
-    "/finances/the-family-centre",
-    "/finances/universal-payment-and-shared-growth",
-    "/psy-chology",
-    "/psy-chology/ego",
-    "/psy-chology/emotioning",
-    "/psy-chology/learning-is-a-matter-of-perspective",
-    "/psy-chology/ocd-to-curl",
-    "/music",
-    "/music/knots-untying-through-perspective",
-    "/music/knots-1",
-    "/culture",
-    "/pasty-quest",
-    "/archive-viewer",
-    "/simulators",
-    "/press",
-    "/submit",
-    "/phantom-concorde",
-    "/fashion-police",
-    "/climate-change-technology",
-    "/climate-technology",
-    "/climate-technology/rainwater-climate-and-rights",
-    "/climate-technology/bubble-butt",
-    "/climate-technology/emission-transitive-emission",
-    "/economic-fairness/universal-basic-income",
-    "/social-technology",
-    "/social-technology/public-service-and-community-resilience/pace",
-    "/social-technology/democratic-centre",
-    "/social-technology/care-for-those-who-care-for-us",
-    "/social-technology/drugs-and-society",
-    "/social-technology/drugs-and-society/cannabis-through-the-nhs",
-    "/social-technology/drugs-and-society/drug-knowledge-body-autonomy-and-patient-choice",
-    "/social-technology/friendship-love-respect",
-    "/social-technology/friendship-two",
-    "/social-technology/friendship-three",
-    "/social-technology/inner-and-outer-world",
-    "/social-technology/where-do-we-expect-god-to-live",
-    "/social-technology/lion-king-or-big-cat",
-    "/social-technology/monkey-banana",
-    "/social-technology/perception-learning-expansion",
-    "/social-technology/psy-body-psychology-communication",
-    "/social-technology/voting-without-fear",
-    "/social-technology/health-systems-and-patient-choice",
-    "/social-technology/health-systems-and-patient-choice/interim-needs-and-adjustments-certificate",
-    "/social-technology/health-systems-and-patient-choice/law-and-policy-in-medicine",
-    "/social-technology/pre-enabler",
-    "/social-technology/justice-and-accountability",
-    "/social-technology/justice-and-accountability/where-have-all-the-houses-gone",
-    "/social-technology/public-duty-and-democratic-accountability",
-    "/time",
-    "/time/embed",
-]
+ROUTES = APPROVED["routes"]
 
-BASELINE_LIBRARY_RESEARCH = {
-    "/research/Affordable_Green_Security_China_UK_Paper.docx",
-    "/research/Alex_Anderson_Alice_Emotion_and_Feeling_Technology.docx",
-    "/research/Alex_Anderson_Alice_Emotion_and_Feeling_Technology.pdf",
-    "/research/Alex_Anderson_Alice_Emotion_and_Feeling_Technology.pptx",
-    "/research/Alex_Anderson_Concordance_Administration_V1.docx",
-    "/research/Alex_Anderson_Concordance_Administration_V1.pdf",
-    "/research/Alex_Anderson_From_Prohibition_to_Regulation_Revised_2026.docx",
-    "/research/Alex_Anderson_From_Prohibition_to_Regulation_Revised_2026.pdf",
-    "/research/Alex_Anderson_From_Punishment_to_Care_Revised_2026.docx",
-    "/research/Alex_Anderson_From_Punishment_to_Care_Revised_2026.pdf",
-    "/research/Alex_Anderson_Full_Submission_to_Prime_Minister.pdf",
-    "/research/Alex_Anderson_Guardians_Not_Enforcers_UK_Policy_Paper.docx",
-    "/research/Alex_Anderson_Guardians_Not_Enforcers_UK_Policy_Paper.pdf",
-    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Left_Authoritarianism.docx",
-    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Left_Authoritarianism.pdf",
-    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Right_Extremism.docx",
-    "/research/Alex_Anderson_How_Fear_Can_Be_Turned_Into_Far_Right_Extremism.pdf",
-    "/research/Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.docx",
-    "/research/Alex_Anderson_The_Democratic_Centre_As_A_Shared_Civic_Space.pdf",
-    "/research/Alex_Anderson_Neighbourhood_Communal_Recycling_Bins_Reconciled.docx",
-    "/research/Alex_Anderson_Neighbourhood_Communal_Recycling_Bins_Reconciled.pdf",
-    "/research/Alex_Anderson_No_More_Landlords_Mortgage.docx",
-    "/research/Alex_Anderson_No_More_Landlords_Mortgage.pdf",
-    "/research/Alex_Anderson_Peoples_European_Reconstruction_Programme.pdf",
-    "/research/Alex_Anderson_Peoples_European_Reconstruction_Programme.pptx",
-    "/research/Alex_Anderson_Stop_Refrigerating_The_Aisle.docx",
-    "/research/Alex_Anderson_Stop_Refrigerating_The_Aisle.pdf",
-    "/research/Alex_Anderson_Stop_Refrigerating_The_Aisle.pptx",
-    "/research/Alex_Anderson_The_Ladder_Prison_Reform_Proposal.docx",
-    "/research/Alex_Anderson_The_Ladder_Prison_Reform_Proposal.pdf",
-    "/research/Alex_Anderson_Trust_Is_The_Temple_Of_Medicine_UK_Evidence_Based_Submission.pdf",
-    "/research/Alex_Anderson_Words_That_Trap_Functions.docx",
-    "/research/Alex_Anderson_Words_That_Trap_Functions.pdf",
-    "/research/Alex_Anderson_You_Cant_Expect_to_Resolve_Conflict_If_You_Come_Dressed_as_It.docx",
-    "/research/Alex_Anderson_You_Cant_Expect_to_Resolve_Conflict_If_You_Come_Dressed_as_It.pdf",
-    "/research/Bubble_Butt_Chemistry_Capture_Concept.png",
-    "/research/Bubble_Butt_Retrofit_Concept.png",
-    "/research/Enough_A_Democratic_Wealth_Ceiling_for_Tom.docx",
-    "/research/Enough_A_Democratic_Wealth_Ceiling_for_Tom.pdf",
-    "/research/Help_First_Policing_Figure_1_Aid_and_Safety_Tools.png",
-    "/research/Help_First_Policing_Figure_2_Uniform_Concept.png",
-    "/research/How_Fear_Can_Be_Turned_Into_Far_Right_Extremism_Infographic.png",
-    "/research/How_Fear_Can_Be_Turned_Into_Far_Left_Authoritarianism_Infographic.png",
-    "/research/Letter_to_President_Xi_Jinping_Bilingual.pdf",
-    "/research/PHANTOM_CONCORDE_Gate_1_Research_Pack.zip",
-    "/research/UK_Neighbourhood_Communal_Bin_Simulation_Reconciled.xlsx",
-    "/research/UK_Perennial_Resilience_Plan_2026.pptx",
-    "/research/UK_Perennial_Resilience_Plan_Technical_Proposal_2026.docx",
-    "/research/LOVE-0_Machine-Neutral_Love_Module_v0.1.docx",
-    "/research/LOVE0_Paper_Comparison_Review_Record_1.0.docx",
-    "/research/Learning_Is_a_Matter_of_Perspective_v0.1.docx",
-    "/research/Learning_Is_a_Matter_of_Perspective_v0.2.docx",
-    "/research/Learning_Is_a_Matter_of_Perspective_v0.3.docx",
-    "/research/Learning_Is_a_Matter_of_Perspective_v0.3_Supplied_Duplicate.docx",
-    "/research/Loss_Is_Not_Nothing_MRRAF.docx",
-    "/research/Loss_Is_Not_Nothing_MRRAF.pdf",
-    "/research/MRRAF_LOVE0_Integrity.json",
-    "/research/MRRAF_LOVE0_Processed.docx",
-    "/research/MRRAF_LOVE0_Processed.pdf",
-    "/research/MRRAF_LOVE0_Side_by_Side.docx",
-    "/research/MRRAF_LOVE0_Side_by_Side.pdf",
-    "/research/Monkey_Banana_Page_Map.png",
-    "/research/Monkey_Bandana.png",
-    "/research/Monkey_Sees_People_Using_Human_Tech.png",
-    "/research/People_Trying_to_Be_Monkeys.png",
-    "/research/What_the_Monkeys_Let_Us_See.png",
-    "/research/Capacity_Uncertainty_Regulation_Loop_CURL_Medical_Hypothesis.docx",
-    "/research/Drug_Knowledge_Body_Autonomy_and_Patient_Choice.docx",
-    "/research/Drug_Knowledge_Body_Autonomy_and_Patient_Choice.pdf",
-    "/research/Universal_Payment_Working_Paper_Stage_1.md",
-    "/research/Universal_Payment_Working_Paper_Stage_2.md",
-    "/research/Universal_Payment_Working_Paper_Stage_3.md",
-    "/research/Universal_Payment_Working_Paper_Stage_4.md",
-    "/research/Universal_Payment_and_Shared_Growth_Financial_Policy_v1.docx",
-    "/research/Corporate_Manslaughter_UK_Draft.docx",
-    "/research/Corporate_Manslaughter_and_Corporate_Homicide_Act_2007.pdf",
-    "/research/Corporate_Manslaughter_Act_2007_Explanatory_Notes.pdf",
-    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pptx",
-    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22.pdf",
-    "/research/Affordable_Modular_Homes_and_Electric_Mobility_2026_Clear_Prices_v22_Transcript.txt",
-    "/research/CL17_Emission_Transitive_Emission_Matrix.xlsx",
-    "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.docx",
-    "/research/CL17_Emission_Transitive_Emission_Ongoing_Study.pdf",
-    "/research/CL17_Emission_Transitive_Emission_Research_Package_2026-09-13.zip",
-    "/research/CL17_Supplemental_Interactive_Systems.xlsx",
-    "/research/CL17_Supplemental_Investigations.docx",
-    "/research/CL17_Supplemental_Investigations.pdf",
-    "/research/Emission_Transitive_Emission_Evidence_Review.docx",
-    "/research/Emission_Transitive_Emission_Evidence_Review.pdf",
-    "/research/The_Family_Centre_Before_Now_After_September_2026.pptx",
-    "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.docx",
-    "/research/MP_Public_Duty_Second_Jobs_Transparency_and_Recall_Operational_Reference.pdf",
-    "/research/NHS_Interim_Needs_and_Adjustments_Certificate_Policy_Proposal_2026.docx",
-    "/research/National_PACE_Resilience_Service_Proposal.docx",
-    "/research/National_PACE_Resilience_Service_Proposal.pdf",
-    "/research/Section_106_Coordinated_Cross_Agency_Covering_Letter_2026-09-22.pdf",
-    "/research/Section_106_Cross_Agency_Combined_Investigation_2026-09-22.pdf",
-    "/research/Green_Tank_Rainwater_Climate_and_Rights_2026-09-23.pptx",
-    "/research/Doctor_Legal_Abilities_and_Duties_v1.docx",
-    "/research/Doctor_Legal_Abilities_and_Duties_v1.pdf",
-    "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.docx",
-    "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.pdf",
-    "/research/Law_and_Policy_in_Medicine_Evidence_Paper_v1.docx",
-    "/research/Law_and_Policy_in_Medicine_Evidence_Paper_v1.pdf",
-    "/research/Law_and_Policy_in_Medicine_Introduction_2026-09-27.txt",
-    "/research/NHS_Policy_vs_Law_Assessment_v1.docx",
-    "/research/NHS_Policy_vs_Law_Assessment_v1.pdf",
-    "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.docx",
-    "/research/Patient_Legal_Standing_Against_NHS_Policy_v1.pdf",
-    "/research/PRE_ENABLER_Concept_Paper_v3_0.docx",
-    "/research/PRE_ENABLER_Concept_Paper_v3_0.pdf",
-    "/research/PRE_ENABLER_Following_Introduction_Context_2026-09-27.txt",
-    "/research/PRE_ENABLER_Form_Pack_PE1_v1_0.docx",
-    "/research/PRE_ENABLER_Form_Pack_PE1_v1_0.pdf",
-    "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.docx",
-    "/research/PRE_ENABLER_Interagency_Architecture_Introduction_v1_0.pdf",
-    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_2026-09-28.docx",
-    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_2026-09-28.pdf",
-    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.docx",
-    "/research/A_Call_for_Legalisation_of_Cannabis_Through_the_NHS_Supplement_Appendices_A-C_2026-09-29.pdf",
-    "/research/Emotioning_OED_Evidence_Submission_2026-09-20.docx",
-    "/research/Emotioning_OED_Evidence_Submission_2026-09-20.pdf",
-    "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.docx",
-    "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.pdf",
-    "/research/Ego_Simple_Universal_Model_2026-09-30.docx",
-    "/research/Ego_Simple_Universal_Model_2026-09-30.pdf",
-}
+BASELINE_LIBRARY_RESEARCH = set(APPROVED["library_research"])
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
-SUBSPACE_CURRENT_RELEASE = "ddsk-v0022"
-SUBSPACE_RELEASES = [f"ddsk-v{number:04d}" for number in range(1, 23)]
-SUBSPACE_PUBLICATION_STATE_HASH = "sha256:9697fe6d99235950d69d3620caa099bc16ded187382952faaee6008ebd3ee248"
+SUBSPACE_CURRENT_RELEASE = APPROVED["subspace_release"]
+SUBSPACE_RELEASES = [f"ddsk-v{number:04d}" for number in range(1, 31)]
+SUBSPACE_PUBLICATION_STATE_HASH = APPROVED["subspace_publication_state_hash"]
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
     "checksums.sha256",
@@ -264,28 +80,28 @@ EXTRA_BASELINE_PUBLIC_FILES = SUBSPACE_PUBLIC_FILES | {
     "/research/NHS_Right_to_Choose_Data_Acquisition_Survey.docx",
     "/simulators/Buddha_Net_Simulator_Standalone.html",
     "/social-technology/pace/pace-community-vehicle-concept.png",
-    "/music/red-hot-voodoo-let-me-untie-you.png",
+    "/music/red-hot-voodoo-let-me-untie-you.webp",
 }
 PUBLIC_ASSETS = {"/favicon.svg", "/og.png", "/file.svg", "/globe.svg", "/window.svg"}
 EXPECTED_CONTENT_SHA256 = {
-    "/music/red-hot-voodoo-let-me-untie-you.png": "b33fe06666ba1c08a6349736b9dba6879154b90b9c26d1042388ea6d14f17585",
+    "/music/red-hot-voodoo-let-me-untie-you.webp": "94dc80c69c951d89d0237051e61ae69b138286949b5774a1a4090be3b0935978",
     "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.docx": "59aa2b1c279ad59865a60e2f33750d9cc64e56d8a501f27fc3a18d97a98807a9",
     "/research/Ego_Predictive_Imagination_Detailed_Model_2026-09-30.pdf": "b4b9093f67656c1acac74001e5da83cde2382a975bd3e25fb1194706ba0b5e32",
     "/research/Ego_Simple_Universal_Model_2026-09-30.docx": "5fc04460049f6c3d7bd27a1bef274889c344a837ff21114e0e1c391ba310af9b",
     "/research/Ego_Simple_Universal_Model_2026-09-30.pdf": "2d9b1c567ff7ebbd45627855e91c9a58b51f7e25a7bc907ac4e53225d8a494de",
-    "/psy-chology/ego/01-best-possible-guess.png": "7b8e0a5e48348502dedc6f6e0c62463189bcb420551feddac11a68224dd37233",
-    "/psy-chology/ego/02-imagination-makes-something-new.png": "5817f8686ba6bc0e1dff3b83dd90737bff0d1fd33cc6c47d1e25b2e08caef62d",
-    "/psy-chology/ego/03-imagination-can-misfire.png": "97cb7ebbe693b682e8e89e4ace438955db3611d42187f7cd5449d0c59318a411",
-    "/psy-chology/ego/04-maths-problem.png": "3954d23705c1c64da043eefe53a50e84f85f210c5a67535d69b7496ab37a5095",
-    "/psy-chology/ego/05-wrong-maths-answer.png": "f852d2676c44806e6fe1aa96bd1a43a0e8f4ae902fee559b2278c8ddc514310a",
-    "/psy-chology/ego/06-mechanical-problem.png": "5d2b722eaf305684cded1a8a9d0e18247aa2cab9038c3ed0239d56755e723c41",
-    "/psy-chology/ego/07-wrong-repair.png": "efcf1e602871e63cfcca3e9aebe2d45c1c80c3c9e694cd3167f478d34ce669b9",
-    "/psy-chology/ego/08-cooking-problem.png": "3cc92d507a6e855d327ee4b26e6a549e9e3df9f90033b2c12bb9754889f0a96c",
-    "/psy-chology/ego/09-wrong-cooking-guess.png": "38cfdabb5975ca27e94e1d6916a80c6fe2791df9083304468e14f0c671ef8812",
-    "/psy-chology/ego/10-cleaning-problem.png": "37c77a045666c3583ceb0fbe5e62624c9b1165e48758429b649919fc7bcc38fc",
-    "/psy-chology/ego/11-wrong-cleaning-guess.png": "6e33f4b3054b509bcff888a3820f7c491d0900f70f7053f302351ca226e376db",
-    "/psy-chology/ego/12-when-null-is-forbidden.png": "51d329e718cde91ab0ad93dc6d188a720f77f1ca88cd77a606c1bad8d9aa0de7",
-    "/psy-chology/ego/13-when-no-is-not-allowed.png": "e4c11459a6b57bb719b677c108ecbd44b84ae5a77cea4a4e3e3a181c0890a3b4",
+    "/psy-chology/ego/01-best-possible-guess.webp": "92b3f68bc53ce22879fef588847ddc0a839e070975cf8ae6e4f1e64853108b97",
+    "/psy-chology/ego/02-imagination-makes-something-new.webp": "499f56a0f1d923b9133adde758bf9cb0bea230e618895c5170b9ce4e4dd6886c",
+    "/psy-chology/ego/03-imagination-can-misfire.webp": "e27b22b9fda9228f8192ebd444ee7417b80f1559a60eb6031dbd0b07194ef021",
+    "/psy-chology/ego/04-maths-problem.webp": "1708f0d29bcc285d8c3d2bb77d21e229e4309412213535b3b5da97471b1263b0",
+    "/psy-chology/ego/05-wrong-maths-answer.webp": "0660f34a6ed156722cbc53f294cc9f12e100b5bd9803e31cb54d3be593565835",
+    "/psy-chology/ego/06-mechanical-problem.webp": "873c1ab18c5ef9b68ac920436de91b78dfeadd60a67b78873b44b13bde549e6d",
+    "/psy-chology/ego/07-wrong-repair.webp": "de89f08334ba78bfa0710061a133131d029b0a448897907f8955ccef89405105",
+    "/psy-chology/ego/08-cooking-problem.webp": "00171fedcaa9ffd7d344d763d8adde6d807f78c5e79d1cfa9c07368c26dd9318",
+    "/psy-chology/ego/09-wrong-cooking-guess.webp": "443e065b71a9de7fe464ff382f61d0afd896627fc8a86e3e95760bfa208cbc6d",
+    "/psy-chology/ego/10-cleaning-problem.webp": "ed8d2e9687e834cbb1e9b932de57b3b95ccaca0f1c2f5e3193dddb4dcb5e949e",
+    "/psy-chology/ego/11-wrong-cleaning-guess.webp": "e5468d0b45c8f85dfd5ad31378c32be3f059f6df95a24744ec1b7ad4bbe6c820",
+    "/psy-chology/ego/12-when-null-is-forbidden.webp": "ff461fe79937d0731b541dd835154f42cb118b3cb7fad708508170eb7a85ade9",
+    "/psy-chology/ego/13-when-no-is-not-allowed.webp": "7f45bbf83c29f8cbc2d54bbdcd2bec8294e100a77ad42d32960b2ce6c8250f71",
     "/research/Doctor_Legal_Abilities_and_Duties_v1.docx": "3e1b44698c1613fe2d9e8596152ae20a9474c5d133d27db622a72c68b2b38a56",
     "/research/Doctor_Legal_Abilities_and_Duties_v1.pdf": "8500fadd0888f582ea3e3f45baf444fdc8738a09d11cadd130c57869de0cd674",
     "/research/GP_Obstruction_Treatment_Access_and_Medication_Safety_v1.docx": "742120537207b70058543044c7795261c10d659d6b1b41e123fdd2e89d87a7c6",
@@ -388,34 +204,34 @@ EXPECTED_CONTENT_SHA256 = {
     "/solutions-now/slides/slide-29.webp": "b4b9a96538b1b056c5f694ec164f75fab73e6cd46aaf9131f0eb4715b6010c47",
     "/solutions-now/slides/slide-30.webp": "6b54250569ecebc733a705a978866729b5d63fb8f5c10bc93c7d5e2dac1b8131",
     "/solutions-now/slides/slide-31.webp": "92ad34b9b75b2b13a39f701dfa6bbbcd2e1fea6f85563c297ffc685efce7ca42",
-    "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f",
+    "/solutions-now/slides/slide-32.webp": "5073388b2b697aecfc6bb7f6536b89c05e9bc8b0ad4579c710a366a0a63aa04f"
 }
 SOLUTION_SLIDES = {f"/solutions-now/slides/slide-{index}.webp" for index in range(1, 33)}
 FAMILY_CENTRE_SLIDES = {f"/finances/family-centre/slides/slide-{index}.webp" for index in range(1, 19)}
 RAINWATER_SLIDES = {f"/climate-technology/rainwater-climate-and-rights/slides/slide-{index}.webp" for index in range(1, 24)}
 FASHION_POSTER_FILES = {
-    "/fashion-police/devon-retro-fashion-wanted.png": "5440a07dcbb8b12d1fec2c1b77ad5fb8c0e8563c6a93368999b69b610b4be8f2",
-    "/fashion-police/devonshire-fashion-comeback.png": "064c6a4c079c8ac2ce753a86473fee09b537d094cd5d1204d4274c4503c40773",
-    "/fashion-police/tigger-family-wellies-sighting.png": "22e766db44646b18badbe99031c4792e6e87ff10ca150c6f1c476e8b59134fee",
-    "/fashion-police/wheely-shoes-wanted.png": "f5dd857b2cbabc2620f967a9bad490b4f262fcf6ec9a2c7d820a56af60136107",
-    "/fashion-police/light-up-disco-wanted.png": "5d032eee35ab42cd5ecb52ea207ef87613bd8cbd6445c520bb50473f88f6bb63",
+    "/fashion-police/devon-retro-fashion-wanted.webp": "c68851ed2130b5c0dccc5a487d935eb8aeb5a13679dbbfa7dc0c3419a01daa9b",
+    "/fashion-police/devonshire-fashion-comeback.webp": "59af3b7df54d312e4c02b310e550db817e908feeedbc13f87ee9be312239e194",
+    "/fashion-police/tigger-family-wellies-sighting.webp": "0b52e812b552d112d3ad9a21a2db2c2e7ecbc4386f1732d780ac239143db96a2",
+    "/fashion-police/wheely-shoes-wanted.webp": "ae8fc7a1ab623c55c1707435da7e6e5ad065aac8fcd6cd26635fe470410dba13",
+    "/fashion-police/light-up-disco-wanted.webp": "aed236540ec396d917b8ddcea5f7cf889bbd3e21652ebe8a4db9c4a1bfa73ca0"
 }
 EGO_IMAGE_FILES = {
-    "/psy-chology/ego/01-best-possible-guess.png": "7b8e0a5e48348502dedc6f6e0c62463189bcb420551feddac11a68224dd37233",
-    "/psy-chology/ego/02-imagination-makes-something-new.png": "5817f8686ba6bc0e1dff3b83dd90737bff0d1fd33cc6c47d1e25b2e08caef62d",
-    "/psy-chology/ego/03-imagination-can-misfire.png": "97cb7ebbe693b682e8e89e4ace438955db3611d42187f7cd5449d0c59318a411",
-    "/psy-chology/ego/04-maths-problem.png": "3954d23705c1c64da043eefe53a50e84f85f210c5a67535d69b7496ab37a5095",
-    "/psy-chology/ego/05-wrong-maths-answer.png": "f852d2676c44806e6fe1aa96bd1a43a0e8f4ae902fee559b2278c8ddc514310a",
-    "/psy-chology/ego/06-mechanical-problem.png": "5d2b722eaf305684cded1a8a9d0e18247aa2cab9038c3ed0239d56755e723c41",
-    "/psy-chology/ego/07-wrong-repair.png": "efcf1e602871e63cfcca3e9aebe2d45c1c80c3c9e694cd3167f478d34ce669b9",
-    "/psy-chology/ego/08-cooking-problem.png": "3cc92d507a6e855d327ee4b26e6a549e9e3df9f90033b2c12bb9754889f0a96c",
-    "/psy-chology/ego/09-wrong-cooking-guess.png": "38cfdabb5975ca27e94e1d6916a80c6fe2791df9083304468e14f0c671ef8812",
-    "/psy-chology/ego/10-cleaning-problem.png": "37c77a045666c3583ceb0fbe5e62624c9b1165e48758429b649919fc7bcc38fc",
-    "/psy-chology/ego/11-wrong-cleaning-guess.png": "6e33f4b3054b509bcff888a3820f7c491d0900f70f7053f302351ca226e376db",
-    "/psy-chology/ego/12-when-null-is-forbidden.png": "51d329e718cde91ab0ad93dc6d188a720f77f1ca88cd77a606c1bad8d9aa0de7",
-    "/psy-chology/ego/13-when-no-is-not-allowed.png": "e4c11459a6b57bb719b677c108ecbd44b84ae5a77cea4a4e3e3a181c0890a3b4",
+    "/psy-chology/ego/01-best-possible-guess.webp": "92b3f68bc53ce22879fef588847ddc0a839e070975cf8ae6e4f1e64853108b97",
+    "/psy-chology/ego/02-imagination-makes-something-new.webp": "499f56a0f1d923b9133adde758bf9cb0bea230e618895c5170b9ce4e4dd6886c",
+    "/psy-chology/ego/03-imagination-can-misfire.webp": "e27b22b9fda9228f8192ebd444ee7417b80f1559a60eb6031dbd0b07194ef021",
+    "/psy-chology/ego/04-maths-problem.webp": "1708f0d29bcc285d8c3d2bb77d21e229e4309412213535b3b5da97471b1263b0",
+    "/psy-chology/ego/05-wrong-maths-answer.webp": "0660f34a6ed156722cbc53f294cc9f12e100b5bd9803e31cb54d3be593565835",
+    "/psy-chology/ego/06-mechanical-problem.webp": "873c1ab18c5ef9b68ac920436de91b78dfeadd60a67b78873b44b13bde549e6d",
+    "/psy-chology/ego/07-wrong-repair.webp": "de89f08334ba78bfa0710061a133131d029b0a448897907f8955ccef89405105",
+    "/psy-chology/ego/08-cooking-problem.webp": "00171fedcaa9ffd7d344d763d8adde6d807f78c5e79d1cfa9c07368c26dd9318",
+    "/psy-chology/ego/09-wrong-cooking-guess.webp": "443e065b71a9de7fe464ff382f61d0afd896627fc8a86e3e95760bfa208cbc6d",
+    "/psy-chology/ego/10-cleaning-problem.webp": "ed8d2e9687e834cbb1e9b932de57b3b95ccaca0f1c2f5e3193dddb4dcb5e949e",
+    "/psy-chology/ego/11-wrong-cleaning-guess.webp": "e5468d0b45c8f85dfd5ad31378c32be3f059f6df95a24744ec1b7ad4bbe6c820",
+    "/psy-chology/ego/12-when-null-is-forbidden.webp": "ff461fe79937d0731b541dd835154f42cb118b3cb7fad708508170eb7a85ade9",
+    "/psy-chology/ego/13-when-no-is-not-allowed.webp": "7f45bbf83c29f8cbc2d54bbdcd2bec8294e100a77ad42d32960b2ce6c8250f71"
 }
-USER_AGENT = "TheGreenTank-GitHub-Mirror/2.9-v87-github-subspace-guard"
+USER_AGENT = "TheGreenTank-GitHub-Mirror/3.0-v92-backup-guard"
 ATTR_URL_RE = re.compile(r'''(?P<attr>href|src)=(?P<q>["'])(?P<url>[^"']+)(?P=q)''', re.I)
 SCRIPT_RE = re.compile(r"<script\b[^>]*>.*?</script\s*>", re.I | re.S)
 SCRIPT_PRELOAD_RE = re.compile(r"<link\b(?=[^>]*\bas=[\"']script[\"'])[^>]*>", re.I | re.S)
@@ -794,6 +610,9 @@ def save_asset(path: str, seen: set[str]) -> None:
     seen.add(normalized)
     source_url = urljoin(BASE, normalized)
     data = fetch(source_url)
+    expected_digest = APPROVED_PUBLIC_SHA256.get(normalized)
+    if expected_digest and hashlib.sha256(data).hexdigest() != expected_digest:
+        raise RuntimeError(f"Source differs from approved full backup: {normalized}")
     dest = local_path_for_url(normalized)
     if dest.suffix.lower() == ".css":
         text = data.decode("utf-8", errors="replace")
@@ -966,6 +785,9 @@ def main() -> int:
         if route == "/archive-viewer":
             mirror_script = f"{PREFIX}/assets/archive-viewer.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
+        if route.startswith("/solutions-now/settlements") or route == "/climate-change-technology/local-recycling-and-manufacturing":
+            mirror_script = f"{PREFIX}/assets/publication-readers.js"
+            cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
         if route in {"/", "/time", "/time/embed"}:
             mirror_script = f"{PREFIX}/assets/time-mirror.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
@@ -985,6 +807,14 @@ def main() -> int:
     write_bytes(OUT / "assets" / "rainwater-viewer.js", RAINWATER_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "archive-viewer.js", ARCHIVE_VIEWER_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "time-mirror.js", Path(__file__).with_name("time-mirror.js").read_bytes())
+    write_bytes(OUT / "assets" / "publication-readers.js", Path(__file__).with_name("publication-readers.js").read_bytes())
+    reader_data = Path(__file__).with_name("settlement-reader-data.json").read_bytes()
+    if hashlib.sha256(reader_data).hexdigest() != APPROVED["settlement_reader_data_sha256"]:
+        raise RuntimeError("Settlement reader data differs from approved backup")
+    stories = json.loads(reader_data)
+    if [book["number"] for book in stories] != [1, 2, 3, 4] or sum(len(book["readerPages"]) for book in stories) != 52:
+        raise RuntimeError("The complete four-part, 52-page story sequence is required")
+    write_bytes(OUT / "assets" / "settlement-reader-data.json", reader_data)
 
     home = original_pages["/"]
     library = original_pages["/library"]
@@ -1010,7 +840,7 @@ def main() -> int:
 
     required_home = [
         "Before we judge",
-        "Fifty-three publications",
+        "Fifty-six publications",
         "P—29",
         "P—30",
         "P—31",
@@ -1036,6 +866,12 @@ def main() -> int:
         "P—51",
         "P—52",
         "P—53",
+        "P—54",
+        "P—55",
+        "P—56",
+        "Population, Permission and Sustainability",
+        "/solutions-now/settlements",
+        "https://www.facebook.com/profile.php?id=61595354184053",
         "The Ego as Predictive Imagination",
         "Emotioning",
         "A Call for Legalisation of Cannabis Through the NHS",
@@ -1201,9 +1037,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 43",
-        "53 publications",
-        "128 public research files",
+        "Release 47",
+        "56 publications",
+        "155 public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -1424,11 +1260,11 @@ def main() -> int:
         "It does not claim endorsement by David Bowie’s estate or representatives.",
         'id="wanted"',
         "Hug boss energy.",
-        "/fashion-police/devon-retro-fashion-wanted.png",
-        "/fashion-police/devonshire-fashion-comeback.png",
-        "/fashion-police/tigger-family-wellies-sighting.png",
-        "/fashion-police/wheely-shoes-wanted.png",
-        "/fashion-police/light-up-disco-wanted.png",
+        "/fashion-police/devon-retro-fashion-wanted.webp",
+        "/fashion-police/devonshire-fashion-comeback.webp",
+        "/fashion-police/tigger-family-wellies-sighting.webp",
+        "/fashion-police/wheely-shoes-wanted.webp",
+        "/fashion-police/light-up-disco-wanted.webp",
     ]
     missing_fashion_police = [m for m in required_fashion_police if m not in fashion_police]
     if missing_fashion_police:
@@ -1484,7 +1320,7 @@ def main() -> int:
         "Eight unique players from the Knots archive",
         "Red Hot Voodoo — Let Me Untie You",
         "knots-red-hot-voodoo-let-me-untie-you",
-        "/music/red-hot-voodoo-let-me-untie-you.png",
+        "/music/red-hot-voodoo-let-me-untie-you.webp",
         "SoundCloud and Internet Archive",
     ]
     missing_music = [m for m in required_music if m not in music]
@@ -1859,6 +1695,20 @@ def main() -> int:
             f"Solutions Now slide set changed: missing={missing_slides}, unexpected={unexpected_slides}"
         )
 
+    new_publication_markers = {
+        "/solutions-now/settlements": ["P—56", "Population, Permission and Sustainability", "all 52 pages", "50,000 is a design choice", "66-page"],
+        "/solutions-now/settlements/stories": [book["title"] for book in stories],
+        "/solutions-now/settlements/maps/population-and-land-use": ["publication-embedded-document", "/research/UK_Population_and_Land_Use.html"],
+        "/solutions-now/settlements/maps/settlement-scenarios": ["publication-embedded-document", "/research/UK_50000_Person_Settlement_Scenarios.html"],
+        "/climate-change-technology/local-recycling-and-manufacturing": ["P—54", "nine-slide introduction", "local-recycling-viewer", "local-recycling-explorer", "208"],
+        "/climate-change-technology/reflux-it-water": ["P—55", "Nine routes in one report", "Guadeloupe", "GWS-1", "id=\"gws-1\""],
+        "/music": ["https://soundcloud.com/thegreentank", "https://www.mixcloud.com/thegreentank/"],
+    }
+    for route, markers in new_publication_markers.items():
+        missing = [marker for marker in markers if marker not in original_pages[route]]
+        if missing:
+            raise RuntimeError(f"Approved publication markers missing from {route}: {missing}")
+
     research_urls = {
         normalized
         for match in ATTR_URL_RE.finditer(library)
@@ -1871,7 +1721,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Version 87 research library file set verified unchanged")
+    print("Approved version 92 research library file set verified")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1885,6 +1735,11 @@ def main() -> int:
     asset_urls.update(RAINWATER_SLIDES)
     asset_urls.update(FASHION_POSTER_FILES)
     asset_urls.update(EGO_IMAGE_FILES)
+    # Include every public object pinned from the ZIP, including reader pages
+    # and presentation slides not exposed by the initial server-rendered page.
+    # Ghostbusters is installed separately from the reviewed portable source
+    # by the Pages workflow; its parent link differs from the development Site.
+    asset_urls.update(path for path in APPROVED_PUBLIC_SHA256 if not path.startswith("/ghostbusters/"))
 
     seen: set[str] = set()
     for asset in sorted(asset_urls):
@@ -1893,6 +1748,16 @@ def main() -> int:
             print(f"mirrored research file {asset.rsplit('/', 1)[-1]}")
 
     verify_subspace_snapshot()
+    for book in stories:
+        for page in book["readerPages"]:
+            if page["src"] not in seen or not local_path_for_url(page["src"]).is_file():
+                raise RuntimeError(f"Graphic novel reader page missing: {page['src']}")
+    recycling_slides = list((OUT / "climate-change-technology/local-recycling-and-manufacturing/slides").glob("slide-*.webp"))
+    if len(recycling_slides) != 9:
+        raise RuntimeError("All nine local recycling introduction slides are required")
+    materials = json.loads((OUT / "research/UK_Materials_Inventory_2026-10-09.json").read_bytes())
+    if len(materials["materials"]) != 208:
+        raise RuntimeError("The complete 208-record materials inventory is required")
     assert len(EGO_IMAGE_FILES) == 13 and all(local_path_for_url(name).is_file() for name in EGO_IMAGE_FILES)
 
     for poster, expected_digest in FASHION_POSTER_FILES.items():
@@ -1907,7 +1772,7 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 87 release-content checksums verified")
+    print("Protected version 92 release-content checksums verified")
 
     research_dir = OUT / "research"
     research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
@@ -1951,6 +1816,11 @@ def main() -> int:
         "source_release": SOURCE_RELEASE,
         "source_publication_count": SOURCE_PUBLICATION_COUNT,
         "source_commit": SOURCE_COMMIT,
+        "approved_public_object_count": len(APPROVED_PUBLIC_SHA256),
+        "settlement_graphic_novels": len(stories),
+        "settlement_reader_pages": sum(len(book["readerPages"]) for book in stories),
+        "local_recycling_slides": len(recycling_slides),
+        "materials_inventory_records": len(materials["materials"]),
         "generated_at_utc": datetime.now(timezone.utc).isoformat(),
         "github_pages_prefix": PREFIX,
         "backup_reference": BACKUP_LABEL,
