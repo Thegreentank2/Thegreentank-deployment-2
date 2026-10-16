@@ -610,10 +610,18 @@ def save_asset(path: str, seen: set[str]) -> None:
     seen.add(normalized)
     source_url = urljoin(BASE, normalized)
     data = fetch(source_url)
+    dest = local_path_for_url(normalized)
+    # The public host can append its request-specific Cloudflare challenge to
+    # HTML responses. Remove only that existing transport wrapper, then require
+    # the underlying document to match the exact ZIP source checksum.
+    if dest.suffix.lower() in {".html", ".htm"}:
+        data = CLOUDFLARE_CHALLENGE_RE.sub("", data.decode("utf-8", errors="strict")).encode("utf-8")
     expected_digest = APPROVED_PUBLIC_SHA256.get(normalized)
     if expected_digest and hashlib.sha256(data).hexdigest() != expected_digest:
-        raise RuntimeError(f"Source differs from approved full backup: {normalized}")
-    dest = local_path_for_url(normalized)
+        raise RuntimeError(
+            f"Source differs from approved full backup: {normalized}; "
+            f"bytes={len(data)}, sha256={hashlib.sha256(data).hexdigest()}"
+        )
     if dest.suffix.lower() == ".css":
         text = data.decode("utf-8", errors="replace")
         patched, nested = patch_css_paths(text, source_url)
@@ -622,7 +630,6 @@ def save_asset(path: str, seen: set[str]) -> None:
             save_asset(nested_url, seen)
     elif dest.suffix.lower() in {".html", ".htm"}:
         text = data.decode("utf-8", errors="replace")
-        text = CLOUDFLARE_CHALLENGE_RE.sub("", text)
         write_bytes(dest, patch_html_paths(text).encode("utf-8"))
     else:
         write_bytes(dest, data)
