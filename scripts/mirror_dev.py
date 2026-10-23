@@ -9,6 +9,7 @@ removals, unexpected additions or protected-object changes.
 
 from __future__ import annotations
 
+import gzip
 import hashlib
 import html
 import json
@@ -633,12 +634,21 @@ def save_asset(path: str, seen: set[str]) -> None:
     source_url = urljoin(BASE, normalized)
     data = fetch(source_url)
     dest = local_path_for_url(normalized)
+    expected_digest = APPROVED_PUBLIC_SHA256.get(normalized)
+    # Some transport-packed historical indexes reach this client as gzip bytes
+    # without a Content-Encoding header. Decode only a mismatching pinned asset;
+    # the original backup checksum below must still match before it is saved.
+    if (
+        expected_digest
+        and hashlib.sha256(data).hexdigest() != expected_digest
+        and data.startswith(b"\x1f\x8b")
+    ):
+        data = gzip.decompress(data)
     # The public host can append its request-specific Cloudflare challenge to
     # HTML responses. Remove only that existing transport wrapper, then require
     # the underlying document to match the exact ZIP source checksum.
     if dest.suffix.lower() in {".html", ".htm"}:
         data = CLOUDFLARE_CHALLENGE_RE.sub("", data.decode("utf-8", errors="strict")).encode("utf-8")
-    expected_digest = APPROVED_PUBLIC_SHA256.get(normalized)
     if expected_digest and hashlib.sha256(data).hexdigest() != expected_digest:
         raise RuntimeError(
             f"Source differs from approved full backup: {normalized}; "

@@ -7,7 +7,7 @@ This repository is the reference GitHub Pages deployment of **The Green Tank**.
 - `Thegreentank-deployment-2`: reference deployment and operational AI Sub Space container
 - `The-green-tank-condition-test`: experimental/condition-test deployment
 
-The Pages workflow builds a guarded static mirror from the public development Site. Its approved version 98 baseline preserves 88 guarded routes plus the 12-page Ghostbusters section, all 61 publications, 169 Library-linked research files, 173 files in the full research tree, and 833 original public objects. Every pinned public object is checked against the full backup before path rewriting. Research folders are checked recursively.
+The Pages workflow builds a guarded static mirror from the public development Site. Its approved version 98 baseline preserves 88 guarded routes plus the 12-page Ghostbusters section, all 61 publications, 169 Library-linked research files, 173 files in the full research tree, and 833 original public objects. Every pinned public object is checked against the full backup before path rewriting. Transport-packed historical indexes are decompressed only when the resulting bytes match that original checksum. Research folders are checked recursively.
 
 Release 50 includes the **Economic Coercion and Criminal Responsibility** campaign in Legal → Cases & actions, with its requested heading, 40-page proposal, 41 model clauses, 19-page evidence attachment, all 31 case studies, two additional evidence records, PDF and Word editions, 84 proposal and 45 evidence source entries, and a dated public action record. **Safe Homes and Accountability** remains alongside it with its evidence, 74-field fillable PDF, editable Word documents, guide and legislative templates.
 
