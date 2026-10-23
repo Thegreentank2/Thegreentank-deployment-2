@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 92 Release 47 portable deployment backup is the baseline. This script requires the
-exact approved version 92 route, research-file and AI Sub Space sets and refuses
+version 98 Release 50 portable deployment backup is the baseline. This script requires the
+exact approved version 98 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -27,7 +27,7 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-APPROVED = json.loads(Path(__file__).with_name("approved-v92.json").read_text(encoding="utf-8"))
+APPROVED = json.loads(Path(__file__).with_name("approved-v98.json").read_text(encoding="utf-8"))
 APPROVED_PUBLIC_SHA256 = APPROVED["public_files"]
 BACKUP_SHA256 = APPROVED["backup_sha256"]
 BACKUP_LABEL = APPROVED["backup_reference"]
@@ -42,7 +42,7 @@ BASELINE_LIBRARY_RESEARCH = set(APPROVED["library_research"])
 
 SUBSPACE_ORIGIN = "https://thegreentank2.github.io/Thegreentank-deployment-2/ai/sub-space"
 SUBSPACE_CURRENT_RELEASE = APPROVED["subspace_release"]
-SUBSPACE_RELEASES = [f"ddsk-v{number:04d}" for number in range(1, 31)]
+SUBSPACE_RELEASES = [f"ddsk-v{number:04d}" for number in range(1, int(SUBSPACE_CURRENT_RELEASE.rsplit("v", 1)[1]) + 1)]
 SUBSPACE_PUBLICATION_STATE_HASH = APPROVED["subspace_publication_state_hash"]
 SUBSPACE_RELEASE_FILES = {
     "README.txt",
@@ -869,7 +869,7 @@ def main() -> int:
 
     required_home = [
         "Before we judge",
-        "Fifty-six publications",
+        "Sixty-one publications",
         "P—29",
         "P—30",
         "P—31",
@@ -1066,9 +1066,9 @@ def main() -> int:
         )
 
     required_library = [
-        "Release 47",
-        "56 publications",
-        "155 public research files",
+        f"Release {SOURCE_RELEASE}",
+        f"{SOURCE_PUBLICATION_COUNT} publications",
+        f"{sum(path.startswith('/research/') for path in APPROVED_PUBLIC_SHA256)} public research files",
         "P—29",
         "P—30",
         "P—31",
@@ -1738,6 +1738,40 @@ def main() -> int:
         if missing:
             raise RuntimeError(f"Approved publication markers missing from {route}: {missing}")
 
+    new_collection_markers = {
+        "/": ["Medical", "/medical", "Legal", "/legal", "The sciences", "/sciences", "/legal/cases/economic-coercion", "P—57", "P—58", "P—59", "P—61"],
+        "/library": [f"P—{number}" for number in range(57, 62)] + ["/legal/cases/safe-homes", "/legal/cases/economic-coercion"],
+        "/medical": ["Medical", "/medical/medicine-safety-and-patient-choice", "/medical/medicines-dependence-withdrawal-and-risks", "/medical/anti-inflammatory-alternatives", "/legal/cases/economic-coercion"],
+        "/medical/medicine-safety-and-patient-choice": ["P—57", "6 pages", "Medicine_Safety_Patient_Choice_and_Prohibition_2026-10-19.pdf"],
+        "/medical/medicines-dependence-withdrawal-and-risks": ["P—58", "49", "23 pages", "NHS_Medicines_Dependence_Stopping_and_Serious_Risks_2026-10-19.pdf"],
+        "/medical/anti-inflammatory-alternatives": ["P—59", "15 pages", "Anti_Inflammatory_Two_Stage_Study_2026-10-13.pdf"],
+        "/legal": ["Cases & actions", "/legal/forms-and-contracts", "/legal/cases", "/legal/cases/economic-coercion", "/legal/cases/safe-homes", "The Ladder"],
+        "/legal/forms-and-contracts": ["15", "standalone forms and templates", "Download PDF", "Download Word", "Explanation and research", "PRE-ENABLER", "Housing Safety"],
+        "/legal/cases": ["EC-01", "P—61", "SH-01", "P—60", "/legal/cases/economic-coercion", "/legal/cases/safe-homes"],
+        "/legal/cases/safe-homes": ["P—60", "Safe Homes and Accountability", "74 fillable fields", "26-page", "housing-safety-complaint-form.pdf", "housing-safety-complaint-form.docx", "legislative-submission-and-templates.docx", "action-record"],
+        "/legal/cases/economic-coercion": ["P—61", "Justice isn't blind, just obstructed by those with the wealth to afford to manipulate the system.", "40 pages", "19 pages", "action-record", "84 numbered source entries", "45 numbered source entries", "proposal.docx", "justice-is-not-blind.docx"],
+        "/sciences": ["Physics", "Biology", "Chemistry", "Data", "/sciences/physics", "/sciences/biology", "/sciences/chemistry", "/sciences/data"],
+        "/sciences/physics": ["Physics", "PHANTOM"],
+        "/sciences/biology": ["Biology", "research"],
+        "/sciences/chemistry": ["Chemistry", "CL17"],
+        "/sciences/data": ["Data", "TIME"],
+        "/finances": ["/legal/cases/economic-coercion"],
+        "/social-technology": ["/legal/cases/economic-coercion"],
+    }
+    for route, markers in new_collection_markers.items():
+        text = html.unescape(original_pages[route])
+        visible = re.sub(r"<[^>]*>", "", text)
+        missing = [marker for marker in markers if marker not in text and marker not in visible]
+        if missing:
+            raise RuntimeError(f"Version 98 collection or case incomplete at {route}: {missing}")
+    campaign = original_pages["/legal/cases/economic-coercion"]
+    for number in range(1, 32):
+        if f'id="case-c{number:02d}"' not in campaign:
+            raise RuntimeError(f"Economic coercion case C{number:02d} is missing")
+    if len(re.findall(r'id="proposal-source-\d+"', campaign)) != 84 or len(re.findall(r'id="evidence-source-\d+"', campaign)) != 45:
+        raise RuntimeError("Economic coercion numbered source registers are incomplete")
+    print("Version 98 Medical, Legal, Sciences, forms and both Cases entries verified")
+
     research_urls = {
         normalized
         for match in ATTR_URL_RE.finditer(library)
@@ -1750,7 +1784,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Approved version 92 research library file set verified")
+    print("Approved version 98 research library file set verified")
 
     asset_urls = {
         u for u in discovered_urls
@@ -1801,13 +1835,15 @@ def main() -> int:
             raise RuntimeError(
                 f"Protected release content checksum mismatch for {asset}: {actual_sha256}"
             )
-    print("Protected version 92 release-content checksums verified")
+    print("Protected inherited release-content checksums verified")
 
     research_dir = OUT / "research"
-    research_files = sorted(p for p in research_dir.iterdir() if p.is_file()) if research_dir.exists() else []
-    expected_research_folder_count = len(research_urls | {
-        path for path in EXTRA_BASELINE_PUBLIC_FILES if path.startswith("/research/")
-    })
+    research_files = sorted(p for p in research_dir.rglob("*") if p.is_file()) if research_dir.exists() else []
+    expected_research_paths = {path for path in APPROVED_PUBLIC_SHA256 if path.startswith("/research/")}
+    actual_research_paths = {"/" + path.relative_to(OUT).as_posix() for path in research_files}
+    if actual_research_paths != expected_research_paths:
+        raise RuntimeError(f"Research folder differs from the approved backup: missing={sorted(expected_research_paths - actual_research_paths)}, extra={sorted(actual_research_paths - expected_research_paths)}")
+    expected_research_folder_count = len(expected_research_paths)
     if len(research_files) != expected_research_folder_count:
         raise RuntimeError(
             f"Expected {expected_research_folder_count} public/research files; found {len(research_files)}"
@@ -1854,7 +1890,7 @@ def main() -> int:
         "github_pages_prefix": PREFIX,
         "backup_reference": BACKUP_LABEL,
         "backup_reference_sha256": BACKUP_SHA256,
-        "backup_digest_record": f"{BACKUP_LABEL}.sha256 companion file",
+        "backup_digest_record": "SHA-256 verified from the complete approved ZIP",
         "routes": ROUTES,
         "baseline_library_research_count": len(BASELINE_LIBRARY_RESEARCH),
         "library_linked_research_count": len(research_urls),
