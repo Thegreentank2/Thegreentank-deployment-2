@@ -2,8 +2,8 @@
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
 The current ChatGPT Green Tank site is the development/update source. The
-version 98 Release 50 portable deployment backup is the baseline. This script requires the
-exact approved version 98 route, research-file and AI Sub Space sets and refuses
+version 100 Release 52 portable deployment backup is the baseline. This script requires the
+exact approved version 100 route, research-file and AI Sub Space sets and refuses
 removals, unexpected additions or protected-object changes.
 """
 
@@ -28,7 +28,7 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-APPROVED = json.loads(Path(__file__).with_name("approved-v98.json").read_text(encoding="utf-8"))
+APPROVED = json.loads(Path(__file__).with_name("approved-v100.json").read_text(encoding="utf-8"))
 APPROVED_PUBLIC_SHA256 = APPROVED["public_files"]
 BACKUP_SHA256 = APPROVED["backup_sha256"]
 BACKUP_LABEL = APPROVED["backup_reference"]
@@ -1748,6 +1748,30 @@ def main() -> int:
         if missing:
             raise RuntimeError(f"Approved publication markers missing from {route}: {missing}")
 
+    detailed = original_pages["/solutions-now/settlements/detailed-plan"]
+    detailed_markers = [
+        'id="invitation"', 'id="full-proposal"', 'id="visual-plans"',
+        'id="access-model"', 'id="downloads"', 'id="releases"',
+        "Current planning clarifications", "sharing is voluntary", "15,000 homes",
+        "10,000 litres per home", "complete 11-page Level 2 partnership invitation",
+        "Green_Tank_Level_2_Permanent_Settlement_Invitation_Oct2026.pdf",
+        "Green_Tank_Foundation_Living_Community_Master_Proposal_v0_2.pdf",
+        "GreenTank-v0.2.zip", "Facility_Access_Calculator_v0_2.xlsx",
+        "The invitation supersedes the v0.2 two-person-per-home assumption",
+    ]
+    missing_detailed = [marker for marker in detailed_markers if marker not in detailed]
+    if missing_detailed:
+        raise RuntimeError(f"Version 100 detailed plan or invitation incomplete: {missing_detailed}")
+    if len(re.findall(r'<h2\b[^>]*id="proposal-', detailed)) != 27:
+        raise RuntimeError("All 24 proposal chapters, introduction and both appendices are required")
+    invitation_route = "/solutions-now/settlements/detailed-plan#invitation"
+    for route in ["/solutions-now/settlements", "/library", "/legal", "/sciences/data"]:
+        if invitation_route not in original_pages[route]:
+            raise RuntimeError(f"Settlement invitation doorway missing from {route}")
+    if "/solutions-now/settlements/detailed-plan" not in home:
+        raise RuntimeError("Homepage detailed-plan doorway missing")
+    print("Version 100 detailed community plan, 27 proposal sections, invitation and relevant doorways verified")
+
     new_collection_markers = {
         "/": ["Medical", "/medical", "Legal", "/legal", "The sciences", "/sciences", "/legal/cases/economic-coercion", "P—57", "P—58", "P—59", "P—61"],
         "/library": [f"P—{number}" for number in range(57, 62)] + ["/legal/cases/safe-homes", "/legal/cases/economic-coercion"],
@@ -1794,7 +1818,7 @@ def main() -> int:
         raise RuntimeError(f"Research files were removed unexpectedly: {removed}")
     if added:
         raise RuntimeError(f"Unexpected research files were added: {added}")
-    print("Approved version 98 research library file set verified")
+    print("Approved version 100 research library file set verified")
 
     asset_urls = {
         u for u in discovered_urls
