@@ -151,3 +151,45 @@ jobs:
         if: github.ref == 'refs/heads/main'
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Verify the published mirror identity
+        if: github.ref == 'refs/heads/main'
+        env:
+          MIRROR_URL: ${{ steps.deployment.outputs.page_url }}
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          import json
+          import os
+          import time
+          from pathlib import Path
+          from urllib.parse import urljoin
+          from urllib.request import Request, urlopen
+
+          approved = json.loads(Path('scripts/approved-v106.json').read_text())
+          base = os.environ['MIRROR_URL'].rstrip('/') + '/'
+          def fetch(path):
+              url = urljoin(base, path) + '?verify=' + os.environ['GITHUB_SHA']
+              with urlopen(Request(url, headers={'Cache-Control': 'no-cache'}), timeout=30) as response:
+                  return response.read()
+          for attempt in range(12):
+              try:
+                  manifest = json.loads(fetch('mirror-manifest.json'))
+                  assert manifest['source_site_version'] == approved['source_site_version']
+                  assert manifest['source_commit'] == approved['source_commit']
+                  assert manifest['backup_reference_sha256'] == approved['backup_sha256']
+                  assert manifest['public_research_folder_count'] == 196
+                  latest = json.loads(fetch('ai/sub-space/latest.json'))
+                  assert latest['release_id'] == approved['subspace_release']
+                  assert latest['publication_state_hash'] == approved['subspace_publication_state_hash']
+                  assert b'mailto:thegreentank@proton.me' in fetch('index.html')
+                  for path in ['assets/v106-controls.js', 'research/The_Right_to_Die_Referenced_Paper_2026-11-12.pdf']:
+                      assert hashlib.sha256(fetch(path)).hexdigest() == manifest['files'][path]['sha256']
+                  print(f"Verified public mirror: v106, {latest['release_id']}, 196 research files at {base}")
+                  break
+              except Exception as error:
+                  if attempt == 11:
+                      raise
+                  print(f'Waiting for public deployment propagation ({attempt + 1}/12): {error}')
+                  time.sleep(10)
+          PY

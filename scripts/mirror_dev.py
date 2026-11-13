@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The current ChatGPT Green Tank site is the development/update source. The
-version 100 Release 52 portable deployment backup is the baseline. This script requires the
-exact approved version 100 route, research-file and AI Sub Space sets and refuses
-removals, unexpected additions or protected-object changes.
+The development source remains authoritative. Version 106 Release 56 is pinned
+from the verified full backup. Rendered pages and changed public objects are
+retained in a checksummed snapshot so a failed development publish cannot block
+the mirror. Unchanged public files must still match their approved hashes.
 """
 
 from __future__ import annotations
@@ -18,6 +18,8 @@ import re
 import shutil
 import sys
 import time
+import io
+import tarfile
 from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import unquote, urljoin, urlparse
@@ -28,7 +30,7 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-APPROVED = json.loads(Path(__file__).with_name("approved-v100.json").read_text(encoding="utf-8"))
+APPROVED = json.loads(Path(__file__).with_name("approved-v106.json").read_text(encoding="utf-8"))
 APPROVED_PUBLIC_SHA256 = APPROVED["public_files"]
 BACKUP_SHA256 = APPROVED["backup_sha256"]
 BACKUP_LABEL = APPROVED["backup_reference"]
@@ -503,6 +505,12 @@ ARCHIVE_VIEWER_SCRIPT = r"""
 
 def fetch(url: str, attempts: int = 3) -> bytes:
     parsed = urlparse(url)
+    if parsed.netloc == BASE_HOST:
+        candidate = SNAPSHOT_ROOT / unquote(parsed.path).lstrip("/")
+        if candidate.is_dir():
+            candidate = candidate / "index.html"
+        if candidate.is_file():
+            return candidate.read_bytes()
     if LOCAL_SOURCE_ROOT is not None and parsed.netloc == BASE_HOST:
         candidate = LOCAL_SOURCE_ROOT / unquote(parsed.path).lstrip("/")
         if candidate.is_dir():
@@ -797,6 +805,34 @@ def verify_subspace_snapshot() -> None:
     )
 
 
+def prepare_snapshot() -> Path:
+    target = Path(".mirror-source-v106")
+    parts = []
+    for part in APPROVED["snapshot_parts"]:
+        data = (Path(__file__).resolve().parent.parent / part["path"]).read_bytes()
+        if len(data) != part["bytes"] or hashlib.sha256(data).hexdigest() != part["sha256"]:
+            raise RuntimeError(f"Snapshot part checksum mismatch: {part['path']}")
+        parts.append(data)
+    packed = b"".join(parts)
+    if hashlib.sha256(packed).hexdigest() != APPROVED["snapshot_sha256"]:
+        raise RuntimeError("Snapshot archive checksum mismatch")
+    with tarfile.open(fileobj=io.BytesIO(packed), mode="r:gz") as archive:
+        members = archive.getmembers()
+        if {m.name for m in members} != set(APPROVED["snapshot_files"]):
+            raise RuntimeError("Snapshot file inventory mismatch")
+        for member in members:
+            if not member.isfile() or member.name.startswith("/") or ".." in Path(member.name).parts:
+                raise RuntimeError("Unsafe snapshot entry")
+            data = archive.extractfile(member).read()
+            if hashlib.sha256(data).hexdigest() != APPROVED["snapshot_files"][member.name]:
+                raise RuntimeError(f"Snapshot object checksum mismatch: {member.name}")
+            write_bytes(target / member.name, data)
+    return target
+
+
+SNAPSHOT_ROOT = prepare_snapshot()
+
+
 def main() -> int:
     if OUT.exists():
         shutil.rmtree(OUT)
@@ -805,10 +841,17 @@ def main() -> int:
     original_pages: dict[str, str] = {}
     discovered_urls: set[str] = set()
     for route in ROUTES:
+        # The workflow installs the separately reviewed portable Ghostbusters source.
+        if route == "/ghostbusters":
+            continue
         text = fetch(urljoin(BASE, route)).decode("utf-8", errors="strict")
+        if hashlib.sha256(text.encode("utf-8")).hexdigest() != APPROVED["route_sha256"][route]:
+            raise RuntimeError(f"Rendered route differs from approved backup: {route}")
         original_pages[route] = text
         discovered_urls.update(collect_same_origin_urls(text))
         cleaned = clean_html(text)
+        if 'aria-controls="complete-pdf-document"' in cleaned or route == "/climate-technology/fame-and-hvo":
+            cleaned = cleaned.replace("</body>", f'<script src="{PREFIX}/assets/v106-controls.js" defer></script>\n</body>', 1)
         if route == "/social-technology/monkey-banana":
             mirror_script = f"{PREFIX}/assets/monkey-banana.js"
             cleaned = cleaned.replace("</body>", f'<script src="{mirror_script}" defer></script>\n</body>', 1)
@@ -847,6 +890,7 @@ def main() -> int:
     write_bytes(OUT / "assets" / "archive-viewer.js", ARCHIVE_VIEWER_SCRIPT.encode("utf-8"))
     write_bytes(OUT / "assets" / "time-mirror.js", Path(__file__).with_name("time-mirror.js").read_bytes())
     write_bytes(OUT / "assets" / "publication-readers.js", Path(__file__).with_name("publication-readers.js").read_bytes())
+    write_bytes(OUT / "assets" / "v106-controls.js", Path(__file__).with_name("v106-controls.js").read_bytes())
     reader_data = Path(__file__).with_name("settlement-reader-data.json").read_bytes()
     if hashlib.sha256(reader_data).hexdigest() != APPROVED["settlement_reader_data_sha256"]:
         raise RuntimeError("Settlement reader data differs from approved backup")
@@ -879,7 +923,7 @@ def main() -> int:
 
     required_home = [
         "Before we judge",
-        "Sixty-one publications",
+        "Sixty-two publications",
         "P—29",
         "P—30",
         "P—31",
@@ -1968,3 +2012,4 @@ if __name__ == "__main__":
     except Exception as exc:  # noqa: BLE001
         print(f"mirror failed: {exc}", file=sys.stderr)
         raise
+

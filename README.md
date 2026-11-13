@@ -1,3 +1,15 @@
+# The Green Tank — current mirror v106
+
+The mirror is pinned to the complete verified **v106 / Release 56** backup (`cc64be95e812079af298f1c73949f51f4bcb7c48`), with 63 publications, 196 public research files, 92 development routes (including the separately installed Ghostbusters entry), and AI Sub Space `ddsk-v0045`. Every earlier public object remains; all 45 immutable catalogue releases are retained.
+
+Version 106 includes the homepage Proton email, FAME/HVO publication and hemp supplement, the Right to Die paper, and static-host controls for the complete PDF readers, fuel calculator and seven video players. The development Site remains the editorial source and the existing GitHub Pages URL remains the operational mirror.
+
+`scripts/approved-v106.json` pins the backup digest, every public file, rendered route, and compressed snapshot part. The five small files in `snapshots/` preserve exact rendered pages, presentation assets and new or updated public files from that backup. The build verifies and unpacks them, then retrieves unchanged public objects from the development Site only if their original checksums match. This lets a prepared, verified release publish even when development hosting failed. No credentials, temporary download URLs or private source are included. The workflow verifies the public mirror identity after deployment.
+
+Local verification uses `GREEN_TANK_MIRROR_LOCAL_SOURCE=/absolute/path/to/verified-backup/website python3 scripts/mirror_dev.py`; the normal workflow needs no environment override. The reviewed Ghostbusters source is installed afterward as before. TIME retains its existing read-only dependence on the development API.
+
+## Previous v100 baseline and retained history
+
 # The Green Tank — GitHub deployment
 
 This repository is the reference GitHub Pages deployment of **The Green Tank**.
