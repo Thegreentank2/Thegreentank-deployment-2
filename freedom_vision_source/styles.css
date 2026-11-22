@@ -78,3 +78,13 @@
 .classic-site-links a{font-size:12px;color:#e3f8ea;text-decoration:none;border:1px solid #5b7775;border-radius:8px;padding:10px 12px}
 .classic-site-links a:hover,.classic-site-links a:focus-visible{text-decoration:underline;border-color:#c6e7d9}
 @media(max-width:760px){.classic-site-grid{grid-template-columns:1fr}.classic-additions{padding-bottom:30px}.classic-site{padding:20px}}
+
+/* Visitors choose a film on the original provider site; examples remain optional. */
+.classic-site-links .primary-film-link{display:inline-flex;align-items:center;justify-content:space-between;gap:14px;background:#d6f1df;color:#0a2420;border-color:#d6f1df;font-weight:800}
+.classic-site-links .primary-film-link:hover,.classic-site-links .primary-film-link:focus-visible{background:#f0fff5;color:#0a2420;text-decoration:underline}
+.film-example{border-top:1px solid #365657;padding-top:14px;margin-top:24px}
+.film-example summary{font-size:12px;color:#d8eadd;font-weight:750;cursor:pointer}
+.film-example a{display:inline-block;margin-top:13px;font-size:12px;color:#ccecd9}
+.film-example p{font-size:11px;margin-top:9px;color:#9eb6b4}
+.classic-direct-link{display:inline-block;font-size:12px;color:#d8eadd;margin-top:18px;text-underline-offset:4px}
+.classic-direct-link:focus-visible,.film-example summary:focus-visible{outline:2px solid #d6f1df;outline-offset:4px}
