@@ -61,3 +61,36 @@ Source verification:
 - https://support-apprendre.tv5monde.com/en/support/solutions/articles/61000298831-why-learn-french-with-tv5monde-
 - https://tatoeba.org/en/downloads
 - https://github.com/LibreLingoCommunity/LibreLingo
+
+## Science, mathematics and free audio lessons (draft extension)
+
+New navigation entries and collection cards: **Science & Maths** and **Audio Lessons**.
+
+- **Curated discovery only** until each specific provider's player, rights, low-bandwidth alternative, attribution and API/embedding conditions are validated. The sources are official external links, not embedded university lectures or mirrored audio.
+- Science directory: MIT OpenCourseWare Quantum Physics I; Yale physics I and II (including quantum), organic chemistry and evolution/biology lectures; CERN educational physics videos; Perimeter Institute PIRSA seminars; PhET simulations; GeoGebra geometry; OpenStax texts; OpenLearn science and maths; NASA podcasts.
+- Audio directory: Language Transfer free audio course downloads, NHK Easy Japanese, Yale lecture MP3s, OpenLearn audio resources and NASA official podcasts. YouTube, Mixcloud and SoundCloud embedded players remain **excluded**, even when a resource uses them as an optional playback method.
+- Only local provider-name/description filtering is offered for these new directories. Searching a phrase does **not** query MIT, Yale, CERN or other third-party providers. No media preloads, thumbnails, site crawling or automatic playback.
+- Open Yale Courses provides audio-only MP3, low-bandwidth MOV and transcripts on individual session pages. Reuse is generally Creative Commons BY-NC-SA 3.0; individual third-party material may be excluded.
+- MIT OCW has downloadable videos and course notes. Its Creative Commons BY-NC-SA 4.0 terms require noncommercial use, attribution and ShareAlike; file-level checks still needed.
+- PhET has official embed codes but its present CC BY-NC 4.0 licence and website terms require non-commercial use and attribution. Do not embed by default.
+- GeoGebra's web services have separate non-commercial licensing terms. External links only until cleared.
+- OpenStax textbooks can be read free online and as PDFs; check each exact title's current licence and credits rather than assuming blanket reuse.
+- NASA podcasts provide direct links, including RSS, but any optional SoundCloud destination is not used inside Freedom Vision.
+- Audio streams will be subject to the same user-controlled start/stop, provider rate limits, attribution, no advertising and direct-provider-support rules as other media.
+
+Official reference documentation:
+- https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016/download/
+- https://www.ocw.mit.edu/pages/privacy-and-terms-of-use/
+- https://oyc.yale.edu/help
+- https://oyc.yale.edu/terms
+- https://oyc.yale.edu/physics/phys-201
+- https://educational-resources.web.cern.ch/videos-and-animations/
+- https://pirsa.org/about-pirsa
+- https://phet.colorado.edu/en/licensing/
+- https://phet.colorado.edu/en/help-center/getting-started
+- https://www.geogebra.org/license
+- https://openstax.org/higher-education
+- https://www.open.edu/openlearn/science-maths-technology/all-content
+- https://www.languagetransfer.org/courses
+- https://www.languagetransfer.org/faq
+- https://www.nasa.gov/podcasts-and-audio/
