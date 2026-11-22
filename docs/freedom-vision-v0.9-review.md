@@ -34,3 +34,17 @@ The locally generated review prototype has been checked in headless Chromium at 
 Before merge, validate the actual GitHub branch in full-browser and GitHub Pages builds, with CORS, per-provider terms, file licences, international rights, exact URLs, accessibility and the existing mirror integrity suite. Update the developer source before treating the mirror as the primary editorial route.
 
 Public homepage remains unchanged until that review is complete.
+
+
+## Classic Free Movies and OldieFlix — external-only discovery (22 November 2026)
+Two classic-film websites supplied by the project owner have been added as **external discovery links only** in the original-source directory and visible cinema cards:
+- [Classic Free Movies](https://classicfreemovies.com/) — [film library](https://classicfreemovies.com/movie-library/) · [site search](https://classicfreemovies.com/search-movies/) · [Attack of the Giant Leeches](https://classicfreemovies.com/movies/attack-of-the-giant-leeches/).
+- [OldieFlix](https://oldieflix.com/) — [original catalogue and search](https://oldieflix.com/) · [The Mummy's Tomb (1942)](https://oldieflix.com/titles/the-mummy-s-tomb-1942-harold-young.html).
+
+**Verified:** Both root sites exist and promote free classic-film browsing; Classic Free Movies publicly claims an MP4 media server and offers embed codes. Its Terms request prior approval for portal links and restrict framed pages; its Privacy Policy names Google advertising. These policies may not reflect current player traffic but require review.
+**Unverified:** No complete browser network trace for the linked film pages; therefore YouTube dependency, advertising at playback, low-resolution/rate limits and player permission cannot be ruled out or confirmed.
+**Copyright:** Listing or linking does not establish public-domain status. In particular, *The Mummy's Tomb* is not marked as rights-cleared for reuse or embedding.
+
+**Implementation:** Two provider directory entries (external), two visible website cards with direct film links and no iframes, third-party thumbnails, autoplay, scraping, API searches or automatic remote connections. External websites control their own privacy, advertising and playback once opened; Freedom Vision's own page remains non-advertising and lightweight.
+
+**Before enabling an internal player:** Obtain confirmation of a permitted embed, inspect the browser requests for any YouTube and advertising, establish a suitable ≤480p existing stream, check rights for relevant territories, and agree source-friendly limits. Classic Free Movies' linking policy should be addressed before public launch.
