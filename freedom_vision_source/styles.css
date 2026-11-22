@@ -66,3 +66,15 @@
 @media(max-width:390px){.collection-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.collection-card{height:167px;padding:11px}.collection-card .card-bottom strong{font-size:15px}.collection-card .card-bottom small{font-size:10px}.shelf-links a{display:block}.shelf-links a small{text-align:left}}
 
 .science{background:linear-gradient(135deg,#123a48,#23646b)}.lessons{background:linear-gradient(135deg,#514459,#654c61)}.stories{background:linear-gradient(135deg,#4f3d45,#774c52)}.science-glyph{font:normal 110px/1 Georgia,serif;color:#ffffff2b;position:absolute;top:-6px;right:20px}
+
+
+/* Curated independent classic cinema website directory: links only, no embeds */
+.classic-additions{padding-top:12px;padding-bottom:42px}
+.classic-site-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px}
+.classic-site{border:1px solid #436565;background:linear-gradient(145deg,#142d30,#13252a);border-radius:13px;padding:24px;min-width:0}
+.classic-site h3{font-size:24px;margin:12px 0;font-weight:650}
+.classic-site p{font-size:13px;line-height:1.65;color:#adc0bd;margin:0 0 20px}
+.classic-site-links{display:flex;flex-wrap:wrap;gap:9px}
+.classic-site-links a{font-size:12px;color:#e3f8ea;text-decoration:none;border:1px solid #5b7775;border-radius:8px;padding:10px 12px}
+.classic-site-links a:hover,.classic-site-links a:focus-visible{text-decoration:underline;border-color:#c6e7d9}
+@media(max-width:760px){.classic-site-grid{grid-template-columns:1fr}.classic-additions{padding-bottom:30px}.classic-site{padding:20px}}
