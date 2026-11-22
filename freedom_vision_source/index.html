@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1216">
+  <meta name="description" content="Freedom Vision: a lightweight, advertising-free gateway to independent archives. Watch, listen, read and discover world news.">
+  <title>Freedom Vision · Independent archive viewer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="page-shell">
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="fv-brand" href="./index.html" aria-label="Freedom Vision home">
+      <span class="brand-glyph" aria-hidden="true"><span class="iris"></span></span>
+      <span class="brand-text">FREEDOM <strong>VISION</strong><small>OPEN THE WORLD</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Main categories">
+      <button type="button" class="nav-link active" data-mode="all" aria-current="page">Discover</button>
+      <button type="button" class="nav-link" data-mode="watch">Watch</button>
+      <button type="button" class="nav-link" data-mode="listen">Listen</button>
+      <button type="button" class="nav-link" data-mode="read">Read</button>
+      <button type="button" class="nav-link" data-mode="news">World News</button>
+    </nav>
+    <a class="home-link" href="https://the-green-tank.alexiscoderpenguy.chatgpt.site/" rel="noopener noreferrer" target="_blank">The Green Tank <span aria-hidden="true">↗</span></a>
+  </div>
+</header>
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <div class="eyebrow"><span class="signal-dot"></span> PUBLIC ARCHIVES · ONE WINDOW</div>
+      <h1 id="hero-title">A world to <em>discover.</em><br>Nothing to sell you.</h1>
+      <p>Classic films, cartoons, series, music, books and independent collections. Search once. Watch, listen or read at your own pace.</p>
+      <form id="search-form" class="search-block" role="search" autocomplete="off">
+        <div class="search-field">
+          <span class="magnify" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.6" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <label class="sr-only" for="search-input">Search the archives</label>
+          <input id="search-input" type="search" placeholder="Search classic films, music, books..." maxlength="120" spellcheck="false">
+          <button class="search-button" id="search-button" type="submit">Search <span aria-hidden="true">↗</span></button>
+        </div>
+        <p class="search-hint">Search sends your query to responding catalogue APIs. Source services may record requests; Freedom Vision adds no tracking.</p>
+      </form>
+      <div class="quick-searches" aria-label="Suggested searches"><span>TRY</span>
+        <button data-quick="silent film">Silent films</button><button data-quick="cartoons">Cartoons</button><button data-quick="science">Science</button><button data-quick="jazz">Jazz</button><button data-quick="Sherlock Holmes">Sherlock Holmes</button>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-halo halo-one"></div><div class="art-halo halo-two"></div>
+      <div class="orbit-dot dot-one"></div><div class="orbit-dot dot-two"></div><div class="orbit-dot dot-three"></div>
+      <div class="art-core"><div class="art-core-ring"><div class="art-eye"><div class="art-pupil"></div></div></div></div>
+      <span class="art-coordinate coord-one">51° · ARCHIVE</span><span class="art-coordinate coord-two">480p · MAX</span>
+      <div class="art-caption">ART · CULTURE · KNOWLEDGE</div>
+    </div>
+  </section>
+  <div class="principles" aria-label="Viewing principles">
+    <span><b class="principle-symbol">◉</b> NO ADVERTS</span><span><b class="principle-symbol">▱</b> VIDEO ≤480p</span><span><b class="principle-symbol">◌</b> NO AUTOPLAY</span><span><b class="principle-symbol">◇</b> ORIGINAL ARCHIVES FIRST</span><span><b class="principle-symbol">↗</b> DONATIONS GO TO PROVIDERS</span>
+  </div>
+  <section class="collections section-inner" aria-labelledby="collections-title">
+    <div class="section-head"><div><div class="section-label">EXPLORE BY INTEREST</div><h2 id="collections-title">What shall we explore?</h2></div><p>Find something old, something new to you, or something worth remembering.</p></div>
+    <div class="collection-grid">
+      <button class="collection-card film" data-collection="film" type="button"><span class="card-top">01 · WATCH</span><span class="abstract-shape film-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>Classic cinema</strong><small>Silent films and early features</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card cartoons" data-collection="cartoons" type="button"><span class="card-top">02 · WATCH</span><span class="abstract-shape cartoons-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>Vintage cartoons</strong><small>Animation through the ages</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card series" data-collection="tv" type="button"><span class="card-top">03 · WATCH</span><span class="abstract-shape series-art" aria-hidden="true"><i></i></span><span class="card-bottom"><strong>Classic series</strong><small>Early television and serials</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card music" data-collection="music" type="button"><span class="card-top">04 · LISTEN</span><span class="abstract-shape music-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="card-bottom"><strong>Music & sound</strong><small>Recordings across generations</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card books" data-collection="books" type="button"><span class="card-top">05 · READ</span><span class="abstract-shape books-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>Books & stories</strong><small>Open literature and documents</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card news" data-collection="news" type="button"><span class="card-top">06 · EXPLORE</span><span class="abstract-shape news-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>World news</strong><small>Discover international sources</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+    </div>
+  </section>
+  <section id="results-section" class="results-section section-inner" aria-labelledby="results-title" hidden>
+    <div class="section-head results-head"><div><div class="section-label">SEARCH RESULTS</div><h2 id="results-title">Found in the archives</h2></div><button id="clear-results" class="subtle-button" type="button">Clear results ×</button></div>
+    <p id="search-status" class="status" aria-live="polite"></p>
+    <div id="results-grid" class="results-grid"></div>
+    <div id="search-errors" class="search-errors" aria-live="polite"></div>
+  </section>
+  <section class="sources-section section-inner" aria-labelledby="sources-title">
+    <div class="section-head"><div><div class="section-label">A GROWING PUBLIC COLLECTION</div><h2 id="sources-title">The archives behind the window</h2></div><p>Some sources have live search connections. Others are linked for discovery until their embedding permissions are verified.</p></div>
+    <div class="provider-filter" aria-label="Filter archive sources"><button class="source-filter active" data-source-filter="all">All sources</button><button class="source-filter" data-source-filter="search">Search connected</button><button class="source-filter" data-source-filter="external">Explore externally</button></div>
+    <div id="provider-grid" class="provider-grid"></div>
+  </section>
+  <section class="ethos-section section-inner" aria-label="Freedom Vision policy">
+    <div class="ethos-mark">“</div><div><h2>Build upon. Don't burden.</h2><p>We leave media with the people preserving it. Requests are limited, playback starts only when you ask, and any contribution goes directly to the original archive. If a source is struggling, we explain why and stop making extra requests.</p></div><a class="ethos-link" href="https://archive.org/donate" target="_blank" rel="noopener noreferrer">Support Internet Archive directly ↗</a>
+  </section>
+</main>
+<footer class="footer"><div><strong>FREEDOM VISION</strong><small>An independent archive gateway. No accounts or analytics; external archives receive search requests.</small></div><div><span>Designed for The Green Tank</span><span>Prototype · v0.6 · Not yet deployed</span></div></footer>
+</div>
+<dialog id="viewer-dialog" aria-labelledby="viewer-title" class="viewer-dialog"><div class="dialog-header"><span class="section-label">FREEDOM VISION · VIEWER</span><button type="button" id="viewer-close" class="dialog-close" aria-label="Close viewer">×</button></div><div class="dialog-body"><h2 id="viewer-title"></h2><p id="viewer-desc" class="dialog-desc"></p><div id="viewer-message" class="viewer-message" aria-live="polite">Select “Check available playback” to ask the archive for a suitable low-bandwidth file.</div><div id="player-shell" class="player-shell" hidden></div><div class="dialog-actions"><button type="button" id="viewer-check" class="search-button">Check available playback</button><a id="viewer-source" target="_blank" rel="noopener noreferrer" class="outline-button">View original archive ↗</a></div><details class="source-details"><summary>Source, licence and support</summary><p id="viewer-provider"></p><p id="viewer-licence">Rights must be verified for each item, including restored video, audio tracks and local territories.</p><a id="viewer-donate" target="_blank" rel="noopener noreferrer" hidden>Donate directly to this archive ↗</a></details></div></dialog>
+</body>
+</html>
