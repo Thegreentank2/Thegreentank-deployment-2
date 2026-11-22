@@ -25,7 +25,20 @@
     {id:'oapen',name:'OAPEN',monogram:'OA',media:'Academic Books',desc:'Open-access scholarly book discovery.',url:'https://www.oapen.org/',kind:'external'},
     {id:'doab',name:'DOAB',monogram:'DB',media:'Academic Books',desc:'Directory of Open Access Books; reading depends on publishers.',url:'https://www.doabooks.org/',kind:'external'},
     {id:'europeana',name:'Europeana',monogram:'EU',media:'Culture · Books',desc:'European cultural collections, with varied provider licences.',url:'https://www.europeana.eu/',kind:'external'},
-    {id:'nasa',name:'NASA Media Library',monogram:'NA',media:'Science · Film',desc:'Space imagery and film, with resource-specific usage rules.',url:'https://images.nasa.gov/',kind:'external'}
+    {id:'nasa',name:'NASA Media Library',monogram:'NA',media:'Science · Film',desc:'Space imagery and film, with resource-specific usage rules.',url:'https://images.nasa.gov/',kind:'external'},
+    {id:'fiaf',name:'FIAF Film Archives Online',monogram:'FI',media:'World Cinema',desc:'Global catalogue of free archive films; English subtitles are available for some works. External links only.',url:'https://www.fiafnet.org/filmsonline',kind:'external',tag:'worldfilm'},
+    {id:'jff',name:'JFF Theater',monogram:'JF',media:'Japan · World Cinema',desc:'Free Japanese movies and dramas with subtitles; separate free account and regional restrictions. External viewing only.',url:'https://en.jff.jpf.go.jp/',kind:'external',tag:'worldfilm'},
+    {id:'nfaj',name:'Japanese Animated Film Classics',monogram:'NF',media:'Japan · Animation',desc:'64 early Japanese animated films, some English-subtitled. Embedding expressly prohibited; link to official site.',url:'https://animation.filmarchives.jp/en/index.html',kind:'external',tag:'worldfilm'},
+    {id:'kofa',name:'Korean Film Archive KMDb',monogram:'KO',media:'Korea · Cinema',desc:'Official Korean classic-film catalogue and on-site VOD. Check subtitles and rights per item.',url:'https://www.kmdb.or.kr/vod',kind:'external',tag:'worldfilm'},
+    {id:'cfc',name:'Chinese Film Classics',monogram:'CF',media:'China · Film History',desc:'Academic film-history research and English subtitle information. Video delivery depends on YouTube and is not embedded.',url:'https://chinesefilmclassics.org/',kind:'external',tag:'worldfilm'},
+    {id:'hkfa',name:'Hong Kong Film Archive',monogram:'HK',media:'Hong Kong · Film Culture',desc:'Archive information and licensed screenings, not a verified free film stream.',url:'https://www.filmarchive.gov.hk/',kind:'external',tag:'worldfilm'},
+    {id:'languageguide',name:'LanguageGuide.org',monogram:'LG',media:'Language Learning',desc:'Free nonprofit interactive vocabulary, listening and pronunciation lessons. External course link.',url:'https://www.languageguide.org/',kind:'external',tag:'culture'},
+    {id:'openlearn',name:'OpenLearn',monogram:'OU',media:'Language Learning',desc:'Free Open University courses in languages and culture. Embedded course reuse not established.',url:'https://www.open.edu/openlearn/languages/free-courses',kind:'external',tag:'culture'},
+    {id:'tv5',name:'TV5MONDE Apprendre',monogram:'TV',media:'French · Language Video',desc:'Free and advertising-free French video lessons and exercises. Link to official teaching platform.',url:'https://apprendre.tv5monde.com/en',kind:'external',tag:'culture'},
+    {id:'nhkjp',name:'NHK Easy Japanese',monogram:'NH',media:'Japanese · Language Audio',desc:'Free Japanese language lessons with listening exercises and cultural context.',url:'https://www.nhk.or.jp/lesson/en/',kind:'external',tag:'culture'},
+    {id:'librelingo',name:'LibreLingo',monogram:'LL',media:'Open Source · Language Learning',desc:'AGPLv3 language app; course content needs separate licence checks.',url:'https://github.com/LibreLingoCommunity/LibreLingo',kind:'external',tag:'culture'},
+    {id:'tatoeba',name:'Tatoeba',monogram:'TT',media:'Language Text · Translation',desc:'Open multilingual sentence and translation datasets; attribution and audio permissions vary.',url:'https://tatoeba.org/en/',kind:'external',tag:'culture'},
+    {id:'lingualibre',name:'Lingua Libre',monogram:'LI',media:'Speech · Language Heritage',desc:'Wikimedia France project preserving recorded pronunciation and endangered-language speech.',url:'https://lingualibre.org/',kind:'external',tag:'culture'}
   ];
   // This directory is *not* a list of authorised embeddable players.
   // External services are discovery links only, not part of unified playback.
@@ -60,6 +73,16 @@
     $$('.nav-link').forEach(b=>{const current=b.dataset.mode===mode;b.classList.toggle('active',current);if(current)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
     $('#search-input').placeholder=({all:'Search classic films, music, books...',watch:'Search films, cartoons, documentaries...',listen:'Search music, recordings, audiobooks...',read:'Search books, authors, documents...',news:'Explore international news sources...'})[mode];
     if(mode==='news')showNews();
+    if(mode==='culture'||mode==='worldcinema')showDirectory(mode);
+  }
+  function showDirectory(mode){
+    const isCulture=mode==='culture', matches=providers.filter(p=>p.tag===mode);
+    const section=$('#results-section');section.hidden=false;
+    $('#results-title').textContent=isCulture?'Culture & languages · Free learning':'World cinema · International collections';
+    $('#search-status').textContent=isCulture?'These free learning resources open on their official websites. Their lessons and audio are not copied or embedded without permission.':'These are official film-archive and cultural links. English subtitles, territorial access, registration, advertising and embed rights differ by provider; video is never loaded automatically.';
+    const grid=$('#results-grid');grid.replaceChildren();
+    matches.forEach(p=>{const card=createResult({id:p.id,kind:'other',provider:p.id,url:p.url,title:p.name,desc:p.desc});card.querySelector('.result-actions button')?.remove();grid.append(card)});
+    $('#search-errors').replaceChildren();section.scrollIntoView({behavior:'smooth',block:'start'});
   }
   function showNews(){
     const s=$('#results-section');s.hidden=false;
@@ -250,6 +273,7 @@
   $$('.nav-link').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
   $$('.quick-searches button').forEach(b=>b.addEventListener('click',()=>{$('#search-input').value=b.dataset.quick;performSearch({term:b.dataset.quick})}));
   $$('.collection-card').forEach(b=>b.addEventListener('click',()=>{
+    if(b.dataset.collection==='culture'||b.dataset.collection==='worldcinema'){setMode(b.dataset.collection);return}
     const c=collectionSettings[b.dataset.collection];setMode(c.mode);$('#search-input').value=c.query;
     if(c.mode==='news'){showNews();return}
     performSearch({term:c.query,mode:c.mode,collection:c.archiveCollection});
