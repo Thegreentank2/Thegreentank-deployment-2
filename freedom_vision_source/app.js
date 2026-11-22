@@ -7,10 +7,13 @@
   const $ = (selector) => document.querySelector(selector);
   const $$ = (selector) => Array.from(document.querySelectorAll(selector));
   const providers = [
-    {id:'ia', name:'Internet Archive', monogram:'IA', media:'Video · Audio · Books', desc:'Classic cinema, vintage animation, historical recordings and digital books.',url:'https://archive.org/',kind:'search',donate:'https://archive.org/donate'},
+    {id:'ia', name:'Internet Archive', monogram:'IA', media:'Video · Audio · Books', desc:'Classic cinema, vintage animation, historical recordings and digital books.',url:'https://archive.org/',kind:'search',donate:'https://archive.org/donate',tag:'audiobook'},
     {id:'commons',name:'Wikimedia Commons',monogram:'WC',media:'Video · Audio',desc:'Free-licensed cultural, historical and educational recordings.',url:'https://commons.wikimedia.org/',kind:'search'},
     {id:'gutenberg',name:'Project Gutenberg',monogram:'PG',media:'Books',desc:'Free ebooks; catalogue discovery uses the independent Gutendex API.',url:'https://www.gutenberg.org/',kind:'search'},
-    {id:'librivox',name:'LibriVox',monogram:'LV',media:'Audiobooks',desc:'Public-domain audiobooks read by volunteers. Requests are carefully paced.',url:'https://librivox.org/',kind:'search'},
+    {id:'librivox',name:'LibriVox',monogram:'LV',media:'Audiobooks',desc:'Public-domain audiobooks read by volunteers. Requests are carefully paced.',url:'https://librivox.org/',kind:'search',tag:'audiobook'},
+    {id:'lit2go',name:'Lit2Go · Free Audiobooks',monogram:'L2',media:'Stories · Poetry · Audio MP3',desc:'University of South Florida narrated classics, stories, poetry and read-along PDFs. Limited noncommercial reuse only; external link.',url:'https://etc.usf.edu/lit2go/',kind:'external',tag:'audiobook'},
+    {id:'storybookscanada',name:'Storybooks Canada',monogram:'SC',media:'Multilingual · Illustrated Audio Stories',desc:'Free illustrated stories with multilingual text and some MP3 narration. Audio varies by language and has track-specific CC licences.',url:'https://storybookscanada.ca/',kind:'external',tag:'audiobook,culture'},
+    {id:'globalstorybooks',name:'Global Storybooks',monogram:'GS',media:'Languages · Children’s Audio Stories',desc:'Free illustrated stories and narration in many languages. Reuse requires checking CC BY and CC BY-NC file permissions.',url:'https://globalstorybooks.net/',kind:'external',tag:'audiobook,culture'},
     {id:'peertube',name:'PeerTube',monogram:'PT',media:'Video',desc:'Independent video instances. Embeds require individual server checks.',url:'https://joinpeertube.org/',kind:'external'},
     {id:'blender',name:'Blender Open Movies',monogram:'BF',media:'Animation',desc:'Openly licensed animated films; credited copies need suitable low-res sources.',url:'https://studio.blender.org/films/',kind:'external'},
     {id:'loc',name:'Library of Congress',monogram:'LC',media:'Film · Audio',desc:'National Screening Room and historical moving-image collections.',url:'https://www.loc.gov/collections/national-screening-room/',kind:'external'},
@@ -84,16 +87,17 @@
   function setMode(mode){
     state.mode=mode;
     $$('.nav-link').forEach(b=>{const current=b.dataset.mode===mode;b.classList.toggle('active',current);if(current)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
-    $('#search-input').placeholder=({all:'Search classic films, music, books...',watch:'Search films, cartoons, documentaries...',listen:'Search music, recordings, audiobooks...',read:'Search books, authors, documents...',news:'Explore international news sources...',worldcinema:'Find world film sources...',culture:'Find language learning sources...',science:'Find science course sources...',audiolessons:'Find free audio lesson sources...'})[mode];
+    $('#search-input').placeholder=({all:'Search classic films, music, books...',watch:'Search films, cartoons, documentaries...',listen:'Search music, recordings, audiobooks...',read:'Search books, authors, documents...',news:'Explore international news sources...',worldcinema:'Find world film sources...',culture:'Find language learning sources...',science:'Find science course sources...',audiolessons:'Find free audio lesson sources...',audiobooks:'Search audiobook titles and narrated stories...'})[mode];
     if(mode==='news')showNews();
-    if(['culture','worldcinema','science','audiolessons'].includes(mode))showDirectory(mode);
+    if(['culture','worldcinema','science','audiolessons','audiobooks'].includes(mode))showDirectory(mode);
   }
   function showDirectory(mode,term=''){
     const settings={
       culture:{tag:'culture',title:'Culture & languages · Free learning',notice:'Official free language-learning resources. Lesson audio is not copied, streamed or embedded without permission.'},
       worldcinema:{tag:'worldfilm',title:'World cinema · International collections',notice:'Official film-archive resources. Subtitles, availability, advertising and embed rights vary; no video loaded automatically.'},
       science:{tag:'science',title:'Science & mathematics · Free courses',notice:'University lectures, physics seminars, simulations and science books. Open original provider sites until low-bandwidth reuse rights are verified.'},
-      audiolessons:{tag:'audio',title:'Free audio lessons · Listen and learn',notice:'Language audio courses, university MP3 lectures and official science podcasts. These are source links, not centrally hosted audio.'}
+      audiolessons:{tag:'audio',title:'Free audio lessons · Listen and learn',notice:'Language audio courses, university MP3 lectures and official science podcasts. These are source links, not centrally hosted audio.'},
+      audiobooks:{tag:'audiobook',title:'Free audiobooks & stories',notice:'Find public-domain audiobooks and multilingual storytelling resources. To search for a story title, type it above and select Search; results come from LibriVox and Internet Archive. Other sources open at their official sites.'}
     };
     const cfg=settings[mode];if(!cfg)return;
     const needle=String(term||'').trim().toLocaleLowerCase();
@@ -191,6 +195,7 @@
     mode=mode||state.mode;term=safeTerm(term===undefined?$('#search-input').value:term);
     if(mode==='news'){showNews();return}
     if(['culture','worldcinema','science','audiolessons'].includes(mode)){showDirectory(mode,term);return}
+    if(mode==='audiobooks')mode='listen';
     if(!term&&!collection){$('#search-input').focus();return}
     state.searching=true;$('#search-button').disabled=true;$('#search-button').textContent='Searching…';
     const section=$('#results-section');section.hidden=false;
@@ -295,7 +300,7 @@
   $$('.nav-link').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
   $$('.quick-searches button').forEach(b=>b.addEventListener('click',()=>{$('#search-input').value=b.dataset.quick;performSearch({term:b.dataset.quick})}));
   $$('.collection-card').forEach(b=>b.addEventListener('click',()=>{
-    if(['culture','worldcinema','science','audiolessons'].includes(b.dataset.collection)){setMode(b.dataset.collection);return}
+    if(['culture','worldcinema','science','audiolessons','audiobooks'].includes(b.dataset.collection)){setMode(b.dataset.collection);return}
     const c=collectionSettings[b.dataset.collection];setMode(c.mode);$('#search-input').value=c.query;
     if(c.mode==='news'){showNews();return}
     performSearch({term:c.query,mode:c.mode,collection:c.archiveCollection});
