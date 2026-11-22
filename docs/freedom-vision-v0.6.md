@@ -94,3 +94,19 @@ Official reference documentation:
 - https://www.languagetransfer.org/courses
 - https://www.languagetransfer.org/faq
 - https://www.nasa.gov/podcasts-and-audio/
+
+## Audiobooks & Stories (draft extension)
+
+The navigation now includes **Audiobooks & Stories**, with a separate collection entrance for full-length audiobooks, stories, poetry, multilingual illustrated books, and archived radio drama discovery. This is separate from the Audio Lessons section.
+
+- The audiobook tab first shows a **curated local directory** with no external network requests: LibriVox, Internet Archive, Lit2Go, Storybooks Canada and Global Storybooks.
+- When the visitor types a **title** and presses Search, the app reuses the existing on-demand Internet Archive audio metadata search and LibriVox audiobook title API. No autoplay, background crawling, downloaded media, thumbnails or new APIs are introduced.
+- LibriVox is nonprofit, volunteer-run, advertising-free and its *recordings* are dedicated to the public domain. Copyright for underlying text, translations and adaptations remains territory-specific. LibriVox is not currently accepting donations directly: its verified official support page instead invites supporters to donate to the Internet Archive, which hosts its systems. Freedom Vision never claims the gift goes to LibriVox. Official policy: https://librivox.org/pages/about-librivox/ and https://librivox.org/pages/how-to-donate/
+- **Lit2Go**, University of South Florida: free MP3 stories and poems with associated text/PDF. It allows no more than 25 files in one non-commercial educational project without special permission; third-party embedding not automatically granted. Official licence: https://etc.usf.edu/lit2go/welcome/license/. Its official project support page is https://etc.usf.edu/lit2go/giving/; support goes directly to USF, never to Freedom Vision.
+- **Storybooks Canada**: 40 freely accessible illustrated stories with multilingual text/audio where available. Audio can be downloaded; each recording has specified CC BY or CC BY-NC terms. Some languages and recordings are incomplete. https://storybookscanada.ca/ and https://storybookscanada.ca/downloads/
+- **Global Storybooks**: official multilingual literacy collection https://globalstorybooks.net/. Audio files are released under individual Creative Commons BY or BY-NC licences; file-level creator and licensing attribution is required before any in-site playback or derivative. https://github.com/global-asp/asp-audio
+- **Radio drama**: archived radio collections can be searched from the Internet Archive, but age or visibility does not imply public-domain status. Only metadata and original archive links by default unless rights for the exact recording are confirmed.
+
+Future improvements: chapter navigation, resume point stored only on user's device if consented, audio-only playback at source-approved low bitrate, Read Along mode pairing properly licensed text and audio, story language filters, manual playback-speed adjustment and optional download link only where permitted. No data-collection or account requirement.
+
+Initial implementation is **not live deployed**. Only JavaScript syntax and source routing checks have been performed; browser API/CORS, runtime indexing, accessibility and media rights still need tests.
