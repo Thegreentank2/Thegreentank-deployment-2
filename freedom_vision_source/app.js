@@ -71,12 +71,12 @@
   function setMode(mode){
     state.mode=mode;
     $$('.nav-link').forEach(b=>{const current=b.dataset.mode===mode;b.classList.toggle('active',current);if(current)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
-    $('#search-input').placeholder=({all:'Search classic films, music, books...',watch:'Search films, cartoons, documentaries...',listen:'Search music, recordings, audiobooks...',read:'Search books, authors, documents...',news:'Explore international news sources...'})[mode];
+    $('#search-input').placeholder=({all:'Search classic films, music, books...',watch:'Search films, cartoons, documentaries...',listen:'Search music, recordings, audiobooks...',read:'Search books, authors, documents...',news:'Explore international news sources...',worldcinema:'Explore world film archives...',culture:'Explore language and culture resources...'})[mode];
     if(mode==='news')showNews();
     if(mode==='culture'||mode==='worldcinema')showDirectory(mode);
   }
   function showDirectory(mode){
-    const isCulture=mode==='culture', matches=providers.filter(p=>p.tag===mode);
+    const isCulture=mode==='culture', matches=providers.filter(p=>p.tag===(isCulture?'culture':'worldfilm'));
     const section=$('#results-section');section.hidden=false;
     $('#results-title').textContent=isCulture?'Culture & languages · Free learning':'World cinema · International collections';
     $('#search-status').textContent=isCulture?'These free learning resources open on their official websites. Their lessons and audio are not copied or embedded without permission.':'These are official film-archive and cultural links. English subtitles, territorial access, registration, advertising and embed rights differ by provider; video is never loaded automatically.';
