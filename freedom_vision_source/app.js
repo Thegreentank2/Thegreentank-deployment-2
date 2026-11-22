@@ -298,7 +298,7 @@
   // Static curated discovery stays readable without a network connection.
   $('#search-form').addEventListener('submit',e=>{e.preventDefault();performSearch()});
   $$('.nav-link').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
-  $$('.quick-searches button').forEach(b=>b.addEventListener('click',()=>{$('#search-input').value=b.dataset.quick;performSearch({term:b.dataset.quick})}));
+  $('.quick-searches button').forEach(b=>b.addEventListener('click',()=>{const mode=b.dataset.quickMode||'all';setMode(mode);$('#search-input').value=b.dataset.quick;performSearch({term:b.dataset.quick,mode})}));
   $$('.collection-card').forEach(b=>b.addEventListener('click',()=>{
     if(['culture','worldcinema','science','audiolessons','audiobooks'].includes(b.dataset.collection)){setMode(b.dataset.collection);return}
     const c=collectionSettings[b.dataset.collection];setMode(c.mode);$('#search-input').value=c.query;
@@ -310,5 +310,12 @@
   $('#viewer-check').addEventListener('click',checkPlayback);$('#viewer-close').addEventListener('click',closeViewer);
   $('#viewer-dialog').addEventListener('click',e=>{if(e.target===$('#viewer-dialog'))closeViewer()});
   $('#viewer-dialog').addEventListener('close',()=>{$('#player-shell').replaceChildren();$('#player-shell').hidden=true;state.activeItem=null});
+  $('.highlight-cta').forEach(b=>b.addEventListener('click',()=>{setMode(b.dataset.goMode);}));
+  $('.topic-pills button').forEach(b=>b.addEventListener('click',()=>{
+    const mode=b.dataset.topicMode,term=b.dataset.topic;
+    setMode(mode);
+    $('#search-input').value=term||'';
+    if(term&&mode!=='audiobooks')showDirectory(mode,term);
+  }));
   renderProviders();
 })();
