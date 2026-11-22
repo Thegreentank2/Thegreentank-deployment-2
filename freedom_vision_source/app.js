@@ -84,15 +84,23 @@
   function setMode(mode){
     state.mode=mode;
     $$('.nav-link').forEach(b=>{const current=b.dataset.mode===mode;b.classList.toggle('active',current);if(current)b.setAttribute('aria-current','page');else b.removeAttribute('aria-current')});
-    $('#search-input').placeholder=({all:'Search classic films, music, books...',watch:'Search films, cartoons, documentaries...',listen:'Search music, recordings, audiobooks...',read:'Search books, authors, documents...',news:'Explore international news sources...',worldcinema:'Explore world film archives...',culture:'Explore language and culture resources...'})[mode];
+    $('#search-input').placeholder=({all:'Search classic films, music, books...',watch:'Search films, cartoons, documentaries...',listen:'Search music, recordings, audiobooks...',read:'Search books, authors, documents...',news:'Explore international news sources...',worldcinema:'Find world film sources...',culture:'Find language learning sources...',science:'Find science course sources...',audiolessons:'Find free audio lesson sources...'})[mode];
     if(mode==='news')showNews();
-    if(mode==='culture'||mode==='worldcinema')showDirectory(mode);
+    if(['culture','worldcinema','science','audiolessons'].includes(mode))showDirectory(mode);
   }
-  function showDirectory(mode){
-    const isCulture=mode==='culture', matches=providers.filter(p=>p.tag===(isCulture?'culture':'worldfilm'));
+  function showDirectory(mode,term=''){
+    const settings={
+      culture:{tag:'culture',title:'Culture & languages · Free learning',notice:'Official free language-learning resources. Lesson audio is not copied, streamed or embedded without permission.'},
+      worldcinema:{tag:'worldfilm',title:'World cinema · International collections',notice:'Official film-archive resources. Subtitles, availability, advertising and embed rights vary; no video loaded automatically.'},
+      science:{tag:'science',title:'Science & mathematics · Free courses',notice:'University lectures, physics seminars, simulations and science books. Open original provider sites until low-bandwidth reuse rights are verified.'},
+      audiolessons:{tag:'audio',title:'Free audio lessons · Listen and learn',notice:'Language audio courses, university MP3 lectures and official science podcasts. These are source links, not centrally hosted audio.'}
+    };
+    const cfg=settings[mode];if(!cfg)return;
+    const needle=String(term||'').trim().toLocaleLowerCase();
+    const matches=providers.filter(p=>String(p.tag||'').split(',').includes(cfg.tag)).filter(p=>!needle||[p.name,p.desc,p.media].join(' ').toLocaleLowerCase().includes(needle));
     const section=$('#results-section');section.hidden=false;
-    $('#results-title').textContent=isCulture?'Culture & languages · Free learning':'World cinema · International collections';
-    $('#search-status').textContent=isCulture?'These free learning resources open on their official websites. Their lessons and audio are not copied or embedded without permission.':'These are official film-archive and cultural links. English subtitles, territorial access, registration, advertising and embed rights differ by provider; video is never loaded automatically.';
+    $('#results-title').textContent=cfg.title;
+    $('#search-status').textContent=cfg.notice+(needle?' Filtered the local source directory for “'+term+'”, with no provider API calls.':'')+' '+matches.length+' source'+(matches.length===1?'':'s')+' listed.';
     const grid=$('#results-grid');grid.replaceChildren();
     matches.forEach(p=>{const card=createResult({id:p.id,kind:'other',provider:p.id,url:p.url,title:p.name,desc:p.desc});card.querySelector('.result-actions button')?.remove();grid.append(card)});
     $('#search-errors').replaceChildren();section.scrollIntoView({behavior:'smooth',block:'start'});
@@ -182,6 +190,7 @@
     if(state.searching)return;
     mode=mode||state.mode;term=safeTerm(term===undefined?$('#search-input').value:term);
     if(mode==='news'){showNews();return}
+    if(['culture','worldcinema','science','audiolessons'].includes(mode)){showDirectory(mode,term);return}
     if(!term&&!collection){$('#search-input').focus();return}
     state.searching=true;$('#search-button').disabled=true;$('#search-button').textContent='Searching…';
     const section=$('#results-section');section.hidden=false;
@@ -286,7 +295,7 @@
   $$('.nav-link').forEach(b=>b.addEventListener('click',()=>setMode(b.dataset.mode)));
   $$('.quick-searches button').forEach(b=>b.addEventListener('click',()=>{$('#search-input').value=b.dataset.quick;performSearch({term:b.dataset.quick})}));
   $$('.collection-card').forEach(b=>b.addEventListener('click',()=>{
-    if(b.dataset.collection==='culture'||b.dataset.collection==='worldcinema'){setMode(b.dataset.collection);return}
+    if(['culture','worldcinema','science','audiolessons'].includes(b.dataset.collection)){setMode(b.dataset.collection);return}
     const c=collectionSettings[b.dataset.collection];setMode(c.mode);$('#search-input').value=c.query;
     if(c.mode==='news'){showNews();return}
     performSearch({term:c.query,mode:c.mode,collection:c.archiveCollection});
