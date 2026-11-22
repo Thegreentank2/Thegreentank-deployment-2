@@ -38,3 +38,26 @@ This is a *functional, static prototype* for The Green Tank; it is **not deploye
 - PeerTube embed documentation: https://docs.joinpeertube.org/support/doc/api/embeds
 - NFB terms: https://help.nfb.ca/terms/
 - Blender open movie reuse: https://peach.blender.org/about/
+
+## Culture & Languages and World Cinema (draft extension)
+
+Two additional front-page entrances and navigation tabs are included in the draft:
+- **Culture & Languages**: curated external, official links to LanguageGuide.org, OpenLearn, TV5MONDE Apprendre, NHK Easy Japanese, LibreLingo, Tatoeba and Lingua Libre. These are discovery links only. They are not treated as automatically reusable course content. Tatoeba text and audio permissions vary by record; LibreLingo's code and course-content licences differ.
+- **World Cinema**: curated external, official links to FIAF's free-film archive directory, Japan Foundation JFF Theater, National Film Archive of Japan's Animated Film Classics, Korean Film Archive KMDb VOD, Chinese Film Classics educational project, and Hong Kong Film Archive. Individual English-subtitle, availability, payment, advertising, regional rights and account requirements must be checked.
+
+**No YouTube or Mixcloud players are integrated.** Chinese Film Classics is included as an academic reference only; most films there are delivered via YouTube, so do not display or embed them inside Freedom Vision. JFF Theater requires its own free account and country-specific access. Japanese Animated Film Classics explicitly prohibits video embedding: link to the official archive, never its stream.
+
+**Stephen Chow:** modern Hong Kong films (for example, *A Chinese Odyssey* (1995), *Shaolin Soccer* (2001), *Kung Fu Hustle* (2004)) are not assumed public domain. Hong Kong Film Archive's free-to-browse screening information (including English-subtitled showings) does not authorise digital playback. No Stephen Chow films are enabled for in-page playback without a verified, legally authorised and ad-free provider.
+
+Future learning options: region and language filter; English subtitles when supplied by the provider; per-item attribution; authorised CC0/CC-BY language sentence samples; user-controlled manual audio replay; and a low-data plain-text study mode. Avoid automatic subtitle downloads, speculative rights claims, unauthorised translations, or mirrored copyrighted language lessons.
+
+Source verification:
+- https://www.fiafnet.org/filmsonline
+- https://www.jpf.go.jp/e/project/culture/media/
+- https://www.nfaj.go.jp/english/onlineservice/
+- https://animation.filmarchives.jp/en/support5.html
+- https://eng.koreafilm.or.kr/pages/PC_00000134
+- https://www.open.edu/openlearn/languages/free-courses
+- https://support-apprendre.tv5monde.com/en/support/solutions/articles/61000298831-why-learn-french-with-tv5monde-
+- https://tatoeba.org/en/downloads
+- https://github.com/LibreLingoCommunity/LibreLingo
