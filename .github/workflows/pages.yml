@@ -115,6 +115,9 @@ jobs:
           print(f"installed Ghostbusters beside Simulators: {manifest['ghostbusters_file_count']} files")
           PY
 
+      - name: Install Freedom Vision gateway from reviewed static source
+        run: python3 scripts/install_freedom_vision.py
+
       - name: Show mirror inventory
         run: |
           python3 - <<'PY'
