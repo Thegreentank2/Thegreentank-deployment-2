@@ -68,7 +68,7 @@ def install():
         files[f'freedom-vision/{name}'] = sha_and_length(DEST / name)
     files['index.html'] = sha_and_length(homepage)
     manifest['freedom_vision_entry'] = 'freedom-vision/index.html'
-    manifest['freedom_vision_version'] = '0.6'
+    manifest['freedom_vision_version'] = '0.9'
     manifest['freedom_vision_files'] = len(ASSETS)
     manifest_path.write_text(json.dumps(manifest, indent=2) + '\n', encoding='utf-8')
     print('Freedom Vision gateway installed on verified mirror: 3 static assets and one navigation link.')
