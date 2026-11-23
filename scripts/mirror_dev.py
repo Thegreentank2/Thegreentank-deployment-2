@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The development source remains authoritative. Version 106 Release 56 is pinned
+The development source remains authoritative. Version 118 Release 56 is pinned
 from the verified full backup. Rendered pages and changed public objects are
 retained in a checksummed snapshot so a failed development publish cannot block
 the mirror. Unchanged public files must still match their approved hashes.
@@ -30,7 +30,7 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-APPROVED = json.loads(Path(__file__).with_name("approved-v106.json").read_text(encoding="utf-8"))
+APPROVED = json.loads(Path(__file__).with_name("approved-v118.json").read_text(encoding="utf-8"))
 APPROVED_PUBLIC_SHA256 = APPROVED["public_files"]
 BACKUP_SHA256 = APPROVED["backup_sha256"]
 BACKUP_LABEL = APPROVED["backup_reference"]
@@ -806,7 +806,7 @@ def verify_subspace_snapshot() -> None:
 
 
 def prepare_snapshot() -> Path:
-    target = Path(".mirror-source-v106")
+    target = Path(".mirror-source-v118")
     parts = []
     for part in APPROVED["snapshot_parts"]:
         data = (Path(__file__).resolve().parent.parent / part["path"]).read_bytes()
@@ -850,6 +850,10 @@ def main() -> int:
         original_pages[route] = text
         discovered_urls.update(collect_same_origin_urls(text))
         cleaned = clean_html(text)
+        if route == "/freedom-vision":
+            # The reviewed standalone viewer has no framework hydration dependency.
+            # Restore only its exact, checksum-pinned script after stripping runtime scripts.
+            cleaned = cleaned.replace("</body>", f'<script src="{PREFIX}/freedom-vision-assets/app.js" defer></script>\n</body>', 1)
         if 'aria-controls="complete-pdf-document"' in cleaned or route == "/climate-technology/fame-and-hvo":
             cleaned = cleaned.replace("</body>", f'<script src="{PREFIX}/assets/v106-controls.js" defer></script>\n</body>', 1)
         if route == "/social-technology/monkey-banana":
@@ -898,6 +902,17 @@ def main() -> int:
     if [book["number"] for book in stories] != [1, 2, 3, 4] or sum(len(book["readerPages"]) for book in stories) != 52:
         raise RuntimeError("The complete four-part, 52-page story sequence is required")
     write_bytes(OUT / "assets" / "settlement-reader-data.json", reader_data)
+
+    freedom = original_pages["/freedom-vision"]
+    if 'href="/freedom-vision"' not in original_pages["/"]:
+        raise RuntimeError("Freedom Vision homepage tab missing")
+    for marker in ['id="documents-books"', 'id="reader-search-form"', 'id="reader-results-list"']:
+        if marker not in freedom:
+            raise RuntimeError(f"Freedom Vision control missing: {marker}")
+    if 'id="tts-' in freedom or 'Read Aloud' in freedom:
+        raise RuntimeError("Deferred local narration returned unexpectedly")
+    if 'Linux' not in original_pages["/linux"]:
+        raise RuntimeError("Linux page missing")
 
     home = original_pages["/"]
     library = original_pages["/library"]
@@ -1947,6 +1962,16 @@ def main() -> int:
     ]
     if not presentation_assets:
         raise RuntimeError("No presentation assets were mirrored; refusing an incomplete deployment")
+
+    # Retain exact prior public build assets so cached pages keep their dependencies.
+    for relative_name, expected_digest in APPROVED.get("retained_mirror_files", {}).items():
+        data = (SNAPSHOT_ROOT / "retained-mirror" / relative_name).read_bytes()
+        if hashlib.sha256(data).hexdigest() != expected_digest:
+            raise RuntimeError(f"Retained mirror asset checksum mismatch: {relative_name}")
+        destination = OUT / relative_name
+        if destination.exists() and destination.read_bytes() != data:
+            raise RuntimeError(f"Retained mirror asset collides with current output: {relative_name}")
+        write_bytes(destination, data)
 
     manifest_files = {}
     for path in sorted(p for p in OUT.rglob("*") if p.is_file()):

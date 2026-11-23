@@ -166,7 +166,7 @@ jobs:
           from urllib.parse import urljoin
           from urllib.request import Request, urlopen
 
-          approved = json.loads(Path('scripts/approved-v106.json').read_text())
+          approved = json.loads(Path('scripts/approved-v118.json').read_text())
           base = os.environ['MIRROR_URL'].rstrip('/') + '/'
           def fetch(path):
               url = urljoin(base, path) + '?verify=' + os.environ['GITHUB_SHA']
@@ -182,10 +182,16 @@ jobs:
                   latest = json.loads(fetch('ai/sub-space/latest.json'))
                   assert latest['release_id'] == approved['subspace_release']
                   assert latest['publication_state_hash'] == approved['subspace_publication_state_hash']
-                  assert b'mailto:thegreentank@proton.me' in fetch('index.html')
-                  for path in ['assets/v106-controls.js', 'research/The_Right_to_Die_Referenced_Paper_2026-11-12.pdf']:
+                  home = fetch('index.html')
+                  assert b'mailto:thegreentank@proton.me' in home
+                  assert b'/Thegreentank-deployment-2/freedom-vision' in home
+                  freedom = fetch('freedom-vision/')
+                  assert b'id="documents-books"' in freedom and b'id="tts-' not in freedom
+                  assert b'/Thegreentank-deployment-2/freedom-vision-assets/app.js' in freedom
+                  assert b'Linux' in fetch('linux/')
+                  for path in ['assets/v106-controls.js', 'research/The_Right_to_Die_Referenced_Paper_2026-11-12.pdf', 'freedom-vision-assets/app.js', 'freedom-vision-assets/styles.css']:
                       assert hashlib.sha256(fetch(path)).hexdigest() == manifest['files'][path]['sha256']
-                  print(f"Verified public mirror: v106, {latest['release_id']}, 196 research files at {base}")
+                  print(f"Verified public mirror: v118, {latest['release_id']}, 196 research files at {base}")
                   break
               except Exception as error:
                   if attempt == 11:

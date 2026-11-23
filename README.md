@@ -1,3 +1,17 @@
+# The Green Tank — verified development mirror v118
+
+This mirror is pinned to development **version 118**, source commit `194782cb6f2701e4b1c9eda4f16f866cbf3b2eaa`, from `The_Green_Tank_Full_Dev_Deployment_Backup_v118_2026-11-23.zip` (SHA-256 `d49ff5a4ff5950117c9960e2cd60c965fe9f2283c264f247051cc5cfcdea453f`). The ChatGPT development Site remains authoritative.
+
+The release retains all 92 earlier routes, 196 public research files, every previously approved public object, and the reviewed 12-page Ghostbusters section. It adds Freedom Vision and Linux, for 94 development routes. The complete 1,178-file public source set is checksum-pinned. All 63 immutable AI Sub Space releases remain, with `ddsk-v0063` current. Only the seven current Sub Space indexes advance; older release bytes remain unchanged.
+
+Freedom Vision has its own homepage tab and working standalone static viewer. Its exact reviewed script is included after framework scripts are removed. Video/audio search and bounded playback remain; document/book results open original source pages in a separate tab. Read Aloud remains removed, and source borrowing/sign-in conditions still apply. Al confirmed document links work in Dolphin on Android. No document gateway is required by this source-link flow.
+
+`scripts/approved-v118.json` and the new checksummed `snapshots/v118.tar.gz.part*` files pin the exact rendered pages, build assets and new/changed public objects. Existing route, content, research, inherited-release and source-file checks remain. The workflow verifies version, commit, backup hash, current Sub Space, Freedom Vision, Linux and key file digests after Pages deployment. Existing TIME review limits and provider connectivity limitations are unchanged.
+
+Version 106 approval/snapshot files remain for recovery. The pre-update mirror is also preserved as `Green_Tank_Mirror_v106_Before_v118_2026-11-23.zip`, and Git commit `0708cdb5646d529127cfa33b0b81b3e24aed27ae` remains its rollback point. No private development source, credentials or temporary download URLs are published.
+
+## Retained publishing history
+
 # The Green Tank — current mirror v106
 
 The mirror is pinned to the complete verified **v106 / Release 56** backup (`cc64be95e812079af298f1c73949f51f4bcb7c48`), with 63 publications, 196 public research files, 92 development routes (including the separately installed Ghostbusters entry), and AI Sub Space `ddsk-v0045`. Every earlier public object remains; all 45 immutable catalogue releases are retained.
