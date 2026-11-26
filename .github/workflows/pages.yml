@@ -166,7 +166,7 @@ jobs:
           from urllib.parse import urljoin
           from urllib.request import Request, urlopen
 
-          approved = json.loads(Path('scripts/approved-v118.json').read_text())
+          approved = json.loads(Path('scripts/approved-v120.json').read_text())
           base = os.environ['MIRROR_URL'].rstrip('/') + '/'
           def fetch(path):
               url = urljoin(base, path) + '?verify=' + os.environ['GITHUB_SHA']
@@ -189,9 +189,14 @@ jobs:
                   assert b'id="documents-books"' in freedom and b'id="tts-' not in freedom
                   assert b'/Thegreentank-deployment-2/freedom-vision-assets/app.js' in freedom
                   assert b'Linux' in fetch('linux/')
+                  assert b'id="live-world"' in freedom
+                  assert b'https://www.earthcam.com/' in freedom and b'https://opencctv.org/cameras/live-cameras' in freedom
+                  music = fetch('music/')
+                  assert b'https://archive.org/embed/the-green-tank-knots-let-me-untie-you-complete-video-collection-2026?playlist=1&amp;list_height=240' in music
+                  assert b'https://archive.org/details/the-green-tank-knots-let-me-untie-you-complete-video-collection-2026' in music
                   for path in ['assets/v106-controls.js', 'research/The_Right_to_Die_Referenced_Paper_2026-11-12.pdf', 'freedom-vision-assets/app.js', 'freedom-vision-assets/styles.css']:
                       assert hashlib.sha256(fetch(path)).hexdigest() == manifest['files'][path]['sha256']
-                  print(f"Verified public mirror: v118, {latest['release_id']}, 196 research files at {base}")
+                  print(f"Verified public mirror: v120, {latest['release_id']}, 196 research files at {base}")
                   break
               except Exception as error:
                   if attempt == 11:

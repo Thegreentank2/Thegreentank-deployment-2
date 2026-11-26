@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build a guarded static GitHub Pages snapshot of The Green Tank.
 
-The development source remains authoritative. Version 118 Release 56 is pinned
+The development source remains authoritative. Version 120 Release 56 is pinned
 from the verified full backup. Rendered pages and changed public objects are
 retained in a checksummed snapshot so a failed development publish cannot block
 the mirror. Unchanged public files must still match their approved hashes.
@@ -30,7 +30,7 @@ BASE_HOST = urlparse(BASE).netloc
 PREFIX = "/Thegreentank-deployment-2"
 OUT = Path("site")
 LOCAL_SOURCE_ROOT = Path(os.environ["GREEN_TANK_MIRROR_LOCAL_SOURCE"]) if os.environ.get("GREEN_TANK_MIRROR_LOCAL_SOURCE") else None
-APPROVED = json.loads(Path(__file__).with_name("approved-v118.json").read_text(encoding="utf-8"))
+APPROVED = json.loads(Path(__file__).with_name("approved-v120.json").read_text(encoding="utf-8"))
 APPROVED_PUBLIC_SHA256 = APPROVED["public_files"]
 BACKUP_SHA256 = APPROVED["backup_sha256"]
 BACKUP_LABEL = APPROVED["backup_reference"]
@@ -806,7 +806,7 @@ def verify_subspace_snapshot() -> None:
 
 
 def prepare_snapshot() -> Path:
-    target = Path(".mirror-source-v118")
+    target = Path(".mirror-source-v120")
     parts = []
     for part in APPROVED["snapshot_parts"]:
         data = (Path(__file__).resolve().parent.parent / part["path"]).read_bytes()
@@ -911,6 +911,16 @@ def main() -> int:
             raise RuntimeError(f"Freedom Vision control missing: {marker}")
     if 'id="tts-' in freedom or 'Read Aloud' in freedom:
         raise RuntimeError("Deferred local narration returned unexpectedly")
+    live_world = re.search(r'<section id="live-world"[\s\S]*?</section>', freedom)
+    if not live_world:
+        raise RuntimeError("Approved Live World section missing")
+    camera_links = re.findall(r'<a\b[^>]*>', live_world.group())
+    for destination in ["https://www.earthcam.com/", "https://opencctv.org/cameras/live-cameras"]:
+        matching = [link for link in camera_links if f'href="{destination}"' in link]
+        if len(matching) != 1 or 'target="_blank"' not in matching[0] or 'rel="noopener noreferrer"' not in matching[0]:
+            raise RuntimeError(f"Approved external camera link changed: {destination}")
+    if re.search(r'<(?:img|video|audio|iframe|script)\b', live_world.group(), re.I):
+        raise RuntimeError("Live World must retain source links without embedded camera media")
     if 'Linux' not in original_pages["/linux"]:
         raise RuntimeError("Linux page missing")
 
@@ -1426,6 +1436,7 @@ def main() -> int:
         raise RuntimeError(f"Dev Music page lost expected version 87 structure: {missing_music}")
 
     expected_archive_player_ids = [
+        "the-green-tank-knots-let-me-untie-you-complete-video-collection-2026?playlist=1&list_height=240",
         "knots-let-me-untie-you-3",
         "knots-Universal-Let-me-untie-you",
         "knots-pop-say-hello-a",
@@ -1435,11 +1446,11 @@ def main() -> int:
         "Knots-POP-Let-me-untie-you",
         "knots-red-hot-voodoo-let-me-untie-you",
     ]
-    actual_archive_player_ids = re.findall(
+    actual_archive_player_ids = [html.unescape(value) for value in re.findall(
         r'src=["\']https://archive\.org/embed/([^"\']+)["\']',
         music,
         re.I,
-    )
+    )]
     if actual_archive_player_ids != expected_archive_player_ids:
         raise RuntimeError(
             "Music archive player set changed: "
@@ -1447,6 +1458,11 @@ def main() -> int:
         )
     if actual_archive_player_ids.count("knots-commercial-Let-me-untie-you") != 1:
         raise RuntimeError("Commercial Music archive player must appear exactly once")
+    playlist = re.search(r'<iframe\b[^>]*src=["\']https://archive\.org/embed/the-green-tank-knots-let-me-untie-you-complete-video-collection-2026[^>]*>', music)
+    if not playlist or re.search(r'autoplay', html.unescape(playlist.group()), re.I):
+        raise RuntimeError("Approved Music playlist must remain present without autoplay")
+    if music.index(playlist.group()) > music.index("https://soundcloud.com/thegreentank"):
+        raise RuntimeError("Approved Archive playlist must remain above the existing Music channels")
 
     journey = original_pages["/music/knots-untying-through-perspective"]
     required_journey = [
