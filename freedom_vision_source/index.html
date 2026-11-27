@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1216">
+  <meta name="description" content="Freedom Vision: a lightweight, advertising-free gateway to independent archives. Watch, listen, read and discover world news.">
+  <title>Freedom Vision · Independent archive viewer</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="app.js" defer></script>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="page-shell">
+<header class="masthead">
+  <div class="masthead-inner">
+    <a class="fv-brand" href="./index.html" aria-label="Freedom Vision home">
+      <span class="brand-glyph" aria-hidden="true"><span class="iris"></span></span>
+      <span class="brand-text">FREEDOM <strong>VISION</strong><small>OPEN THE WORLD</small></span>
+    </a>
+    <nav class="main-nav" aria-label="Main categories">
+      <button type="button" class="nav-link active" data-mode="all" aria-current="page">Discover</button>
+      <button type="button" class="nav-link" data-mode="watch">Watch</button>
+      <button type="button" class="nav-link" data-mode="listen">Listen</button>
+      <button type="button" class="nav-link" data-mode="read">Read</button>
+      <button type="button" class="nav-link" data-mode="news">World News</button>
+      <button type="button" class="nav-link" data-mode="worldcinema">World Cinema</button>
+      <button type="button" class="nav-link" data-mode="culture">Culture &amp; Languages</button>
+      <button type="button" class="nav-link" data-mode="science">Science &amp; Maths</button>
+      <button type="button" class="nav-link" data-mode="audiolessons">Audio Lessons</button>
+      <button type="button" class="nav-link" data-mode="audiobooks">Audiobooks &amp; Stories</button>
+    </nav>
+    <a class="home-link" href="https://the-green-tank.alexiscoderpenguy.chatgpt.site/" rel="noopener noreferrer" target="_blank">The Green Tank <span aria-hidden="true">↗</span></a>
+  </div>
+</header>
+<main id="main">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-text">
+      <div class="eyebrow"><span class="signal-dot"></span> PUBLIC ARCHIVES · CULTURE · LEARNING</div>
+      <h1 id="hero-title">A world to <em>discover.</em><br>Nothing to sell you.</h1>
+      <p>Classic cinema, narrated stories, world languages, music and science. Search once, then watch, listen, read or learn at your own pace.</p>
+      <form id="search-form" class="search-block" role="search" autocomplete="off">
+        <div class="search-field">
+          <span class="magnify" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none"><circle cx="10.8" cy="10.8" r="6.6" stroke="currentColor" stroke-width="1.8"/><path d="m16 16 5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+          <label class="sr-only" for="search-input">Search the archives</label>
+          <input id="search-input" type="search" placeholder="Search books, films, stories, lectures..." maxlength="120" spellcheck="false">
+          <button class="search-button" id="search-button" type="submit">Search <span aria-hidden="true">↗</span></button>
+        </div>
+        <p class="search-hint">Search sends your query to responding catalogue APIs. Source services may record requests; Freedom Vision adds no tracking.</p>
+      </form>
+      <div class="quick-searches" aria-label="Suggested searches"><span>TRY</span>
+        <button data-quick="silent film" data-quick-mode="watch">Silent cinema</button><button data-quick="quantum" data-quick-mode="science">Quantum physics</button><button data-quick="Japanese" data-quick-mode="culture">Japanese</button><button data-quick="Sherlock Holmes" data-quick-mode="audiobooks">Sherlock Holmes audio</button>
+      </div>
+      <a class="classic-direct-link" href="#classic-film-sites">Browse independent classic film libraries ↓</a>
+    </div>
+    <div class="hero-art" aria-hidden="true">
+      <div class="art-halo halo-one"></div><div class="art-halo halo-two"></div>
+      <div class="orbit-dot dot-one"></div><div class="orbit-dot dot-two"></div><div class="orbit-dot dot-three"></div>
+      <div class="art-core"><div class="art-core-ring"><div class="art-eye"><div class="art-pupil"></div></div></div></div>
+      <span class="art-coordinate coord-one">51° · ARCHIVE</span><span class="art-coordinate coord-two">480p · MAX</span>
+      <div class="art-caption">ART · CULTURE · KNOWLEDGE</div>
+    </div>
+  </section>
+  <div class="principles" aria-label="Viewing principles">
+    <span><b class="principle-symbol">◉</b> NO ADVERTS</span><span><b class="principle-symbol">▱</b> VIDEO ≤480p</span><span><b class="principle-symbol">◌</b> NO AUTOPLAY</span><span><b class="principle-symbol">◇</b> ORIGINAL ARCHIVES FIRST</span><span><b class="principle-symbol">↗</b> DONATIONS GO TO PROVIDERS</span>
+  </div>
+<section class="highlights section-inner" aria-labelledby="highlights-title"><div class="section-head"><div><div class="section-label">NEW IN THE COLLECTION</div><h2 id="highlights-title">Follow your curiosity.</h2></div><p>Stories to listen to, films to discover and ideas to understand. These open from their original providers.</p></div><div class="highlight-grid"><article class="highlight-card highlight-story"><div class="highlight-top"><span class="highlight-mark">01 / LISTEN</span><span class="highlight-symbol" aria-hidden="true">♫</span></div><h3>Take a story<br><em>with you.</em></h3><p>Free audiobooks, classic mysteries, poetry, illustrated stories and radio drama.</p><button class="highlight-cta" type="button" data-go-mode="audiobooks">Browse audio stories <span aria-hidden="true">↗</span></button><div class="highlight-sources">From <a href="https://librivox.org/" target="_blank" rel="noopener noreferrer">LibriVox</a> · <a href="https://etc.usf.edu/lit2go/" target="_blank" rel="noopener noreferrer">Lit2Go</a> · <a href="https://storybookscanada.ca/" target="_blank" rel="noopener noreferrer">Storybooks Canada</a></div></article><article class="highlight-card highlight-science"><div class="highlight-top"><span class="highlight-mark">02 / LEARN</span><span class="highlight-symbol" aria-hidden="true">∑</span></div><h3>Understand<br><em>the universe.</em></h3><p>Quantum theory, particles, geometry, chemistry and biology in accessible lectures and books.</p><button class="highlight-cta" type="button" data-go-mode="science">Explore science <span aria-hidden="true">↗</span></button><div class="highlight-sources">From <a href="https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016/" target="_blank" rel="noopener noreferrer">MIT OCW</a> · <a href="https://oyc.yale.edu/physics/phys-201" target="_blank" rel="noopener noreferrer">Yale</a> · <a href="https://phet.colorado.edu/" target="_blank" rel="noopener noreferrer">PhET</a></div></article><article class="highlight-card highlight-culture"><div class="highlight-top"><span class="highlight-mark">03 / EXPLORE</span><span class="highlight-symbol" aria-hidden="true">◎</span></div><h3>Every language.<br><em>Every culture.</em></h3><p>World cinema with subtitles, Japanese and Korean film history, and free language lessons.</p><button class="highlight-cta" type="button" data-go-mode="culture">Explore languages <span aria-hidden="true">↗</span></button><div class="highlight-sources">From <a href="https://en.jff.jpf.go.jp/" target="_blank" rel="noopener noreferrer">JFF Theater</a> · <a href="https://www.languageguide.org/" target="_blank" rel="noopener noreferrer">LanguageGuide</a> · <a href="https://apprendre.tv5monde.com/en" target="_blank" rel="noopener noreferrer">TV5MONDE</a></div></article></div></section>
+  <section class="collections section-inner" aria-labelledby="collections-title">
+    <div class="section-head"><div><div class="section-label">EXPLORE BY INTEREST</div><h2 id="collections-title">What shall we explore?</h2></div><p>Find something old, something new to you, or something worth remembering.</p></div>
+    <div class="collection-grid">
+      <button class="collection-card film" data-collection="film" type="button"><span class="card-top">01 · WATCH</span><span class="abstract-shape film-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>Classic cinema</strong><small>Silent films and early features</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card cartoons" data-collection="cartoons" type="button"><span class="card-top">02 · WATCH</span><span class="abstract-shape cartoons-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>Vintage cartoons</strong><small>Animation through the ages</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card series" data-collection="tv" type="button"><span class="card-top">03 · WATCH</span><span class="abstract-shape series-art" aria-hidden="true"><i></i></span><span class="card-bottom"><strong>Classic series</strong><small>Early television and serials</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card music" data-collection="music" type="button"><span class="card-top">04 · LISTEN</span><span class="abstract-shape music-art" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span class="card-bottom"><strong>Music & sound</strong><small>Recordings across generations</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card books" data-collection="books" type="button"><span class="card-top">05 · READ</span><span class="abstract-shape books-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>Books & stories</strong><small>Open literature and documents</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card news" data-collection="news" type="button"><span class="card-top">06 · EXPLORE</span><span class="abstract-shape news-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>World news</strong><small>Discover international sources</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card film" data-collection="worldcinema" type="button"><span class="card-top">07 · CULTURE</span><span class="abstract-shape film-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>World cinema</strong><small>Subtitled films and original cultures</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card books" data-collection="culture" type="button"><span class="card-top">08 · LEARN</span><span class="abstract-shape books-art" aria-hidden="true"><i></i><i></i><i></i></span><span class="card-bottom"><strong>Culture &amp; languages</strong><small>Free lessons, speech and stories</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card science" data-collection="science" type="button"><span class="card-top">09 · STUDY</span><span class="science-glyph" aria-hidden="true">∑</span><span class="card-bottom"><strong>Science &amp; mathematics</strong><small>Quantum · Particle · Geometry · Chemistry · Biology</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card lessons" data-collection="audiolessons" type="button"><span class="card-top">10 · LISTEN</span><span class="science-glyph" aria-hidden="true">〽</span><span class="card-bottom"><strong>Free audio lessons</strong><small>Language practice · Science lectures · Transcripts</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+      <button class="collection-card stories" data-collection="audiobooks" type="button"><span class="card-top">11 · STORIES</span><span class="science-glyph" aria-hidden="true">“</span><span class="card-bottom"><strong>Audiobooks &amp; stories</strong><small>Novels · Poetry · Children’s stories · Radio drama</small></span><span class="card-arrow" aria-hidden="true">↗</span></button>
+    </div>
+  </section>
+  <section id="results-section" class="results-section section-inner" aria-labelledby="results-title" hidden>
+    <div class="section-head results-head"><div><div class="section-label">SEARCH RESULTS</div><h2 id="results-title">Found in the archives</h2></div><button id="clear-results" class="subtle-button" type="button">Clear results ×</button></div>
+    <p id="search-status" class="status" aria-live="polite"></p>
+    <div id="results-grid" class="results-grid"></div>
+    <div id="search-errors" class="search-errors" aria-live="polite"></div>
+  </section>
+<section class="topic-shelf section-inner" aria-labelledby="topic-shelf-title"><div class="topic-shelf-copy"><div class="section-label">PICK A SUBJECT</div><h2 id="topic-shelf-title">A little closer to what interests you.</h2><p>Select a subject to see relevant learning sources. No video or audio is loaded.</p></div><div class="topic-pills"><button type="button" data-topic-mode="science" data-topic="quantum">Quantum mechanics</button><button type="button" data-topic-mode="science" data-topic="particle">Particle physics</button><button type="button" data-topic-mode="science" data-topic="geometry">Geometry</button><button type="button" data-topic-mode="science" data-topic="chemistry">Chemistry</button><button type="button" data-topic-mode="science" data-topic="biology">Biology</button><button type="button" data-topic-mode="culture" data-topic="Japanese">Learn Japanese</button><button type="button" data-topic-mode="culture" data-topic="French">Learn French</button><button type="button" data-topic-mode="audiobooks" data-topic="">Audiobooks</button></div></section>
+<section class="source-shelves section-inner" aria-labelledby="source-shelves-title"><div class="section-head"><div><div class="section-label">EXPLORE TRUSTED SOURCES</div><h2 id="source-shelves-title">The original collections.</h2></div><p>Handpicked starting points. Links go to the organisations preserving or teaching the material.</p></div><div class="shelf-grid"><article class="shelf"><div class="shelf-kicker"><span class="shelf-icon" aria-hidden="true">♪</span>STORIES & AUDIO</div><h3>Something to listen to</h3><div class="shelf-links"><a href="https://librivox.org/" target="_blank" rel="noopener noreferrer"><span>LibriVox</span><small>Public-domain audiobooks</small></a><a href="https://etc.usf.edu/lit2go/" target="_blank" rel="noopener noreferrer"><span>Lit2Go</span><small>MP3 stories and poems</small></a><a href="https://storybookscanada.ca/" target="_blank" rel="noopener noreferrer"><span>Storybooks Canada</span><small>Multilingual narration</small></a><a href="https://globalstorybooks.net/" target="_blank" rel="noopener noreferrer"><span>Global Storybooks</span><small>World stories and languages</small></a></div></article><article class="shelf"><div class="shelf-kicker"><span class="shelf-icon" aria-hidden="true">∑</span>SCIENCE & MATHS</div><h3>Ideas worth exploring</h3><div class="shelf-links"><a href="https://ocw.mit.edu/courses/8-04-quantum-physics-i-spring-2016/" target="_blank" rel="noopener noreferrer"><span>MIT OpenCourseWare</span><small>Quantum lectures</small></a><a href="https://oyc.yale.edu/physics/phys-201" target="_blank" rel="noopener noreferrer"><span>Open Yale Courses</span><small>MP3 physics lectures</small></a><a href="https://educational-resources.web.cern.ch/videos-and-animations/" target="_blank" rel="noopener noreferrer"><span>CERN</span><small>Particle physics</small></a><a href="https://phet.colorado.edu/" target="_blank" rel="noopener noreferrer"><span>PhET</span><small>Interactive science</small></a><a href="https://openstax.org/higher-education" target="_blank" rel="noopener noreferrer"><span>OpenStax</span><small>Open textbooks</small></a></div></article><article class="shelf"><div class="shelf-kicker"><span class="shelf-icon" aria-hidden="true">◎</span>WORLD CULTURE</div><h3>Across borders</h3><div class="shelf-links"><a href="https://en.jff.jpf.go.jp/" target="_blank" rel="noopener noreferrer"><span>JFF Theater</span><small>Japanese films with subtitles</small></a><a href="https://www.kmdb.or.kr/vod" target="_blank" rel="noopener noreferrer"><span>Korean Film Archive</span><small>Classic cinema</small></a><a href="https://animation.filmarchives.jp/en/index.html" target="_blank" rel="noopener noreferrer"><span>Animated Film Classics</span><small>Early Japanese animation</small></a><a href="https://www.languageguide.org/" target="_blank" rel="noopener noreferrer"><span>LanguageGuide</span><small>Free vocabulary</small></a><a href="https://www.nhk.or.jp/lesson/en/" target="_blank" rel="noopener noreferrer"><span>NHK Easy Japanese</span><small>Audio language lessons</small></a></div></article></div><p class="rights-note">Freedom Vision provides discovery and approved viewing only. External sites may have separate adverts, accounts, licensing or regional restrictions. Older works are not automatically public domain.</p></section>
+  <section id="classic-film-sites" class="classic-additions section-inner" aria-labelledby="classic-additions-heading">
+    <div class="section-head">
+      <div><div class="section-label">CLASSIC CINEMA · CHOOSE YOUR OWN FILM</div><h2 id="classic-additions-heading">Pick a film, explore the library.</h2></div>
+      <p>Browse or search each provider's complete collection. Film choice and playback happen on their original website. Examples are optional.</p>
+    </div>
+    <div class="classic-site-grid">
+      <article class="classic-site">
+        <div class="section-label">INDEPENDENT CLASSIC FILMS</div>
+        <h3>Classic Free Movies</h3>
+        <p>Discover old films by title, genre or catalogue listing. Choose whichever film interests you; nothing plays automatically.</p>
+        <div class="classic-site-links">
+          <a class="primary-film-link" href="https://classicfreemovies.com/movie-library/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Browse the film library <span aria-hidden="true">↗</span></a>
+          <a href="https://classicfreemovies.com/search-movies/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Search films on their site <span aria-hidden="true">↗</span></a>
+        </div>
+        <details class="film-example"><summary>Optional example film</summary><a href="https://classicfreemovies.com/movies/attack-of-the-giant-leeches/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Attack of the Giant Leeches (1959) <span aria-hidden="true">↗</span></a></details>
+      </article>
+      <article class="classic-site">
+        <div class="section-label">INDEPENDENT CLASSIC FILMS</div>
+        <h3>OldieFlix</h3>
+        <p>Browse horror, film noir, cult cinema, vintage cartoons or type a title into OldieFlix's own search box.</p>
+        <div class="classic-site-links">
+          <a class="primary-film-link" href="https://oldieflix.com/" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">Browse &amp; search films <span aria-hidden="true">↗</span></a>
+        </div>
+        <details class="film-example"><summary>Optional example film</summary><a href="https://oldieflix.com/titles/the-mummy-s-tomb-1942-harold-young.html" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">The Mummy's Tomb (1942) <span aria-hidden="true">↗</span></a><p>Original website link only. Film rights have not been independently cleared.</p></details>
+      </article>
+    </div>
+    <p class="rights-note">External-site links only. These websites control their own playback, cookies, adverts and streaming quality. Freedom Vision loads neither player or its media, and does not label all films public domain without individual verification.</p>
+  </section>
+  <section class="sources-section section-inner" aria-labelledby="sources-title">
+    <div class="section-head"><div><div class="section-label">COMPLETE PROVIDER DIRECTORY</div><h2 id="sources-title">Every archive, one place.</h2></div><p>Some sources have live search connections. Others are linked for discovery until their embedding permissions are verified.</p></div>
+    <details class="all-sources"><summary>View all archive and learning sources <span aria-hidden="true">↗</span></summary>    <div class="provider-filter" aria-label="Filter archive sources"><button class="source-filter active" data-source-filter="all">All sources</button><button class="source-filter" data-source-filter="search">Search connected</button><button class="source-filter" data-source-filter="external">Explore externally</button></div>
+    <div id="provider-grid" class="provider-grid"></div></details>
+  </section>
+  <section class="ethos-section section-inner" aria-label="Freedom Vision policy">
+    <div class="ethos-mark">“</div><div><h2>Build upon. Don't burden.</h2><p>We leave media with the people preserving it. Requests are limited, playback starts only when you ask, and any contribution goes directly to the original archive. If a source is struggling, we explain why and stop making extra requests.</p></div><a class="ethos-link" href="https://archive.org/donate" target="_blank" rel="noopener noreferrer">Support Internet Archive directly ↗</a>
+  </section>
+</main>
+<footer class="footer"><div><strong>FREEDOM VISION</strong><small>An independent archive gateway. No accounts or analytics; external archives receive search requests.</small></div><div><span>Designed for The Green Tank</span><span>Design review · v0.9 · Not yet deployed</span></div></footer>
+</div>
+<dialog id="viewer-dialog" aria-labelledby="viewer-title" class="viewer-dialog"><div class="dialog-header"><span class="section-label">FREEDOM VISION · VIEWER</span><button type="button" id="viewer-close" class="dialog-close" aria-label="Close viewer">×</button></div><div class="dialog-body"><h2 id="viewer-title"></h2><p id="viewer-desc" class="dialog-desc"></p><div id="viewer-message" class="viewer-message" aria-live="polite">Select “Check available playback” to ask the archive for a suitable low-bandwidth file.</div><div id="player-shell" class="player-shell" hidden></div><div class="dialog-actions"><button type="button" id="viewer-check" class="search-button">Check available playback</button><a id="viewer-source" target="_blank" rel="noopener noreferrer" class="outline-button">View original archive ↗</a></div><details class="source-details"><summary>Source, licence and support</summary><p id="viewer-provider"></p><p id="viewer-licence">Rights must be verified for each item, including restored video, audio tracks and local territories.</p><a id="viewer-donate" target="_blank" rel="noopener noreferrer" hidden>Donate directly to this archive ↗</a></details></div></dialog>
+</body>
+</html>
